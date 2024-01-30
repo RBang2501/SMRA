@@ -11,7 +11,7 @@ function Home() {
     console.log('Creating auction:', auctionName);
 
     // Navigate to Admin Dashboard with auction name as a parameter
-    navigate(`/admin-dashboard/${encodeURIComponent(auctionName)}`);
+    navigate(`/admin-dashboard/${auctionName}`);
   };
 
   return (

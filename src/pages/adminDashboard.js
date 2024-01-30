@@ -24,9 +24,6 @@ function AdminDashboard() {
     setIsModalOpen(true);
   };
 
-  const createAuction = () => {
-    console.log('Creating auction!');
-  };
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -36,10 +33,18 @@ function AdminDashboard() {
     setItems([...items, item]);
     closeModal();
   };
+  const deleteAuction = () =>{
+    console.log("Delete Auction");
+  }
 
   return (
     <div className="admin-dashboard">
       <h1>Auction Instance: {auctionName}</h1>
+      <button onClick={deleteAuction}>Delete Auction</button>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
       <button onClick={openModal}>Add Item</button>
       <ItemTable items={items} />
       {isModalOpen && <AddItemModal onAdd={addItem} onCancel={closeModal} />}
