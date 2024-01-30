@@ -1,1 +1,0 @@
-SMRA Auction Platform !
