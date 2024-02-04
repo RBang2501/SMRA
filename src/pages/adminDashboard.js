@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import AddItemModal from './AddItemModal';
-import ItemTable from './ItemTable';
+// import ItemTable from './ItemTable';
 
 function AdminDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,7 +46,7 @@ function AdminDashboard() {
       <br/>
       <br/>
       <button onClick={openModal}>Add Item</button>
-      <ItemTable items={items} />
+     
       {isModalOpen && <AddItemModal onAdd={addItem} onCancel={closeModal} />}
     </div>
   );

@@ -1,8 +1,10 @@
 // CompanyAuction.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { cartItemsList } from './cartData';
 
 const CompanyAuction = () => {
-  // Sample data for company details and holdings
+  console.log('Cart Items:', cartItemsList);
+
   const companyDetails = {
     companyName: "Sample Company",
     netWorth: "$1,000,000",
@@ -15,12 +17,12 @@ const CompanyAuction = () => {
   };
 
   const [selectedHoldings, setSelectedHoldings] = useState([]);
-  const [editedQuantities, setEditedQuantities] = useState(new Array(companyDetails.currentHoldings.length).fill(1));
-  const holdingsToAuction = [
-    { itemName: "Item 1", price: "$100" },
-    { itemName: "Item 2", price: "$50" },
-    { itemName: "Item 3", price: "$200" },
-  ];
+  const [editedQuantities, setEditedQuantities] = useState(new Array(cartItemsList.length).fill(1));
+
+  useEffect(() => {
+    // Update the editedQuantities array length when cartItemsList changes
+    setEditedQuantities(new Array(cartItemsList.length).fill(1));
+  }, [cartItemsList]);
 
   const handleSelect = (index) => {
     const updatedSelectedHoldings = [...selectedHoldings];
@@ -41,7 +43,6 @@ const CompanyAuction = () => {
   };
 
   const handleSubmitRound = () => {
-    // Perform actions when submitting the round
     console.log("Round Submitted!");
     console.log("Selected Holdings:", selectedHoldings);
     console.log("Edited Quantities:", editedQuantities);
@@ -71,7 +72,7 @@ const CompanyAuction = () => {
       <div style={{ flex: 1, border: "1px solid #ccc", padding: "10px" }}>
         <h2>Round 1</h2>
         <div>
-          {holdingsToAuction.map((holding, index) => (
+          {cartItemsList.map((cartItem, index) => (
             <div
               key={index}
               style={{
@@ -81,8 +82,8 @@ const CompanyAuction = () => {
                 backgroundColor: selectedHoldings[index] ? "#ccc" : "white",
               }}
             >
-              <h3>{holding.itemName}</h3>
-              <p>Price: {holding.price}</p>
+              <h3>{cartItem.region}</h3>
+              <p>Freq Band: {cartItem.freqBand}</p>
               <label>Quantity:</label>
               <input
                 type="number"
