@@ -10,9 +10,14 @@ const CompanyAuction = () => {
     netWorth: "$1,000,000",
     eligibilityScore: 80,
     currentHoldings: [
-      { itemName: "Holding 1", price: "$150", quantity: 12 },
-      { itemName: "Holding 2", price: "$80", quantity: 8 },
-      { itemName: "Holding 3", price: "$200", quantity: 10 },
+      { operator: "RJio", region: "Delhi", holdingUP: 10, holdingP: 0, year: 2022 },
+      { operator: "RJio", region: "Tamil Nadu", holdingUP: 0, holdingP: 10, year: 2021},
+      { operator: "RJio", region: "Kerala", holdingUP: 10, holdingP: 0, year: 2016 },
+    ],
+    itemsOnBid: [
+      { operator: "Delhi", frequencyBand: "700 Mhz", unpaired: 10, paired: 0, reservePrice: 200 },
+      { operator: "Tamil Nadu", frequencyBand: "700 Mhz", unpaired: 0, paired: 10, reservePrice: 200 },
+      { operator: "Kerala", frequencyBand: "700 Mhz", unpaired: 10, paired: 0, reservePrice: 200 },
     ],
   };
 
@@ -36,7 +41,7 @@ const CompanyAuction = () => {
     setSelectedHoldings(updatedSelectedHoldings);
   };
 
-  const handleQuantityChange = (index, value) => {
+  const handleholdingUPChange = (index, value) => {
     const updatedQuantities = [...editedQuantities];
     updatedQuantities[index] = value;
     setEditedQuantities(updatedQuantities);
@@ -60,9 +65,11 @@ const CompanyAuction = () => {
         <div>
           {companyDetails.currentHoldings.map((holding, index) => (
             <div key={index} style={{ border: "1px solid #ccc", margin: "10px", padding: "10px" }}>
-              <h3>{holding.itemName}</h3>
-              <p>Price: {holding.price}</p>
-              <p>Quantity: {holding.quantity}</p>
+              <h3>{holding.operator}</h3>
+              <p>region: {holding.region}</p>
+              <p>holdingUP: {holding.holdingUP}</p>
+              <p>holdingP: {holding.holdingP}</p>
+              <p>year: {holding.year}</p>
             </div>
           ))}
         </div>
@@ -70,9 +77,9 @@ const CompanyAuction = () => {
 
       {/* Right Box: List of Holdings to be Auctioned */}
       <div style={{ flex: 1, border: "1px solid #ccc", padding: "10px" }}>
-        <h2>Round 1</h2>
+        <h2>Items on Bid</h2>
         <div>
-          {cartItemsList.map((cartItem, index) => (
+          {companyDetails.itemsOnBid.map((item, index) => (
             <div
               key={index}
               style={{
@@ -82,13 +89,16 @@ const CompanyAuction = () => {
                 backgroundColor: selectedHoldings[index] ? "#ccc" : "white",
               }}
             >
-              <h3>{cartItem.region}</h3>
-              <p>Freq Band: {cartItem.freqBand}</p>
-              <label>Quantity:</label>
+              <h3>{item.operator}</h3>
+              <p>Freq Band: {item.frequencyBand}</p>
+              <p>Unpaired: {item.unpaired}</p>
+              <p>Paired: {item.paired}</p>
+              <p>Reserve Price: {item.reservePrice}</p>
+              <label>holdingUP:</label>
               <input
                 type="number"
                 value={editedQuantities[index]}
-                onChange={(e) => handleQuantityChange(index, e.target.value)}
+                onChange={(e) => handleholdingUPChange(index, e.target.value)}
               />
               <button onClick={() => handleSelect(index)}>Yes</button>
               <button onClick={() => handleDeselect(index)}>No</button>
