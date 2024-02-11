@@ -1,7 +1,7 @@
 // CompanyAuction.js
 import React, { useState, useEffect } from "react";
 import { cartItemsList } from './cartData';
-import Tab from './Tab';
+import Tab1 from './Tab1';
 
 const CompanyAuction = () => {
   console.log('Cart Items:', cartItemsList);
@@ -54,59 +54,92 @@ const CompanyAuction = () => {
     console.log("Edited Quantities:", editedQuantities);
   };
 
+  const [activeTab, setActiveTab] = useState('tab1');
+
+  function Tab({title, active, onClick}) {
+
+  return (
+    <button 
+      className={active ? 'tab active' : 'tab'}
+      onClick={onClick}
+    >
+      {title}
+    </button>
+  )
+
+}
+
+function Tab1Content() {
+  return(
+    <div>
+    <h2>Company Portfolio</h2>
+          <p>Company Name: {companyDetails.companyName}</p>
+          <p>Net Worth: {companyDetails.netWorth}</p>
+          <p>Eligibility Score: {companyDetails.eligibilityScore}</p>
+          <p>Current Holdings:</p>
+          <div>
+            {companyDetails.currentHoldings.map((holding, index) => (
+              <div key={index} style={{ border: "1px solid #ccc", margin: "10px", padding: "10px" }}>
+                <h3>{holding.operator}</h3>
+                <p>region: {holding.region}</p>
+                <p>holdingUP: {holding.holdingUP}</p>
+                <p>holdingP: {holding.holdingP}</p>
+                <p>year: {holding.year}</p>
+              </div>
+            ))}
+          </div> 
+     </div>
+  )
+}
+
+function Tab2Content() {
+  return <div>Tab 2 content</div>
+} 
+
+function Tab3Content() {
+  return <div>Tab 3 content</div>
+}
+
+
+
   return (
     <div style={{ display: "flex", justifyContent: "space-between" }}>
-      {/* Left Box: Company Details */}
-      <div style={{ flex: 1, border: "1px solid #ccc", padding: "10px" }}>
-        <h2>Company Portfolio</h2>
-        <p>Company Name: {companyDetails.companyName}</p>
-        <p>Net Worth: {companyDetails.netWorth}</p>
-        <p>Eligibility Score: {companyDetails.eligibilityScore}</p>
-        <p>Current Holdings:</p>
-        <div>
-          {companyDetails.currentHoldings.map((holding, index) => (
-            <div key={index} style={{ border: "1px solid #ccc", margin: "10px", padding: "10px" }}>
-              <h3>{holding.operator}</h3>
-              <p>region: {holding.region}</p>
-              <p>holdingUP: {holding.holdingUP}</p>
-              <p>holdingP: {holding.holdingP}</p>
-              <p>year: {holding.year}</p>
-            </div>
-          ))}
-        </div>
+      <div>
+      <h1>Information Center</h1>
+      <div className="tabs">
+    
+      <Tab 
+        title="Company Portfolio"
+        active={activeTab === 'tab1'}
+        onClick={() => setActiveTab('tab1')}
+      />
+
+      <Tab
+        title="Participants"
+        active={activeTab === 'tab2'}
+        onClick={() => setActiveTab('tab2')} 
+      />
+
+      <Tab 
+        title="Round Details"
+        active={activeTab === 'tab3'}
+        onClick={() => setActiveTab('tab3')}
+      />
+
+      <div className="tab-content">
+        {activeTab === 'tab1' && <Tab1Content />}
+        {activeTab === 'tab2' && <Tab2Content />}
+        {activeTab === 'tab3' && <Tab3Content />}
       </div>
+    
+    </div>
+    </div>
+
 
       {/* Right Box: List of Holdings to be Auctioned */}
       <div style={{ flex: 1, border: "1px solid #ccc", padding: "10px" }}>
         <h2>Items on Bid</h2>
-        {/* <div>
-          {companyDetails.itemsOnBid.map((item, index) => (
-            <div
-              key={index}
-              style={{
-                border: "1px solid #ccc",
-                margin: "10px",
-                padding: "10px",
-                backgroundColor: selectedHoldings[index] ? "#ccc" : "white",
-              }}
-            >
-              <h3>{item.operator}</h3>
-              <p>Freq Band: {item.frequencyBand}</p>
-              <p>Unpaired: {item.unpaired}</p>
-              <p>Paired: {item.paired}</p>
-              <p>Reserve Price: {item.reservePrice}</p>
-              <label>holdingUP:</label>
-              <input
-                type="number"
-                value={editedQuantities[index]}
-                onChange={(e) => handleholdingUPChange(index, e.target.value)}
-              />
-              <button onClick={() => handleSelect(index)}>Yes</button>
-              <button onClick={() => handleDeselect(index)}>No</button>
-            </div>
-          ))}
-        </div> */}
-        <Tab items={companyDetails.itemsOnBid} />
+        <Tab1 items={companyDetails.itemsOnBid} />
         <button onClick={handleSubmitRound}>Submit Round</button>
       </div>
     </div>
@@ -114,62 +147,3 @@ const CompanyAuction = () => {
 };
 
 export default CompanyAuction;
-
-
-// CompanyAuction.js
-
-// import React, { useState } from 'react'; 
-// import Tab from './Tab';
-
-// const companyDetails = {
-//     companyName: "Sample Company",
-//     netWorth: "$1,000,000",
-//     eligibilityScore: 80,
-//     currentHoldings: [
-//       { operator: "RJio", region: "Delhi", holdingUP: 10, holdingP: 0, year: 2022 },
-//       { operator: "RJio", region: "Tamil Nadu", holdingUP: 0, holdingP: 10, year: 2021},
-//       { operator: "RJio", region: "Kerala", holdingUP: 10, holdingP: 0, year: 2016 },
-//     ],
-//     itemsOnBid: [
-//       { operator: "Delhi", frequencyBand: "700 Mhz", unpaired: 10, paired: 0, reservePrice: 200 },
-//       { operator: "Tamil Nadu", frequencyBand: "700 Mhz", unpaired: 0, paired: 10, reservePrice: 200 },
-//       { operator: "Kerala", frequencyBand: "700 Mhz", unpaired: 10, paired: 0, reservePrice: 200 },
-//     ],
-//   };
-
-// const CompanyAuction = ({ companyDetails }) => {
-
-//   const [bidQuantities, setBidQuantities] = useState({});
-
-//   const handleBidChange = (operator, value) => {
-//     setBidQuantities({
-//       ...bidQuantities,
-//       [operator]: value
-//     });
-//   }
-
-//   const handleSubmit = () => {
-//     console.log('Submitted bids:', bidQuantities);
-//   }
-
-//   return (
-//     <div>
-//       <Tab items={companyDetails.itemsOnBid} />
-
-//       {companyDetails.itemsOnBid.map(item => (
-//         <div key={item.operator}>
-//           <label>{item.operator}</label>
-//           <input 
-//             type="number"
-//             value={bidQuantities[item.operator] || ''}
-//             onChange={e => handleBidChange(item.operator, e.target.value)} 
-//           />
-//         </div>
-//       ))}
-
-//       <button onClick={handleSubmit}>Submit Bids</button>
-//     </div>
-//   );
-// }
-
-// export default CompanyAuction;

@@ -2,6 +2,9 @@
 import React, { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./authContext";
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import '../Styles/LoginForm.css'; // Import custom CSS file
 
 const Home = () => {
   const navigate = useNavigate();
