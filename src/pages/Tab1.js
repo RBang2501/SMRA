@@ -41,7 +41,7 @@
 import React, { useState } from 'react';
 
 
-const Tab = ({ items }) => {
+const Tab1 = ({ items }) => {
 
   const [selectedTab, setSelectedTab] = useState('700 Mhz');
   const [bid, setBid] = useState('');
@@ -106,4 +106,4 @@ const Tab = ({ items }) => {
   );
 }
 
-export default Tab;
+export default Tab1;
