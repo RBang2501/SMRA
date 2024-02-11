@@ -18,6 +18,9 @@ const CompanyAuction = () => {
     ],
     itemsOnBid: [
       { operator: "Delhi", frequencyBand: "700 Mhz", unpaired: 10, paired: 0, reservePrice: 200 },
+      { operator: "Delhi", frequencyBand: "700 Mhz", unpaired: 10, paired: 0, reservePrice: 200 },
+      { operator: "Delhi", frequencyBand: "700 Mhz", unpaired: 10, paired: 0, reservePrice: 200 },
+      { operator: "Delhi", frequencyBand: "700 Mhz", unpaired: 10, paired: 0, reservePrice: 200 },
       { operator: "Tamil Nadu", frequencyBand: "800 Mhz", unpaired: 0, paired: 10, reservePrice: 200 },
       { operator: "Kerala", frequencyBand: "900 Mhz", unpaired: 10, paired: 0, reservePrice: 200 },
     ],
@@ -78,7 +81,7 @@ function Tab1Content() {
     <p>Net Worth: {companyDetails.netWorth}</p>
     <p>Eligibility Score: {companyDetails.eligibilityScore}</p>
     <p>Current Holdings:</p>
-    <div style = {{overflow: "scroll", maxHeight:"50vh" }} className="contains-Tabcontent">
+    <div className="contains-Tabcontent">
       {companyDetails.currentHoldings.map((holding, index) => (
         <div key={index} className="holding-container">
           <h3>{holding.operator}</h3>
@@ -106,54 +109,68 @@ function Tab3Content() {
 
   return (
     <div style={{ display: "flex", justifyContent: "space-between"}}>
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 
-      <h1>Information Center</h1>
-      <div>
-      
-      <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
-        <div style={{ padding: '10px' }}>
-          <Tab 
-          title="Company Portfolio"
-          active={activeTab === 'tab1'}
-          onClick={() => setActiveTab('tab1')}
-           // Add margin-right to the first tab
-        />
+          <h1>Information Center</h1>
+        <div>
+        
+        <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
+          <div style={{ padding: '10px' }}>
+            <Tab 
+            title="Company Portfolio"
+            active={activeTab === 'tab1'}
+            onClick={() => setActiveTab('tab1')}
+            // Add margin-right to the first tab
+          />
+          </div>
+        
+          <div style={{ padding: '10px' }}>
+            <Tab
+            title="Participants"
+            active={activeTab === 'tab2'}
+            onClick={() => setActiveTab('tab2')}
+            // Add margin-right to the second tab
+          />
+          </div>
+        
+          <div style={{ padding: '10px' }}>
+            <Tab 
+            title="Round Details"
+            active={activeTab === 'tab3'}
+            onClick={() => setActiveTab('tab3')}
+          />
+          </div>
         </div>
-      
-        <div style={{ padding: '10px' }}>
-          <Tab
-          title="Participants"
-          active={activeTab === 'tab2'}
-          onClick={() => setActiveTab('tab2')}
-           // Add margin-right to the second tab
-        />
-        </div>
-      
-        <div style={{ padding: '10px' }}>
-          <Tab 
-          title="Round Details"
-          active={activeTab === 'tab3'}
-          onClick={() => setActiveTab('tab3')}
-        />
-        </div>
-    </div>
 
-      <div className="tab-content">
-        {activeTab === 'tab1' && <Tab1Content />}
-        {activeTab === 'tab2' && <Tab2Content />}
-        {activeTab === 'tab3' && <Tab3Content />}
+        <div className="tab-content">
+          {activeTab === 'tab1' && <Tab1Content />}
+          {activeTab === 'tab2' && <Tab2Content />}
+          {activeTab === 'tab3' && <Tab3Content />}
+        </div>
+      
       </div>
-    
-    </div>
-    </div>
-
+    </div >
+      
 
       {/* Right Box: List of Holdings to be Auctioned */}
-      <div style={{ flex: 1, border: "1px solid #ccc", padding: "10px" }}>
-        <h2>Items on Bid</h2>
-        <Tab1 items={companyDetails.itemsOnBid} />
-        <button onClick={handleSubmitRound}>Submit Round</button>
+      {/* <div style={{ display: "flex", justifyContent: "space-between"}}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+
+          <h2>Information Center</h2>
+        </div>
+      </div> */}
+      
+      <div style={{ flex: 1, border: "1px solid #007bff", paddingLeft: "20px",
+      paddingBottom:"20px", borderRadius:"10px", maxHeight:"94vh", marginTop:"1vh", marginRight:"1vh"}}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <h1>Items On Bid</h1>
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
+          <Tab1 items={companyDetails.itemsOnBid} />
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <button onClick={handleSubmitRound}>Submit Round</button>
+        </div>
       </div>
     </div>
 
