@@ -66,7 +66,7 @@ const Tab1 = ({ items }) => {
     <div>
     
       {/*...tab buttons*/}
-      <div style={{display: 'flex',justifyContent: "space-between", paddingBottom: "20px"}}>
+      <div style={{display: 'flex', paddingBottom: "20px"}}>
         {tabs.map(tab => (
           <div style={{ paddingLeft: "10px"}}>
             <button 
