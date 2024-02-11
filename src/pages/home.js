@@ -1,6 +1,6 @@
-// Home.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import '../Styles/LoginForm.css'; // Import custom CSS file
 
 const Home = () => {
   const navigate = useNavigate();
@@ -22,52 +22,45 @@ const Home = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Assuming you have a route for adminDashboard and companyDashboard
     const route = loginData.userType === 'admin' ? `/admin-dashboard/${loginData.name}` : `/company-dashboard/${loginData.name}`;
     navigate(route, { state: { name: loginData.name } });
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
-      <div style={{ display: 'flex', width: '80%', border: '1px solid #ccc', borderRadius: '10px' }}>
-        {/* Left Box (Image) */}
-        <div style={{ flex: 1, padding: '20px', backgroundColor: '#f0f0f0' }}>
+    <div className="container">
+      <div className="form-container">
+        <div className="left">
           <img
-            src="https://example.com/your-image.jpg"  // Replace with the actual image URL
+            src={require('../Assets/auction-services.png')}
             alt="Company Logo"
-            style={{ width: '100%', height: 'auto', maxWidth: '200px', maxHeight: '200px' }}
+            className="logo"
           />
         </div>
-        {/* Right Box (Login Form) */}
-        <div style={{ flex: 1, padding: '20px', textAlign: 'center' }}>
+        <div className="right">
           <form onSubmit={handleSubmit}>
             <h2>Login</h2>
-            <label>
-              Name:
-              <input type="text" name="name" value={loginData.name} onChange={handleChange} required />
-            </label>
-            <br />
-            <label>
-              Password:
-              <input type="password" name="password" value={loginData.password} onChange={handleChange} required />
-            </label>
-            <br />
-            <label>
-              Type:
-              <select name="userType" value={loginData.userType} onChange={handleChange}>
+            <div className="input-container">
+              <label htmlFor="name">Name</label>
+              <input type="text" id="name" name="name" value={loginData.name} onChange={handleChange} placeholder="Narendra Modi" required />
+            </div>
+            <div className="input-container">
+              <label htmlFor="password">Password</label>
+              <input type="password" id="password" name="password" value={loginData.password} onChange={handleChange} placeholder="******" required />
+            </div>
+            <div className="input-container">
+              <label htmlFor="userType">Type</label>
+              <select id="userType" name="userType" value={loginData.userType} onChange={handleChange}>
                 <option value="company">Company</option>
                 <option value="admin">Admin</option>
               </select>
-            </label>
-            <br />
-            <label>
-              Remember Me:
-              <input type="checkbox" name="rememberMe" checked={loginData.rememberMe} onChange={handleChange} />
-            </label>
-            <br />
+            </div>
+            <div className="input-container">
+              <input type="checkbox" id="rememberMe" name="rememberMe" checked={loginData.rememberMe} onChange={handleChange} />
+              <label htmlFor="rememberMe">Remember Me</label>
+            </div>
             <button type="submit">Sign In</button>
           </form>
-          <div style={{ marginTop: '20px' }}>
+          <div className="links">
             <p>
               <Link to="/forgot-password">Forgot Password</Link>
             </p>
