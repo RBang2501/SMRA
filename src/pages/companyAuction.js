@@ -1,8 +1,9 @@
 // CompanyAuction.js
+
 import React, { useState, useEffect } from "react";
 import { cartItemsList } from './cartData';
 import Tab1 from './Tab1';
-
+import '../Styles/CompanyAuction.css'
 const CompanyAuction = () => {
   console.log('Cart Items:', cartItemsList);
 
@@ -71,24 +72,25 @@ const CompanyAuction = () => {
 
 function Tab1Content() {
   return(
-    <div>
+    <div className="portfolio-container">
     <h2>Company Portfolio</h2>
-          <p>Company Name: {companyDetails.companyName}</p>
-          <p>Net Worth: {companyDetails.netWorth}</p>
-          <p>Eligibility Score: {companyDetails.eligibilityScore}</p>
-          <p>Current Holdings:</p>
-          <div>
-            {companyDetails.currentHoldings.map((holding, index) => (
-              <div key={index} style={{ border: "1px solid #ccc", margin: "10px", padding: "10px" }}>
-                <h3>{holding.operator}</h3>
-                <p>region: {holding.region}</p>
-                <p>holdingUP: {holding.holdingUP}</p>
-                <p>holdingP: {holding.holdingP}</p>
-                <p>year: {holding.year}</p>
-              </div>
-            ))}
-          </div> 
-     </div>
+    <p>Company Name: {companyDetails.companyName}</p>
+    <p>Net Worth: {companyDetails.netWorth}</p>
+    <p>Eligibility Score: {companyDetails.eligibilityScore}</p>
+    <p>Current Holdings:</p>
+    <div style = {{overflow: "scroll", maxHeight:"50vh" }} className="contains-Tabcontent">
+      {companyDetails.currentHoldings.map((holding, index) => (
+        <div key={index} className="holding-container">
+          <h3>{holding.operator}</h3>
+          <p>region: {holding.region}</p>
+          <p>holdingUP: {holding.holdingUP}</p>
+          <p>holdingP: {holding.holdingP}</p>
+          <p>year: {holding.year}</p>
+        </div>
+      ))}
+    </div> 
+  </div>
+
   )
 }
 
@@ -103,28 +105,39 @@ function Tab3Content() {
 
 
   return (
-    <div style={{ display: "flex", justifyContent: "space-between" }}>
-      <div>
+    <div style={{ display: "flex", justifyContent: "space-between"}}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+
       <h1>Information Center</h1>
-      <div className="tabs">
-    
-      <Tab 
-        title="Company Portfolio"
-        active={activeTab === 'tab1'}
-        onClick={() => setActiveTab('tab1')}
-      />
-
-      <Tab
-        title="Participants"
-        active={activeTab === 'tab2'}
-        onClick={() => setActiveTab('tab2')} 
-      />
-
-      <Tab 
-        title="Round Details"
-        active={activeTab === 'tab3'}
-        onClick={() => setActiveTab('tab3')}
-      />
+      <div>
+      
+      <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
+        <div style={{ padding: '10px' }}>
+          <Tab 
+          title="Company Portfolio"
+          active={activeTab === 'tab1'}
+          onClick={() => setActiveTab('tab1')}
+           // Add margin-right to the first tab
+        />
+        </div>
+      
+        <div style={{ padding: '10px' }}>
+          <Tab
+          title="Participants"
+          active={activeTab === 'tab2'}
+          onClick={() => setActiveTab('tab2')}
+           // Add margin-right to the second tab
+        />
+        </div>
+      
+        <div style={{ padding: '10px' }}>
+          <Tab 
+          title="Round Details"
+          active={activeTab === 'tab3'}
+          onClick={() => setActiveTab('tab3')}
+        />
+        </div>
+    </div>
 
       <div className="tab-content">
         {activeTab === 'tab1' && <Tab1Content />}
@@ -143,6 +156,7 @@ function Tab3Content() {
         <button onClick={handleSubmitRound}>Submit Round</button>
       </div>
     </div>
+
   );
 };
 
