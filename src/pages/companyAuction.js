@@ -109,47 +109,50 @@ function Tab3Content() {
 
   return (
     <div style={{ display: "flex", justifyContent: "space-between"}}>
+      <div className = "mainleft">
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 
-          <h1>Information Center</h1>
-        <div>
-        
-        <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
-          <div style={{ padding: '10px' }}>
-            <Tab 
-            title="Company Portfolio"
-            active={activeTab === 'tab1'}
-            onClick={() => setActiveTab('tab1')}
-            // Add margin-right to the first tab
-          />
-          </div>
-        
-          <div style={{ padding: '10px' }}>
-            <Tab
-            title="Participants"
-            active={activeTab === 'tab2'}
-            onClick={() => setActiveTab('tab2')}
-            // Add margin-right to the second tab
-          />
-          </div>
-        
-          <div style={{ padding: '10px' }}>
-            <Tab 
-            title="Round Details"
-            active={activeTab === 'tab3'}
-            onClick={() => setActiveTab('tab3')}
-          />
-          </div>
-        </div>
+              <h1>Information Center</h1>
+            <div>
+            
+            <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
+              <div style={{ padding: '10px' }}>
+                <Tab 
+                title="Company Portfolio"
+                active={activeTab === 'tab1'}
+                onClick={() => setActiveTab('tab1')}
+                // Add margin-right to the first tab
+              />
+              </div>
+            
+              <div style={{ padding: '10px' }}>
+                <Tab
+                title="Participants"
+                active={activeTab === 'tab2'}
+                onClick={() => setActiveTab('tab2')}
+                // Add margin-right to the second tab
+              />
+              </div>
+            
+              <div style={{ padding: '10px' }}>
+                <Tab 
+                title="Round Details"
+                active={activeTab === 'tab3'}
+                onClick={() => setActiveTab('tab3')}
+              />
+              </div>
+            </div>
 
-        <div className="tab-content">
-          {activeTab === 'tab1' && <Tab1Content />}
-          {activeTab === 'tab2' && <Tab2Content />}
-          {activeTab === 'tab3' && <Tab3Content />}
-        </div>
-      
+            <div className="tab-content">
+              {activeTab === 'tab1' && <Tab1Content />}
+              {activeTab === 'tab2' && <Tab2Content />}
+              {activeTab === 'tab3' && <Tab3Content />}
+            </div>
+          
+          </div>
+        </div >
       </div>
-    </div >
+        
       
 
       {/* Right Box: List of Holdings to be Auctioned */}

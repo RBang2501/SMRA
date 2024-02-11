@@ -9,7 +9,7 @@
   }
   
   .portfolio-container h2 {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
   .contains-Tabcontent{
     border: 1px solid #007bff;
@@ -23,6 +23,10 @@
     margin: 10px;
     padding: 10px;
     background-color: #f5f5f5;
+  }
+  .mainleft{
+    overflow: scroll;
+    max-height: 102vh;
   }
   .auction-container-container {
     border: 1px solid #007bff;
