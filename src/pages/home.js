@@ -1,9 +1,6 @@
-// Home.js
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./authContext";
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import '../Styles/LoginForm.css'; // Import custom CSS file
 
 const Home = () => {
@@ -11,20 +8,6 @@ const Home = () => {
   const { login } = useAuth();
   const emailRef = useRef();
   const passwordRef = useRef();
-  const [loginData, setLoginData] = useState({
-    name: "",
-    password: "",
-    userType: "company",
-    rememberMe: false,
-  });
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setLoginData((prevData) => ({
-      ...prevData,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
 
   async function handleSubmitLogin(e) {
     e.preventDefault();
@@ -35,10 +18,10 @@ const Home = () => {
         // You can set isAdmin in the context or use local state
         // For simplicity, let's use local state here
         // isAdmin = true;
-        setLoginData((prevData) => ({
-          ...prevData,
-          isAdmin: true,
-        }));
+        // setLoginData((prevData) => ({
+        //   ...prevData,
+        //   isAdmin: true,
+        // }));
       }
       navigate("/admin-dashboard/Auction");
     } catch {
@@ -47,88 +30,30 @@ const Home = () => {
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "80vh",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          width: "80%",
-          border: "1px solid #ccc",
-          borderRadius: "10px",
-        }}
-      >
-        {/* Left Box (Image) */}
-        <div style={{ flex: 1, padding: "20px", backgroundColor: "#f0f0f0" }}>
+    <div className="container">
+      <div className="form-container">
+        <div className="left">
           <img
-            src="https://example.com/your-image.jpg"
+            src={require('../Assets/auction-services.png')}
             alt="Company Logo"
-            style={{
-              width: "100%",
-              height: "auto",
-              maxWidth: "200px",
-              maxHeight: "200px",
-            }}
+            className="logo"
           />
         </div>
-        {/* Right Box (Login Form) */}
-        <div style={{ flex: 1, padding: "20px", textAlign: "center" }}>
+        <div className="right">
           <form onSubmit={handleSubmitLogin}>
             <h2>Login</h2>
-            <label>
-              Name:
-              <input
-                type="text"
-                ref={emailRef}
-                name="name"
-                value={loginData.name}
-                onChange={handleChange}
-                required
-              />
-            </label>
-            <br />
-            <label>
-              Password:
-              <input
-                type="password"
-                ref={passwordRef}
-                name="password"
-                value={loginData.password}
-                onChange={handleChange}
-                required
-              />
-            </label>
-            <br />
-            <label>
-              Type:
-              <select
-                name="userType"
-                value={loginData.userType}
-                onChange={handleChange}
-              >
-                <option value="company">Company</option>
-                <option value="admin">Admin</option>
-              </select>
-            </label>
-            <br />
-            <label>
-              Remember Me:
-              <input
-                type="checkbox"
-                name="rememberMe"
-                checked={loginData.rememberMe}
-                onChange={handleChange}
-              />
-            </label>
-            <br />
+            
+            <div className="input-container">
+              <label htmlFor="email">Email</label>
+              <input type="text" id="email" ref={emailRef} placeholder="narendramodi@bjp.gov.in" required />
+            </div>
+            <div className="input-container">
+              <label htmlFor="password">Password</label>
+              <input type="password" id="password" ref={passwordRef} placeholder="********" required />
+            </div>
             <button type="submit">Sign In</button>
           </form>
-          <div style={{ marginTop: "20px" }}>
+          <div className="links">
             <p>
               <Link to="/forgot-password">Forgot Password</Link>
             </p>
