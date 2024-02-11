@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import './AddItemModal.css';
 import { cartItemsList } from './cartData';
+import '../Styles/AddItemModal.css';
 
 function AddItemModal() {
   const [region, setRegion] = useState('');
@@ -38,62 +39,68 @@ function AddItemModal() {
   };
 
   return (
-    <div className="container">
+    <div className="container" style = {{height: '85vh'}}>
       {/* Left Box: Add Item Details */}
-      <div className="add-item-container">
+        <div className="cart-container">
         <h2>Add Item</h2>
         <form>
           <div className="input-group">
-            <label>Region:</label>
+            <label>Region</label>
             <input
+              type = "text"
               value={region}
               onChange={(e) => setRegion(e.target.value)}
-              placeholder="Region"
+              placeholder="Ayodhya"
             />
           </div>
 
           <div className="input-group">
-            <label>Frequency Band:</label>
+            <label>Frequency Band</label>
             <input
+            type = "text"
               value={freqBand}
               onChange={(e) => setFreqBand(e.target.value)}
-              placeholder="Frequency Band"
+              placeholder="1000 Mhz"
             />
           </div>
 
           <div className="input-group">
-            <label>Unpaired (on sale):</label>
+            <label>Unpaired (on sale)</label>
             <input
+              type = "text"
               value={unpairedOnSale}
               onChange={(e) => setUnpairedOnSale(e.target.value)}
-              placeholder="Unpaired (on sale)"
+              placeholder="10"
             />
           </div>
 
           <div className="input-group">
-            <label>Paired (on sale):</label>
+            <label>Paired (on sale)</label>
             <input
+              type = "text"
               value={pairedOnSale}
               onChange={(e) => setPairedOnSale(e.target.value)}
-              placeholder="Paired (on sale)"
+              placeholder="20"
             />
           </div>
 
           <div className="input-group">
-            <label>Reserved Price (per block):</label>
+            <label>Reserved Price (per block)</label>
             <input
+              type = "text"
               value={reservedPrice}
               onChange={(e) => setReservedPrice(e.target.value)}
-              placeholder="Reserved Price (per block)"
+              placeholder="3000000"
             />
           </div>
 
           <div className="input-group">
-            <label>EP (per block):</label>
+            <label>EP (per block)</label>
             <input
+              type = "text"
               value={epPerBlock}
               onChange={(e) => setEpPerBlock(e.target.value)}
-              placeholder="EP (per block)"
+              placeholder="2000"
             />
           </div>
 
@@ -108,7 +115,7 @@ function AddItemModal() {
         <h2>Cart</h2>
         <ul>
           {cartItemsList.map((item) => (
-            <div key={item.id} className="cart">
+            <div key={item.id} className="cart-item">
               <strong>Region:</strong> {item.region}
               <br />
               <strong>Freq Band:</strong> {item.freqBand}

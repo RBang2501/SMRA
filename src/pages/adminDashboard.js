@@ -39,15 +39,12 @@ function AdminDashboard() {
 
   return (
     <div className="admin-dashboard">
-      <h1>Auction Instance: {auctionName}</h1>
-      <button onClick={deleteAuction}>Delete Auction</button>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-      <button onClick={openModal}>Add Item</button>
+      <h2>Auction Instance: {auctionName}</h2>
+      <button onClick={deleteAuction} style={{ position: 'fixed', top: '10%', right: '20px', transform: 'translateY(-50%)' }}>Delete Auction</button>
+      <button onClick={openModal} style={{ marginLeft: '50px' }}>Add Item</button>
      
       {isModalOpen && <AddItemModal onAdd={addItem} onCancel={closeModal} />}
+      
     </div>
   );
 }
