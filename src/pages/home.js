@@ -1,14 +1,17 @@
 // Home.js
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "./authContext";
 
 const Home = () => {
   const navigate = useNavigate();
-
+  const { login } = useAuth();
+  const emailRef = useRef();
+  const passwordRef = useRef();
   const [loginData, setLoginData] = useState({
-    name: '',
-    password: '',
-    userType: 'company',
+    name: "",
+    password: "",
+    userType: "company",
     rememberMe: false,
   });
 
@@ -16,45 +19,95 @@ const Home = () => {
     const { name, value, type, checked } = e.target;
     setLoginData((prevData) => ({
       ...prevData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  async function handleSubmitLogin(e) {
     e.preventDefault();
-    // Assuming you have a route for adminDashboard and companyDashboard
-    const route = loginData.userType === 'admin' ? `/admin-dashboard/${loginData.name}` : `/company-dashboard/${loginData.name}`;
-    navigate(route, { state: { name: loginData.name } });
-  };
+
+    try {
+      await login(emailRef.current.value, passwordRef.current.value);
+      if (emailRef.current.value === "admin@gmail.com") {
+        // You can set isAdmin in the context or use local state
+        // For simplicity, let's use local state here
+        // isAdmin = true;
+        setLoginData((prevData) => ({
+          ...prevData,
+          isAdmin: true,
+        }));
+      }
+      navigate("/admin-dashboard/Auction");
+    } catch {
+      console.error("Incorrect Username or Password");
+    }
+  }
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
-      <div style={{ display: 'flex', width: '80%', border: '1px solid #ccc', borderRadius: '10px' }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "80vh",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          width: "80%",
+          border: "1px solid #ccc",
+          borderRadius: "10px",
+        }}
+      >
         {/* Left Box (Image) */}
-        <div style={{ flex: 1, padding: '20px', backgroundColor: '#f0f0f0' }}>
+        <div style={{ flex: 1, padding: "20px", backgroundColor: "#f0f0f0" }}>
           <img
-            src="https://example.com/your-image.jpg"  // Replace with the actual image URL
+            src="https://example.com/your-image.jpg"
             alt="Company Logo"
-            style={{ width: '100%', height: 'auto', maxWidth: '200px', maxHeight: '200px' }}
+            style={{
+              width: "100%",
+              height: "auto",
+              maxWidth: "200px",
+              maxHeight: "200px",
+            }}
           />
         </div>
         {/* Right Box (Login Form) */}
-        <div style={{ flex: 1, padding: '20px', textAlign: 'center' }}>
-          <form onSubmit={handleSubmit}>
+        <div style={{ flex: 1, padding: "20px", textAlign: "center" }}>
+          <form onSubmit={handleSubmitLogin}>
             <h2>Login</h2>
             <label>
               Name:
-              <input type="text" name="name" value={loginData.name} onChange={handleChange} required />
+              <input
+                type="text"
+                ref={emailRef}
+                name="name"
+                value={loginData.name}
+                onChange={handleChange}
+                required
+              />
             </label>
             <br />
             <label>
               Password:
-              <input type="password" name="password" value={loginData.password} onChange={handleChange} required />
+              <input
+                type="password"
+                ref={passwordRef}
+                name="password"
+                value={loginData.password}
+                onChange={handleChange}
+                required
+              />
             </label>
             <br />
             <label>
               Type:
-              <select name="userType" value={loginData.userType} onChange={handleChange}>
+              <select
+                name="userType"
+                value={loginData.userType}
+                onChange={handleChange}
+              >
                 <option value="company">Company</option>
                 <option value="admin">Admin</option>
               </select>
@@ -62,12 +115,17 @@ const Home = () => {
             <br />
             <label>
               Remember Me:
-              <input type="checkbox" name="rememberMe" checked={loginData.rememberMe} onChange={handleChange} />
+              <input
+                type="checkbox"
+                name="rememberMe"
+                checked={loginData.rememberMe}
+                onChange={handleChange}
+              />
             </label>
             <br />
             <button type="submit">Sign In</button>
           </form>
-          <div style={{ marginTop: '20px' }}>
+          <div style={{ marginTop: "20px" }}>
             <p>
               <Link to="/forgot-password">Forgot Password</Link>
             </p>
