@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Tab1 from './Tab1';
 import '../Styles/CompanyAuction.css'
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, set, onValue } from "firebase/database";
+
 
 const CompanyAuction = () => {
   const [itemsOnBid, setItemsOnBid] = useState([]);
@@ -25,18 +26,14 @@ const CompanyAuction = () => {
     ],
   };
 
-  useEffect(() => {
-    fetchItemsOnBid();
-    // console.log(itemsOnBid);
-  }, []);
 
-  const fetchItemsOnBid = () => {
+  useEffect(() => {
     const db = getDatabase();
     const itemsRef = ref(db, 'Auctions/Instance1/Items');
     onValue(itemsRef, (snapshot) => {
       const data = snapshot.val();
-      var newItemsOnBid = [];
       if (data) {
+        const newCartItems = [];
         Object.keys(data).forEach((freqBand) => {
           Object.keys(data[freqBand]).forEach((region) => {
             const newItem = {
@@ -44,19 +41,17 @@ const CompanyAuction = () => {
               frequencyBand: freqBand,
               unpaired: data[freqBand][region].unpairedBlocks,
               paired: data[freqBand][region].pairedBlocks,
-              reservePrice: data[freqBand][region].reservedPrice,
-              // epPerBlock: data[freqBand][region].epPerBlock
+              reservedPrice: data[freqBand][region].reservedPrice,
+              epPerBlock: data[freqBand][region].epPerBlock
             };
-            newItemsOnBid.push(newItem);
+            newCartItems.push(newItem);
           });
         });
-        console.log("This", newItemsOnBid);
-        setItemsOnBid(newItemsOnBid);
-        
-        console.log(itemsOnBid);
+        setItemsOnBid(newCartItems);
       }
     });
-  };
+  }, []); // Empty dependency array to run the effect only once on component mount
+  
 
   const handleSubmitRound = () => {
     console.log("Round Submitted!");

@@ -5,7 +5,7 @@ import "../Styles/CompanyAuction.css"
 
 const Tab1 = ({ items }) => {
 
-  const [selectedTab, setSelectedTab] = useState('700 Mhz');
+  const [selectedTab, setSelectedTab] = useState('700');
   const [bid, setBid] = useState('');
   const [wantItem, setWantItem] = useState(false);
   const tabs = [...new Set(items.map(item => item.frequencyBand))];
@@ -23,7 +23,7 @@ const Tab1 = ({ items }) => {
     setWantItem(false);
   }
 
-
+// console.log("this", items)
   return (  
     <div>
     

@@ -143,6 +143,7 @@ function AddItemModal() {
           ))}
         </ul>
       </div>
+      </div>
     </div>
   );
 }
