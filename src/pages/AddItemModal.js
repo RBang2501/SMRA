@@ -41,7 +41,7 @@ function AddItemModal() {
     const db = getDatabase();
     set(ref(db, 'Auctions/' + "Instance1" + "/Items/" + freqBand + "/" + region), {
       unpairedBlocks: unpairedOnSale,
-      pairtedBlocks: pairedOnSale,
+      pairedBlocks: pairedOnSale,
       reservedPrice: reservedPrice,
       epPerBlock: epPerBlock
     });

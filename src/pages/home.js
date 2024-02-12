@@ -15,15 +15,8 @@ const Home = () => {
     try {
       await login(emailRef.current.value, passwordRef.current.value);
       if (emailRef.current.value === "admin@gmail.com") {
-        // You can set isAdmin in the context or use local state
-        // For simplicity, let's use local state here
-        // isAdmin = true;
-        // setLoginData((prevData) => ({
-        //   ...prevData,
-        //   isAdmin: true,
-        // }));
+        navigate("/admin/selectAuction");
       }
-      navigate("/admin-dashboard/Auction");
     } catch {
       console.error("Incorrect Username or Password");
     }

@@ -54,11 +54,11 @@ const SelectAuction = () => {
           <button onClick={() => handleCreateAuction(newAuctionName)} style={{ padding: "5px 10px", borderRadius: "5px", border: "1px solid #007bff", backgroundColor: "#007bff", color: "#fff", cursor: "pointer" }}>Create Auction</button>
           {/* List of already created auctions as cards */}
           {auctions.map((auction) => (
-            <div key={auction.id} style={{ border: "1px solid #ccc", borderRadius: "5px", margin: "10px", padding: "10px", width: "200px" }}>
-              <Link to={`/auction/${auction.id}`} style={{ textDecoration: "none", color: "#333" }}>
+            <Link key={auction.id} to={`/admin/auction/${auction.name}`} style={{ textDecoration: "none", color: "#333" }}>
+              <div style={{ border: "1px solid #ccc", borderRadius: "5px", margin: "10px", padding: "10px", width: "200px" }}>
                 <h3 style={{ margin: "0", fontSize: "16px", textAlign: "center" }}>{auction.name}</h3>
-              </Link>
-            </div>
+              </div>
+            </Link>
           ))}
         </div>
       </div>
