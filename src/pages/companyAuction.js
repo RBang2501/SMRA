@@ -18,6 +18,7 @@ const CompanyAuction = () => {
     ],
     itemsOnBid: [
       { operator: "Delhi", frequencyBand: "700 Mhz", unpaired: 10, paired: 0, reservePrice: 200 },
+      { operator: "Karnataka", frequencyBand: "700 Mhz", unpaired: 20, paired: 0, reservePrice: 200 },
       { operator: "Tamil Nadu", frequencyBand: "800 Mhz", unpaired: 0, paired: 10, reservePrice: 200 },
       { operator: "Kerala", frequencyBand: "900 Mhz", unpaired: 10, paired: 0, reservePrice: 200 },
     ],

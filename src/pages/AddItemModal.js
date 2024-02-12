@@ -111,7 +111,7 @@ function AddItemModal() {
       </div>
 
       {/* Right Box: Cart */}
-      <div className="cart-container">
+      <div className="cart-container" style={{overflow: 'scroll'}}>
         <h2>Cart</h2>
         <ul>
           {cartItemsList.map((item) => (
