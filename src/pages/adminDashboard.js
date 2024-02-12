@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import AddItemModal from './AddItemModal';
+import { getDatabase, ref, update, remove } from "firebase/database";
 
 
 function AdminDashboard() {
@@ -34,7 +35,11 @@ function AdminDashboard() {
     closeModal();
   };
   const deleteAuction = () =>{
-    console.log("Delete Auction");
+    console.log("Deleting Auction !")
+    const db = getDatabase();
+    remove(ref(db, 'Auctions/' + auctionName));
+    console.log("Deleted Auction Successfully !");
+
   }
 
   return (

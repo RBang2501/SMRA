@@ -1,8 +1,7 @@
-// AddItemModal.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './AddItemModal.css';
-import { cartItemsList } from './cartData';
 import '../Styles/AddItemModal.css';
+import { getDatabase, ref, set, onValue } from "firebase/database";
 
 function AddItemModal() {
   const [region, setRegion] = useState('');
@@ -11,22 +10,42 @@ function AddItemModal() {
   const [pairedOnSale, setPairedOnSale] = useState('');
   const [reservedPrice, setReservedPrice] = useState('');
   const [epPerBlock, setEpPerBlock] = useState('');
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    const db = getDatabase();
+    const itemsRef = ref(db, 'Auctions/Instance1/Items');
+    onValue(itemsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const newCartItems = [];
+        Object.keys(data).forEach((freqBand) => {
+          Object.keys(data[freqBand]).forEach((region) => {
+            const newItem = {
+              region: region,
+              freqBand: freqBand,
+              unpairedOnSale: data[freqBand][region].unpairedBlocks,
+              pairedOnSale: data[freqBand][region].pairedBlocks,
+              reservedPrice: data[freqBand][region].reservedPrice,
+              epPerBlock: data[freqBand][region].epPerBlock
+            };
+            newCartItems.push(newItem);
+          });
+        });
+        setCartItems(newCartItems);
+      }
+    });
+  }, []); // Empty dependency array to run the effect only once on component mount
 
   const handleSubmit = () => {
-    const newItem = {
-      id: cartItemsList.length + 1,
-      region,
-      freqBand,
-      unpairedOnSale,
-      pairedOnSale,
-      reservedPrice,
-      epPerBlock,
-    };
-
-    cartItemsList.push(newItem);
+    const db = getDatabase();
+    set(ref(db, 'Auctions/' + "Instance1" + "/Items/" + freqBand + "/" + region), {
+      unpairedBlocks: unpairedOnSale,
+      pairedBlocks: pairedOnSale,
+      reservedPrice: reservedPrice,
+      epPerBlock: epPerBlock
+    });
     clearForm();
-
-    console.log(cartItemsList);
   };
 
   const clearForm = () => {
@@ -39,83 +58,75 @@ function AddItemModal() {
   };
 
   return (
-    <div className="container" style = {{height: '85vh'}}>
-      {/* Left Box: Add Item Details */}
-        <div className="cart-container">
+    <div className="container" style={{ height: '85vh' }}>
+      <div className="cart-container">
         <h2>Add Item</h2>
         <form>
           <div className="input-group">
             <label>Region</label>
             <input
-              type = "text"
+              type="text"
               value={region}
               onChange={(e) => setRegion(e.target.value)}
-              placeholder="Ayodhya"
+              placeholder="Enter Region"
             />
           </div>
-
           <div className="input-group">
             <label>Frequency Band</label>
             <input
-            type = "text"
+              type="text"
               value={freqBand}
               onChange={(e) => setFreqBand(e.target.value)}
-              placeholder="1000 Mhz"
+              placeholder="Enter Frequency Band"
             />
           </div>
-
           <div className="input-group">
             <label>Unpaired (on sale)</label>
             <input
-              type = "text"
+              type="text"
               value={unpairedOnSale}
               onChange={(e) => setUnpairedOnSale(e.target.value)}
-              placeholder="10"
+              placeholder="Enter Unpaired Blocks On Sale"
             />
           </div>
-
           <div className="input-group">
             <label>Paired (on sale)</label>
             <input
-              type = "text"
+              type="text"
               value={pairedOnSale}
               onChange={(e) => setPairedOnSale(e.target.value)}
-              placeholder="20"
+              placeholder="Enter Paired Blocks On Sale"
             />
           </div>
-
           <div className="input-group">
             <label>Reserved Price (per block)</label>
             <input
-              type = "text"
+              type="text"
               value={reservedPrice}
               onChange={(e) => setReservedPrice(e.target.value)}
-              placeholder="3000000"
+              placeholder="Enter Reserved Price"
             />
           </div>
-
           <div className="input-group">
             <label>EP (per block)</label>
             <input
-              type = "text"
+              type="text"
               value={epPerBlock}
               onChange={(e) => setEpPerBlock(e.target.value)}
-              placeholder="2000"
+              placeholder="Enter EP Per Block"
             />
           </div>
-
-          <button type="button" onClick={handleSubmit}>
-            Add Item
-          </button>
+          <button type="button" onClick={handleSubmit}>Add Item</button>
         </form>
       </div>
 
       {/* Right Box: Cart */}
       <div className="cart-container" style={{overflow: 'scroll'}}>
+      <div className="cart-container">
         <h2>Cart</h2>
         <ul>
-          {cartItemsList.map((item) => (
-            <div key={item.id} className="cart-item">
+          {cartItems.map((item, index) => (
+            <div key={index} className="cart-item">
               <strong>Region:</strong> {item.region}
               <br />
               <strong>Freq Band:</strong> {item.freqBand}

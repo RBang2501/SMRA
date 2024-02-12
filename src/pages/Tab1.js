@@ -1,42 +1,4 @@
-// // Tab.js
 
-// import React, { useState } from 'react';
-
-// const Tab = ({ items }) => {
-
-//   const [selectedTab, setSelectedTab] = useState('700 Mhz');
-
-//   const tabs = [...new Set(items.map(item => item.frequencyBand))];
-  
-//   return (
-//     <div>
-//       <div style={{display: 'flex'}}>
-//         {tabs.map(tab => (
-//           <button 
-//             key={tab}
-//             onClick={() => setSelectedTab(tab)}
-//           >
-//             {tab}
-//           </button>
-//         ))}
-//       </div>
-
-//       {items.filter(item => item.frequencyBand === selectedTab).map(item => (
-//         <div key={item.operator}>
-//           <h3>{item.operator}</h3>
-//           <p>Frequency: {item.frequencyBand}</p>
-//           <p>Unpaired: {item.unpaired}</p>
-//           <p>Paired: {item.paired}</p>
-//         </div>
-//       ))}
-
-//     </div>
-//   );
-// }
-
-// export default Tab;
-
-// Tab.js
 
 import React, { useState } from 'react';
 import "../Styles/CompanyAuction.css"
@@ -48,6 +10,7 @@ const Tab1 = ({ items }) => {
   const [wantItem, setWantItem] = useState(false);
   const tabs = [...new Set(items.map(item => item.frequencyBand))];
 
+  
   const handleBidChange = (e) => {
     setBid(e.target.value);
   }
@@ -60,7 +23,6 @@ const Tab1 = ({ items }) => {
     setWantItem(false);
   }
 
-  //...tabs buttons
 
   return (  
     <div>
