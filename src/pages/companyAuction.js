@@ -17,13 +17,13 @@ const CompanyAuction = () => {
       { operator: "RJio", region: "Delhi", holdingUP: 10, holdingP: 0, year: 2022 },
       { operator: "RJio", region: "Tamil Nadu", holdingUP: 0, holdingP: 10, year: 2021 },
       { operator: "RJio", region: "Kerala", holdingUP: 10, holdingP: 0, year: 2016 },
-    ],
-    itemsOnBid: [
-      { operator: "Delhi", frequencyBand: "700 Mhz", unpaired: 10, paired: 0, reservePrice: 200 },
-      { operator: "Karnataka", frequencyBand: "700 Mhz", unpaired: 20, paired: 0, reservePrice: 200 },
-      { operator: "Tamil Nadu", frequencyBand: "800 Mhz", unpaired: 0, paired: 10, reservePrice: 200 },
-      { operator: "Kerala", frequencyBand: "900 Mhz", unpaired: 10, paired: 0, reservePrice: 200 },
-    ],
+    ]
+    // itemsOnBid: [
+    //   { operator: "Delhi", frequencyBand: "700 Mhz", unpaired: 10, paired: 0, reservePrice: 200 },
+    //   { operator: "Karnataka", frequencyBand: "700 Mhz", unpaired: 20, paired: 0, reservePrice: 200 },
+    //   { operator: "Tamil Nadu", frequencyBand: "800 Mhz", unpaired: 0, paired: 10, reservePrice: 200 },
+    //   { operator: "Kerala", frequencyBand: "900 Mhz", unpaired: 10, paired: 0, reservePrice: 200 },
+    // ],
   };
 
 
