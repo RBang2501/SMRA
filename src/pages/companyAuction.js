@@ -88,6 +88,61 @@ const CompanyAuction = () => {
       </div> 
     </div>
   );
+
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [timerExpired, setTimerExpired] = useState(false);
+  useEffect(() => {
+    // Retrieve start time from Firebase
+    // const timerDataRef = database.ref('timerData');
+    const db = getDatabase();
+    const itemsRef= ref(db, 'Auctions/Instance1/timerData');
+    onValue(itemsRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log(data);
+      const intervalId = setInterval(() => {
+        const startTime = data.start || 0;
+        const currentTime = Date.now();
+        const elapsedMilliseconds = currentTime - startTime;
+        const remainingMilliseconds = Math.max(0, 60 * 1000 * data.time - elapsedMilliseconds);
+        setElapsedTime(remainingMilliseconds);
+
+        if (remainingMilliseconds > 0) {
+          setTimerExpired(false);
+          // clearInterval(intervalId);
+        }
+
+        if (remainingMilliseconds === 0) {
+          setTimerExpired(true);
+          clearInterval(intervalId);
+        }
+
+      }, 1000)
+      return () => {
+        // Stop the interval when the component unmounts
+        clearInterval(intervalId);
+      };
+    })
+
+    // Update the elapsed time when the data changes
+    // const onDataChange = (snapshot) => {
+    //   const startTime = snapshot.val()?.startTime || 0;
+    //   const currentTime = Date.now();
+    //   const newElapsedTime = currentTime - startTime;
+    //   setElapsedTime(newElapsedTime);
+    // };
+
+    // timerDataRef.on('value', onDataChange);
+    // return () => {
+    //   // Stop listening to changes when the component unmounts
+    //   timerDataRef.off('value', onDataChange);
+    // };
+  }, []); // Empty dependency array ensures this effect runs once
+
+  const minutes = Math.floor(elapsedTime / 1000 / 60);
+  const seconds = Math.floor((elapsedTime / 1000) % 60);
+
+
+
           // console.log("this", itemsOnBid)
   return (
     <div style={{ display: "flex", justifyContent: "space-between"}}>
@@ -130,11 +185,14 @@ const CompanyAuction = () => {
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         <h1>Items On Bid</h1>
         </div>
+        <div class="timer-box">
+          <span id="minutes">{minutes}</span>:<span id="seconds">{seconds}</span>
+        </div>
         <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
           <Tab1 items={itemsOnBid} />
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <button onClick={handleSubmitRound}>Submit Round</button>
+          <button disabled={timerExpired} onClick={handleSubmitRound}>Submit Round</button>
         </div>
       </div>
     </div>

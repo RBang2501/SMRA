@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import AddItemModal from './AddItemModal';
-import { getDatabase, ref, update, remove } from "firebase/database";
+import { getDatabase, ref, set, update, remove } from "firebase/database";
 
 
 function AdminDashboard() {
@@ -42,10 +42,20 @@ function AdminDashboard() {
 
   }
 
+    const handleStartTimer = () => {
+    const db = getDatabase();
+    const startTime = Date.now();
+    set(ref(db, 'Auctions/' + "Instance1" + "/timerData"), {
+      start: startTime,
+      time: 1
+    });
+  };
+
   return (
     <div className="admin-dashboard">
       <h2>Auction Instance: {auctionName}</h2>
       <button onClick={deleteAuction} style={{ position: 'fixed', top: '10%', right: '20px', transform: 'translateY(-50%)' }}>Delete Auction</button>
+      <button onClick={handleStartTimer} style={{ marginLeft: '50px' }}>Start Timer</button>
       <button onClick={openModal} style={{ marginLeft: '50px' }}>Add Item</button>
      
       {isModalOpen && <AddItemModal onAdd={addItem} onCancel={closeModal} />}
