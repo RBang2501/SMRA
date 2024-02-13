@@ -7,6 +7,7 @@ import CompanyAuction from "./pages/companyAuction";
 import CompanyDashboard from "./pages/CompanyDashboard";
 import { AuthProvider} from "./pages/authContext"; 
 import SelectAuction from "./pages/selectAuction";
+import CompanyDetails from "./pages/companyDetails"
 
 function App() {
   return (
@@ -16,9 +17,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Home />} />
           <Route path="/admin/auction/:auctionName" element={<AdminDashboard />} />
-          <Route path="/admin/selectAuction" element={<SelectAuction />} />
-          <Route path="/:companyName/selectAuction" element={<SelectAuction />} />
+          <Route path="/selectAuction/:companyName" element={<SelectAuction />} />
           <Route path="/company-dashboard/:companyName" element={<CompanyDashboard />} />
+          <Route path="/auction/:auctionName/companyDetails/:companyName" element={<CompanyDetails/>} />
           {/* <Route path="/admin-dashboard" element={<AdminDashboard />} /> */}
           <Route path="/companyAuction" element={<CompanyAuction />} />
           {/* <Route path="/company-dashboard" element={<CompanyDashboard />} /> */}

@@ -32,7 +32,7 @@ const Home = () => {
       const companyName = extractCompanyName(email);
 
       // Navigate to the appropriate page based on company
-      navigate(`/${companyName}/selectAuction`);
+      navigate(`selectAuction/${companyName}`);
     } catch (error) {
       console.error("Login failed:", error);
       window.alert("Incorrect username or password. Please try again.");
