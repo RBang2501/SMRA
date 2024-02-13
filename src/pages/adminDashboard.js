@@ -63,7 +63,52 @@ function AdminDashboard() {
       time: 1,
       round: round
     });
+    newRound();
     }
+
+    const newRound = () => {
+      const db = getDatabase();
+      const refPath = 'Auctions/Instance1/Items';
+      const itemsRef = ref(db, refPath);
+      const newCartItems = [];
+      get((itemsRef)).then((snapshot) => {
+        const data = snapshot.val();
+        Object.keys(data).forEach((freqBand) => {
+          Object.keys(data[freqBand]).forEach((region) => {
+            const newItem = {
+              operator: region,
+              frequencyBand: freqBand,
+              unpaired: data[freqBand][region].unpairedBlocks,
+              paired: data[freqBand][region].pairedBlocks,
+              reservedPrice: data[freqBand][region].reservedPrice,
+              epPerBlock: data[freqBand][region].epPerBlock,
+              qty: 0
+            };
+            newCartItems.push(newItem);
+          });
+        });
+      })
+      const refPath2 = 'Auctions/Instance1/companyHistory'
+      const itemsRef2 = ref(db, refPath2);
+      get((itemsRef2)).then((snapshot) => {
+        const data = snapshot.val();
+        const rounditem = {
+          round : round,
+          data : newCartItems
+        }
+        data["companyMapping"]["airtel"].push(rounditem);
+        data["companyMapping"]["rjio"].push(rounditem);
+        data["companyMapping"]["att"].push(rounditem);
+        data["companyMapping"]["bsnl"].push(rounditem);
+        data["companyMapping"]["vi"].push(rounditem);
+        console.log(data["companyMapping"]);
+        const companyMapping = data["companyMapping"]
+        set(ref(db, 'Auctions/' + "Instance1" + "/companyHistory"), {
+          companyMapping
+        });
+      })
+    }
+
     const handleInit = ()=>{
       InitCompanyHistory();
     }
