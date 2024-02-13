@@ -2,13 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import AddItemModal from './AddItemModal';
-import { getDatabase, ref, set, update, remove } from "firebase/database";
+import { getDatabase, ref, set, update, remove, onValue } from "firebase/database";
 
 
 function AdminDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [items, setItems] = useState([]);
   const [auctionName, setAuctionName] = useState('Default Auction Name');
+  const [round, setRound] = useState(1);  
   const location = useLocation();
   const [isInitCompany, setIsInitCompany] = useState(false);
   useEffect(() => {
@@ -42,12 +43,26 @@ function AdminDashboard() {
 
   }
 
+
+  // useEffect(() => {
+  //   const db = getDatabase();
+  //   const itemsRef = ref(db, 'Auctions/Instance1/timerData');
+  //   onValue(itemsRef, (snapshot) => {
+  //     const data = snapshot.val();
+  //     const round = data.round;
+  //     setRound(round);
+  //   });
+  // }, []); // Empty dependency array to run the effect only once on component mount
+
     const handleStartTimer = () => {
     const db = getDatabase();
     const startTime = Date.now();
+    setRound(round+1);
+    console.log(round);
     set(ref(db, 'Auctions/' + "Instance1" + "/timerData"), {
       start: startTime,
-      time: 1
+      time: 1,
+      round: round
     });
     }
     const handleInit = ()=>{

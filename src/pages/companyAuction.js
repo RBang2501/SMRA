@@ -8,6 +8,7 @@ import { getDatabase, ref, set, onValue } from "firebase/database";
 
 const CompanyAuction = () => {
   const [itemsOnBid, setItemsOnBid] = useState([]);
+  
 
   const companyDetails = {
     companyName: "Sample Company",
@@ -91,6 +92,8 @@ const CompanyAuction = () => {
 
   const [elapsedTime, setElapsedTime] = useState(0);
   const [timerExpired, setTimerExpired] = useState(false);
+  const [round, setRound] = useState(0);
+
   useEffect(() => {
     const db = getDatabase();
     const itemsRef= ref(db, 'Auctions/Instance1/timerData');
@@ -103,6 +106,7 @@ const CompanyAuction = () => {
         const elapsedMilliseconds = currentTime - startTime;
         const remainingMilliseconds = Math.max(0, 60 * 1000 * data.time - elapsedMilliseconds);
         setElapsedTime(remainingMilliseconds);
+        setRound(data.round);
 
         if (remainingMilliseconds > 0) {
           setTimerExpired(false);
@@ -185,6 +189,9 @@ const CompanyAuction = () => {
         </div>
         <div class="timer-box">
           <span id="minutes">{minutes}</span>:<span id="seconds">{seconds}</span>
+        </div>
+        <div class="timer-box">
+          <span id="minutes">{round}</span>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
           <Tab1 items={itemsOnBid} />
