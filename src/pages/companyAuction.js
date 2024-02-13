@@ -92,8 +92,6 @@ const CompanyAuction = () => {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [timerExpired, setTimerExpired] = useState(false);
   useEffect(() => {
-    // Retrieve start time from Firebase
-    // const timerDataRef = database.ref('timerData');
     const db = getDatabase();
     const itemsRef= ref(db, 'Auctions/Instance1/timerData');
     onValue(itemsRef, (snapshot) => {

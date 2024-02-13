@@ -10,7 +10,7 @@ function AdminDashboard() {
   const [items, setItems] = useState([]);
   const [auctionName, setAuctionName] = useState('Default Auction Name');
   const location = useLocation();
-
+  const [isInitCompany, setIsInitCompany] = useState(false);
   useEffect(() => {
     // Extract auctionName from the path parameters
     const { pathname } = location;
@@ -49,6 +49,36 @@ function AdminDashboard() {
       start: startTime,
       time: 1
     });
+    }
+    const handleInit = ()=>{
+      if(!isInitCompany){
+        console.log("Companies initialised");
+        InitCompanyHistory();
+        setIsInitCompany(true);
+      }
+    }
+    const InitCompanyHistory = () => {
+      const db = getDatabase();
+      const startTime = Date.now();
+      const companyMapping = {
+        'rjio': [],
+        'airtel': [],
+        'vi': [],
+        'att': [],
+        'bsnl': []
+      };
+      const refPath = 'Auctions/Instance1/companyHistory'
+      db.ref(refPath).once('value', (snapshot) => {
+        const companyMapping = snapshot.val();
+        if (companyMapping == null) {
+          set(ref(db, 'Auctions/' + "Instance1" + "/companyHistory"), {
+            companyMapping
+          });
+        }
+        else{
+          console.log("Already set");
+        }
+      })
   };
 
   return (
@@ -57,7 +87,7 @@ function AdminDashboard() {
       <button onClick={deleteAuction} style={{ position: 'fixed', top: '10%', right: '20px', transform: 'translateY(-50%)' }}>Delete Auction</button>
       <button onClick={handleStartTimer} style={{ marginLeft: '50px' }}>Start Timer</button>
       <button onClick={openModal} style={{ marginLeft: '50px' }}>Add Item</button>
-     
+      <button onClick={handleInit} style={{marginLeft:'50px'}}>Init Company History</button>
       {isModalOpen && <AddItemModal onAdd={addItem} onCancel={closeModal} />}
       
     </div>
@@ -65,22 +95,3 @@ function AdminDashboard() {
 }
 
 export default AdminDashboard;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
