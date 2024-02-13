@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import AddItemModal from './AddItemModal';
-import { getDatabase, ref, set, update, remove, onValue } from "firebase/database";
+import { getDatabase, ref, set, update, remove, onValue, get } from "firebase/database";
 
 
 function AdminDashboard() {
@@ -11,7 +11,6 @@ function AdminDashboard() {
   const [auctionName, setAuctionName] = useState('Default Auction Name');
   const [round, setRound] = useState(1);  
   const location = useLocation();
-  const [isInitCompany, setIsInitCompany] = useState(false);
   useEffect(() => {
     // Extract auctionName from the path parameters
     const { pathname } = location;
@@ -66,15 +65,11 @@ function AdminDashboard() {
     });
     }
     const handleInit = ()=>{
-      if(!isInitCompany){
-        console.log("Companies initialised");
-        InitCompanyHistory();
-        setIsInitCompany(true);
-      }
+      InitCompanyHistory();
     }
-    const InitCompanyHistory = () => {
+    const handleDelete = ()=>{
       const db = getDatabase();
-      const startTime = Date.now();
+      const refPath = 'Auctions/Instance1/companyHistory';
       const companyMapping = {
         'rjio': [],
         'airtel': [],
@@ -82,10 +77,27 @@ function AdminDashboard() {
         'att': [],
         'bsnl': []
       };
+      set(ref(db, 'Auctions/' + "Instance1" + "/companyHistory"), {
+        companyMapping
+      });
+      console.log("History removed");
+    }
+    const InitCompanyHistory = () => {
+      const db = getDatabase();
+      const startTime = Date.now();
+      const companyMapping = {
+        'rjio': [{"0" : "INIT"}],
+        'airtel': [{"0" : "INIT"}],
+        'vi': [{"0" : "INIT"}],
+        'att': [{"0" : "INIT"}],
+        'bsnl': [{"0" : "INIT"}]
+      };
       const refPath = 'Auctions/Instance1/companyHistory'
-      db.ref(refPath).once('value', (snapshot) => {
-        const companyMapping = snapshot.val();
-        if (companyMapping == null) {
+      const itemsRef = ref(db, refPath);
+      get((itemsRef)).then((snapshot) => {
+        const data = snapshot.val();
+        if(!data){
+          console.log("init...done!")
           set(ref(db, 'Auctions/' + "Instance1" + "/companyHistory"), {
             companyMapping
           });
@@ -94,6 +106,7 @@ function AdminDashboard() {
           console.log("Already set");
         }
       })
+      
   };
 
   return (
@@ -103,6 +116,7 @@ function AdminDashboard() {
       <button onClick={handleStartTimer} style={{ marginLeft: '50px' }}>Start Timer</button>
       <button onClick={openModal} style={{ marginLeft: '50px' }}>Add Item</button>
       <button onClick={handleInit} style={{marginLeft:'50px'}}>Init Company History</button>
+      <button onClick={handleDelete} style={{marginLeft:'50px'}}>Delete Company History</button>
       {isModalOpen && <AddItemModal onAdd={addItem} onCancel={closeModal} />}
       
     </div>
