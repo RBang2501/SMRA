@@ -1,16 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import { getDatabase, ref, set, onValue } from "firebase/database";
+import { useAuth } from "./authContext";
+
 
 const SelectAuction = () => {
   const [newAuctionName, setNewAuctionName] = useState("");
   const [auctions, setAuctions] = useState([]);
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch existing auctions when the component mounts
-    handleReadAuctions();
-  }, []);
-
+    console.log(currentUser);
+    if (!currentUser) {
+      navigate(`/`) // Redirect to login page
+    } else {
+      handleReadAuctions(); // Fetch auctions only when user is logged in
+    }
+  }, [currentUser]);
+  
   const handleCreateAuction = (name) => {
     const db = getDatabase();
     set(ref(db, 'Auctions/' + name), {
@@ -49,7 +57,6 @@ const SelectAuction = () => {
             style={{ marginBottom: "10px", padding: "5px", borderRadius: "5px", border: "1px solid #ccc" }}
           />
           {/* Button to read existing auctions */}
-          <button onClick={() => handleReadAuctions()} style={{ padding: "5px 10px", borderRadius: "5px", border: "1px solid #007bff", backgroundColor: "#007bff", color: "#fff", cursor: "pointer" }}>Read Auction</button>
           {/* Button to create a new auction */}
           <button onClick={() => handleCreateAuction(newAuctionName)} style={{ padding: "5px 10px", borderRadius: "5px", border: "1px solid #007bff", backgroundColor: "#007bff", color: "#fff", cursor: "pointer" }}>Create Auction</button>
           {/* List of already created auctions as cards */}
