@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./authContext";
 import '../Styles/LoginForm.css'; // Import custom CSS file
@@ -9,17 +9,51 @@ const Home = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
 
+  const { currentUser } = useAuth();
+
+
+  useEffect(() => {
+    console.log(currentUser);
+    if (!currentUser) {
+      navigate(`/`);
+    }
+  }, [currentUser]);
+
   async function handleSubmitLogin(e) {
     e.preventDefault();
 
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
+
     try {
-      await login(emailRef.current.value, passwordRef.current.value);
-      if (emailRef.current.value === "admin@gmail.com") {
-        navigate("/admin/selectAuction");
-      }
-    } catch {
-      console.error("Incorrect Username or Password");
+      await login(email, password);
+
+      // Extract companyName from email
+      const companyName = extractCompanyName(email);
+
+      // Navigate to the appropriate page based on company
+      navigate(`/${companyName}/selectAuction`);
+    } catch (error) {
+      console.error("Login failed:", error);
+      window.alert("Incorrect username or password. Please try again.");
     }
+  }
+
+  // Function to extract company name from email
+  function extractCompanyName(email) {
+    // Split the email address at the "@" symbol
+    const parts = email.split("@");
+    
+    // Get the first part of the split (before the "@")
+    const companyNameWithEmailProvider = parts[0];
+    
+    // Split the first part of the email at the "."
+    const companyParts = companyNameWithEmailProvider.split(".");
+    
+    // Get the first part of the split (company name)
+    const companyName = companyParts[0];
+    
+    return companyName;
   }
 
   return (

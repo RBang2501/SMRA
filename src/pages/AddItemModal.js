@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './AddItemModal.css';
 import '../Styles/AddItemModal.css';
+import { Link, useNavigate } from "react-router-dom";
 import { getDatabase, ref, set, onValue } from "firebase/database";
+import { useAuth } from "./authContext";
 
 function AddItemModal() {
   const [region, setRegion] = useState('');
@@ -11,8 +13,15 @@ function AddItemModal() {
   const [reservedPrice, setReservedPrice] = useState('');
   const [epPerBlock, setEpPerBlock] = useState('');
   const [cartItems, setCartItems] = useState([]);
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(currentUser);
+    if (!currentUser) {
+      navigate(`/`) // Redirect to login page{}
+    } 
+    else{
     const db = getDatabase();
     const itemsRef = ref(db, 'Auctions/Instance1/Items');
     onValue(itemsRef, (snapshot) => {
@@ -35,6 +44,7 @@ function AddItemModal() {
         setCartItems(newCartItems);
       }
     });
+    }
   }, []); // Empty dependency array to run the effect only once on component mount
 
   const handleSubmit = () => {

@@ -1,8 +1,5 @@
-// authContext.js
-import React, { useState, useContext, useEffect } from "react";
-// import firebase from "firebase/compat/app";
-// import "firebase/compat/auth";
-import {auth} from "./firebase"
+import React, { useState, useEffect, useContext} from "react";
+import { auth } from "./firebase";
 
 const AuthContext = React.createContext();
 
@@ -19,25 +16,21 @@ export function AuthProvider({ children }) {
       setCurrentUser(user);
       setLoading(false);
     });
-
+  
     return unsubscribe;
   }, []);
+  
 
-  function login(email, password) {
-    console.log("Firebase Starting !")
-    auth.signInWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-    // Signed in
-      var user = userCredential.user;
-    // ...
-      console.log("Firebase Successfull !");
-    })
-    .catch((error) => {
-      // var errorCode = error.code;
-      // var errorMessage = error.message;
-      console.log("Nahi Hua + ", error);
-    });
-    // return auth.signInWithEmailAndPassword(email, password);
+  async function login(email, password) {
+    try {
+      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      const user = userCredential.user;
+      setCurrentUser(user);
+      console.log("Login successful!");
+    } catch (error) {
+      console.error("Login failed:", error);
+      throw error;
+    }
   }
 
   function logout() {
