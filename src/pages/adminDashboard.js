@@ -127,6 +127,16 @@ function AdminDashboard() {
       });
       console.log("History removed");
     }
+    const resetRound = () => {
+      const db = getDatabase();
+      const itemsRef= ref(db, 'Auctions/Instance1/timerData');
+      const startTime = Date.now();
+      set(ref(db, 'Auctions/' + "Instance1" + "/timerData"), {
+        start: startTime,
+        time: 1,
+        round: 0
+      });
+    }
     const InitCompanyHistory = () => {
       const db = getDatabase();
       const startTime = Date.now();
@@ -162,6 +172,8 @@ function AdminDashboard() {
       <button onClick={openModal} style={{ marginLeft: '50px' }}>Add Item</button>
       <button onClick={handleInit} style={{marginLeft:'50px'}}>Init Company History</button>
       <button onClick={handleDelete} style={{marginLeft:'50px'}}>Delete Company History</button>
+      <button onClick={resetRound} style={{marginLeft:'50px'}}>Round : 0</button>
+
       {isModalOpen && <AddItemModal onAdd={addItem} onCancel={closeModal} />}
       
     </div>

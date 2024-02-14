@@ -8,7 +8,8 @@ import { getDatabase, ref, set, onValue } from "firebase/database";
 
 const CompanyAuction = () => {
   const [itemsOnBid, setItemsOnBid] = useState([]);
-  
+  const [purchases, setPurchases] = useState([]);
+
 
   const companyDetails = {
     companyName: "Sample Company",
@@ -138,7 +139,12 @@ const CompanyAuction = () => {
   const minutes = Math.floor(elapsedTime / 1000 / 60);
   const seconds = Math.floor((elapsedTime / 1000) % 60);
 
-
+  useEffect(()=>{
+    console.log(purchases)
+  },[purchases])
+  const handlePurchase = (data)=>{
+    setPurchases(data)
+  }
 
           // console.log("this", itemsOnBid)
   return (
@@ -189,7 +195,7 @@ const CompanyAuction = () => {
           <span id="minutes">{round}</span>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
-          <Tab1 items={itemsOnBid} />
+          <Tab1 onPurchase ={handlePurchase} items={itemsOnBid} />
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <button disabled={timerExpired} onClick={handleSubmitRound}>Submit Round</button>
