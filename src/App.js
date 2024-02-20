@@ -21,7 +21,7 @@ function App() {
           <Route path="/company-dashboard/:companyName" element={<CompanyDashboard />} />
           <Route path="/auction/:auctionName/companyDetails/:companyName" element={<CompanyDetails/>} />
           {/* <Route path="/admin-dashboard" element={<AdminDashboard />} /> */}
-          <Route path="/companyAuction" element={<CompanyAuction />} />
+          <Route path="/auction/:auctionName/companyAuction/:companyName" element={<CompanyAuction />} />
           {/* <Route path="/company-dashboard" element={<CompanyDashboard />} /> */}
         </Routes>
       </Router>
