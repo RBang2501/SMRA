@@ -3,10 +3,12 @@
 import React, { useState, useEffect } from "react";
 import Tab1 from './Tab1';
 import '../Styles/CompanyAuction.css'
-import { getDatabase, ref, set, onValue } from "firebase/database";
+import { getDatabase, ref, get, set, onValue } from "firebase/database";
+import { useParams } from 'react-router-dom';
 
 
 const CompanyAuction = () => {
+  const { companyName } = useParams();
   const [itemsOnBid, setItemsOnBid] = useState([]);
   const [purchases, setPurchases] = useState([]);
 
@@ -51,6 +53,40 @@ const CompanyAuction = () => {
   
 
   const handleSubmitRound = () => {
+    console.log(purchases);
+    console.log(companyName);
+    const db = getDatabase();
+    const refPath2 = 'Auctions/Instance1/companyHistory';
+    const itemsRef2 = ref(db, refPath2);
+    get((itemsRef2)).then((snapshot) => {
+      const data = snapshot.val();
+      console.log(data["companyMapping"][companyName][round]);
+      for (let i = 0; i < data["companyMapping"][companyName][round].length; i++) {
+        const freqBand = data["companyMapping"][companyName][round][i]["frequencyBand"];
+        const region = data["companyMapping"][companyName][round][i]["operator"];
+          for (let j = 0; j< purchases.length; j++) {
+            if (purchases[j]["band"] === freqBand && purchases[j]["op"] === region) {
+              data["companyMapping"][companyName][round][i]["qty"]=Number(purchases[j]["bid"]);
+            }
+          }
+        }
+      console.log(data["companyMapping"][companyName]); 
+      // 
+      // const rounditem = {
+      //   round : round,
+      //   data : newCartItems
+      // }
+      // data["companyMapping"]["airtel"].push(newCartItems);
+      // data["companyMapping"]["rjio"].push(newCartItems);
+      // data["companyMapping"]["att"].push(newCartItems);
+      // data["companyMapping"]["bsnl"].push(newCartItems);
+      // data["companyMapping"]["vi"].push(newCartItems);
+      // console.log(data["companyMapping"]);
+      const companyMapping = data["companyMapping"];
+      set(ref(db, 'Auctions/' + "Instance1" + "/companyHistory"), {
+        companyMapping
+      });
+    })
     console.log("Round Submitted!");
   };
 
@@ -140,7 +176,7 @@ const CompanyAuction = () => {
   const seconds = Math.floor((elapsedTime / 1000) % 60);
 
   useEffect(()=>{
-    console.log(purchases)
+    // console.log(purchases)
   },[purchases])
   const handlePurchase = (data)=>{
     setPurchases(data)
