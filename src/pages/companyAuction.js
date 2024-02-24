@@ -143,6 +143,7 @@ const CompanyAuction = () => {
     console.log(purchases)
   },[purchases])
   const handlePurchase = (data)=>{
+
     setPurchases(data)
   }
 
