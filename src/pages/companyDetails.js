@@ -33,7 +33,7 @@ const CompanyDetails = () => {
           bankGuarantee: bankGuaranteeInput,
           totalEligibilityPoints: eligibilityPoints,
       });
-    navigate(`/auction/${auctionName}/companyAuction/${companyName}`);
+    navigate(`/auction/{auctionName}/companyAuction/${companyName}`);
   };
 
   return (
