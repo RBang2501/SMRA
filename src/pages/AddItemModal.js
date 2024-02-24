@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './AddItemModal.css';
 import '../Styles/AddItemModal.css';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getDatabase, ref, set, onValue } from "firebase/database";
 import { useAuth } from "./authContext";
 
 function AddItemModal() {
+  const { auctionName } = useParams();
   const [region, setRegion] = useState('');
   const [freqBand, setFreqBand] = useState('');
   const [unpairedOnSale, setUnpairedOnSale] = useState('');
@@ -15,41 +16,41 @@ function AddItemModal() {
   const [cartItems, setCartItems] = useState([]);
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+  console.log(auctionName);
 
   useEffect(() => {
     console.log(currentUser);
     if (!currentUser) {
       navigate(`/`) // Redirect to login page{}
-    } 
-    else{
-    const db = getDatabase();
-    const itemsRef = ref(db, 'Auctions/Instance1/Items');
-    onValue(itemsRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const newCartItems = [];
-        Object.keys(data).forEach((freqBand) => {
-          Object.keys(data[freqBand]).forEach((region) => {
-            const newItem = {
-              region: region,
-              freqBand: freqBand,
-              unpairedOnSale: data[freqBand][region].unpairedBlocks,
-              pairedOnSale: data[freqBand][region].pairedBlocks,
-              reservedPrice: data[freqBand][region].reservedPrice,
-              epPerBlock: data[freqBand][region].epPerBlock
-            };
-            newCartItems.push(newItem);
+    } else {
+      const db = getDatabase();
+      const itemsRef = ref(db, `Auctions/${auctionName}/Items`);
+      onValue(itemsRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          const newCartItems = [];
+          Object.keys(data).forEach((freqBand) => {
+            Object.keys(data[freqBand]).forEach((region) => {
+              const newItem = {
+                region: region,
+                freqBand: freqBand,
+                unpairedOnSale: data[freqBand][region].unpairedBlocks,
+                pairedOnSale: data[freqBand][region].pairedBlocks,
+                reservedPrice: data[freqBand][region].reservedPrice,
+                epPerBlock: data[freqBand][region].epPerBlock
+              };
+              newCartItems.push(newItem);
+            });
           });
-        });
-        setCartItems(newCartItems);
-      }
-    });
+          setCartItems(newCartItems);
+        }
+      });
     }
   }, []); // Empty dependency array to run the effect only once on component mount
 
   const handleSubmit = () => {
     const db = getDatabase();
-    set(ref(db, 'Auctions/' + "Instance1" + "/Items/" + freqBand + "/" + region), {
+    set(ref(db, `Auctions/${auctionName}/Items/${freqBand}/${region}`), {
       unpairedBlocks: unpairedOnSale,
       pairedBlocks: pairedOnSale,
       reservedPrice: reservedPrice,
@@ -66,7 +67,6 @@ function AddItemModal() {
     setReservedPrice('');
     setEpPerBlock('');
   };
-
 
   return (
     <div className="container" style={{ height: '85vh' }}>
@@ -132,28 +132,28 @@ function AddItemModal() {
       </div>
 
       {/* Right Box: Cart */}
-      <div className="cart-container" style={{overflow: 'scroll'}}>
-      <div className="cart-container">
-        <h2>Cart</h2>
-        <ul>
-          {cartItems.map((item, index) => (
-            <div key={index} className="cart-item">
-              <strong>Region:</strong> {item.region}
-              <br />
-              <strong>Freq Band:</strong> {item.freqBand}
-              <br />
-              <strong>Unpaired (on sale):</strong> {item.unpairedOnSale}
-              <br />
-              <strong>Paired (on sale):</strong> {item.pairedOnSale}
-              <br />
-              <strong>Reserved Price:</strong> {item.reservedPrice}
-              <br />
-              <strong>EP:</strong> {item.epPerBlock}
-              <br />
-            </div>
-          ))}
-        </ul>
-      </div>
+      <div className="cart-container" style={{ overflow: 'scroll' }}>
+        <div className="cart-container">
+          <h2>Cart</h2>
+          <ul>
+            {cartItems.map((item, index) => (
+              <div key={index} className="cart-item">
+                <strong>Region:</strong> {item.region}
+                <br />
+                <strong>Freq Band:</strong> {item.freqBand}
+                <br />
+                <strong>Unpaired (on sale):</strong> {item.unpairedOnSale}
+                <br />
+                <strong>Paired (on sale):</strong> {item.pairedOnSale}
+                <br />
+                <strong>Reserved Price:</strong> {item.reservedPrice}
+                <br />
+                <strong>EP:</strong> {item.epPerBlock}
+                <br />
+              </div>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

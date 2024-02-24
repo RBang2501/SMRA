@@ -1,8 +1,7 @@
-// AdminDashboard.js
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import AddItemModal from './AddItemModal';
-import { getDatabase, ref, set, update, remove, onValue, get } from "firebase/database";
+import { getDatabase, ref, set, remove, get } from "firebase/database";
 
 
 function AdminDashboard() {
@@ -37,131 +36,115 @@ function AdminDashboard() {
   const deleteAuction = () =>{
     console.log("Deleting Auction !")
     const db = getDatabase();
-    remove(ref(db, 'Auctions/' + auctionName));
+    remove(ref(db, `Auctions/${auctionName}`));
     console.log("Deleted Auction Successfully !");
-
   }
 
-
-  // useEffect(() => {
-  //   const db = getDatabase();
-  //   const itemsRef = ref(db, 'Auctions/Instance1/timerData');
-  //   onValue(itemsRef, (snapshot) => {
-  //     const data = snapshot.val();
-  //     const round = data.round;
-  //     setRound(round);
-  //   });
-  // }, []); // Empty dependency array to run the effect only once on component mount
-
-    const handleStartTimer = () => {
+  const handleStartTimer = () => {
     const db = getDatabase();
     const startTime = Date.now();
-    setRound(round+1);
+    setRound(round + 1);
     console.log(round);
-    set(ref(db, 'Auctions/' + "Instance1" + "/timerData"), {
+    set(ref(db, `Auctions/${auctionName}/timerData`), {
       start: startTime,
       time: 1,
       round: round
     });
     newRound();
-    }
+  }
 
-    const newRound = () => {
-      const db = getDatabase();
-      const refPath = 'Auctions/Instance1/Items';
-      const itemsRef = ref(db, refPath);
-      const newCartItems = [];
-      get((itemsRef)).then((snapshot) => {
-        const data = snapshot.val();
-        Object.keys(data).forEach((freqBand) => {
-          Object.keys(data[freqBand]).forEach((region) => {
-            const newItem = {
-              operator: region,
-              frequencyBand: freqBand,
-              unpaired: data[freqBand][region].unpairedBlocks,
-              paired: data[freqBand][region].pairedBlocks,
-              reservedPrice: data[freqBand][region].reservedPrice,
-              epPerBlock: data[freqBand][region].epPerBlock,
-              qty: 0
-            };
-            newCartItems.push(newItem);
-          });
+  const newRound = () => {
+    const db = getDatabase();
+    const refPath = `Auctions/${auctionName}/Items`;
+    const itemsRef = ref(db, refPath);
+    const newCartItems = [];
+    get((itemsRef)).then((snapshot) => {
+      const data = snapshot.val();
+      Object.keys(data).forEach((freqBand) => {
+        Object.keys(data[freqBand]).forEach((region) => {
+          const newItem = {
+            operator: region,
+            frequencyBand: freqBand,
+            unpaired: data[freqBand][region].unpairedBlocks,
+            paired: data[freqBand][region].pairedBlocks,
+            reservedPrice: data[freqBand][region].reservedPrice,
+            epPerBlock: data[freqBand][region].epPerBlock,
+            qty: 0
+          };
+          newCartItems.push(newItem);
         });
-      })
-      const refPath2 = 'Auctions/Instance1/companyHistory'
-      const itemsRef2 = ref(db, refPath2);
-      get((itemsRef2)).then((snapshot) => {
-        const data = snapshot.val();
-        // const rounditem = {
-        //   round : round,
-        //   data : newCartItems
-        // }
-        data["companyMapping"]["airtel"][round] = newCartItems;
-        data["companyMapping"]["rjio"][round] = newCartItems;
-        data["companyMapping"]["att"][round] = newCartItems;
-        data["companyMapping"]["bsnl"][round] = newCartItems;
-        data["companyMapping"]["vi"][round] = newCartItems;
-        console.log(data["companyMapping"]);
-        const companyMapping = data["companyMapping"]
-        set(ref(db, 'Auctions/' + "Instance1" + "/companyHistory"), {
-          companyMapping
-        });
-      })
-    }
-
-    const handleInit = ()=>{
-      InitCompanyHistory();
-    }
-    const handleDelete = ()=>{
-      const db = getDatabase();
-      const refPath = 'Auctions/Instance1/companyHistory';
-      const companyMapping = {
-        'rjio': [],
-        'airtel': [],
-        'vi': [],
-        'att': [],
-        'bsnl': []
-      };
-      set(ref(db, 'Auctions/' + "Instance1" + "/companyHistory"), {
+      });
+    })
+    const refPath2 = `Auctions/${auctionName}/companyHistory`;
+    const itemsRef2 = ref(db, refPath2);
+    get((itemsRef2)).then((snapshot) => {
+      const data = snapshot.val();
+      data["companyMapping"]["airtel"][round] = newCartItems;
+      data["companyMapping"]["rjio"][round] = newCartItems;
+      data["companyMapping"]["att"][round] = newCartItems;
+      data["companyMapping"]["bsnl"][round] = newCartItems;
+      data["companyMapping"]["vi"][round] = newCartItems;
+      console.log(data["companyMapping"]);
+      const companyMapping = data["companyMapping"]
+      set(ref(db, `Auctions/${auctionName}/companyHistory`), {
         companyMapping
       });
-      console.log("History removed");
-    }
-    const resetRound = () => {
-      const db = getDatabase();
-      const itemsRef= ref(db, 'Auctions/Instance1/timerData');
-      const startTime = Date.now();
-      set(ref(db, 'Auctions/' + "Instance1" + "/timerData"), {
-        start: startTime,
-        time: 1,
-        round: 0
-      });
-    }
-    const InitCompanyHistory = () => {
-      const db = getDatabase();
-      const startTime = Date.now();
-      const companyMapping = {
-        'rjio': [{"0" : "INIT"}],
-        'airtel': [{"0" : "INIT"}],
-        'vi': [{"0" : "INIT"}],
-        'att': [{"0" : "INIT"}],
-        'bsnl': [{"0" : "INIT"}]
-      };
-      const refPath = 'Auctions/Instance1/companyHistory'
-      const itemsRef = ref(db, refPath);
-      get((itemsRef)).then((snapshot) => {
-        const data = snapshot.val();
-        if(!data){
-          console.log("init...done!")
-          set(ref(db, 'Auctions/' + "Instance1" + "/companyHistory"), {
-            companyMapping
-          });
-        }
-        else{
-          console.log("Already set");
-        }
-      })
-      
+    })
+  }
+
+  const handleInit = () => {
+    InitCompanyHistory();
+  }
+  
+  const handleDelete = () => {
+    const db = getDatabase();
+    const refPath = `Auctions/${auctionName}/companyHistory`;
+    const companyMapping = {
+      'rjio': [],
+      'airtel': [],
+      'vi': [],
+      'att': [],
+      'bsnl': []
+    };
+    set(ref(db, refPath), {
+      companyMapping
+    });
+    console.log("History removed");
+  }
+
+  const resetRound = () => {
+    const db = getDatabase();
+    set(ref(db, `Auctions/${auctionName}/timerData`), {
+      start: Date.now(),
+      time: 1,
+      round: 0
+    });
+  }
+
+  const InitCompanyHistory = () => {
+    const db = getDatabase();
+    const startTime = Date.now();
+    const companyMapping = {
+      'rjio': [{"0" : "INIT"}],
+      'airtel': [{"0" : "INIT"}],
+      'vi': [{"0" : "INIT"}],
+      'att': [{"0" : "INIT"}],
+      'bsnl': [{"0" : "INIT"}]
+    };
+    const refPath = `Auctions/${auctionName}/companyHistory`;
+    const itemsRef = ref(db, refPath);
+    get((itemsRef)).then((snapshot) => {
+      const data = snapshot.val();
+      if (!data) {
+        console.log("init...done!")
+        set(ref(db, refPath), {
+          companyMapping
+        });
+      }
+      else {
+        console.log("Already set");
+      }
+    })
   };
 
   return (
@@ -174,7 +157,7 @@ function AdminDashboard() {
       <button onClick={handleDelete} style={{marginLeft:'50px'}}>Delete Company History</button>
       <button onClick={resetRound} style={{marginLeft:'50px'}}>Round : 0</button>
 
-      {isModalOpen && <AddItemModal onAdd={addItem} onCancel={closeModal} />}
+      {isModalOpen && <AddItemModal onAdd={addItem} onCancel={closeModal} auctionName={auctionName}/>}
       
     </div>
   );
