@@ -16,7 +16,7 @@ const CompanyAuction = () => {
   const [purchases, setPurchases] = useState([]);
   const [quantities, setQuantities] = useState([]);
   const [EP, setEP] = useState('');  // const [companyDetails, setCompanyDetails] = useState(null);
-
+  const [holdings, setHoldings] = useState([]);
 
   // Fetch company portfolio data
   useEffect(() => {
@@ -29,12 +29,13 @@ const CompanyAuction = () => {
     netWorth: curCompanyValuation,
     eligibilityScore: currCompanyEliScore,
     bankGuarantee: curCompanyBankGuarantee,
-    currentHoldings: [
-      { operator: "RJio", region: "Delhi", holdingUP: 10, holdingP: 0, year: 2022 },
-      { operator: "RJio", region: "Tamil Nadu", holdingUP: 0, holdingP: 10, year: 2021 },
-      { operator: "RJio", region: "Kerala", holdingUP: 10, holdingP: 0, year: 2016 },
-    ]
-  
+    currentHoldings: holdings.map(holding => ({
+      operator: companyName,
+      region: holding.region,
+      holdingUP: holding.holdingUP,
+      holdingP: holding.holdingP,
+      year: holding.year
+    }))
   };
 
   const fetchCompanyPortfolio = () =>{
@@ -50,6 +51,7 @@ const CompanyAuction = () => {
         setCurCompanyEliScore(data.totalEligibilityPoints);
         setCurCompanyValuation(data.valuation);
         setCurCompanyBankGuarantee(data.bankGuarantee);
+        setHoldings(data.Holding.holdingCards);
       } else {
         // Handle the case where data is null or empty
         console.log("Data is null or empty");
@@ -63,6 +65,7 @@ const CompanyAuction = () => {
     console.log(currCompanyEliScore);
     console.log(curCompanyBankGuarantee);
     console.log(curCompanyValuation);
+    console.log(holdings);
   }
 
 
