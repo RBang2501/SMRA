@@ -12,7 +12,7 @@ const CompanyAuction = () => {
   const [itemsOnBid, setItemsOnBid] = useState([]);
   const [purchases, setPurchases] = useState([]);
   const [quantities, setQuantities] = useState([]);
-
+  const [EP, setEP] = useState('');
 
   const companyDetails = {
     companyName: "Sample Company",
@@ -98,7 +98,15 @@ const CompanyAuction = () => {
   }
 
 
-
+  useEffect(()=>{
+    const db = getDatabase();
+    const refPath= `Auctions/Instance1/CompanyPortfolio/${companyName}/totalEligibilityPoints`;
+    const itemsRef = ref(db, refPath);
+    get((itemsRef)).then((snapshot) => {
+      const data = snapshot.val();
+      setEP(data);
+    });
+  },[]) 
   useEffect(() => {
     const db = getDatabase();
     const itemsRef = ref(db, 'Auctions/Instance1/Items');
@@ -258,11 +266,16 @@ const CompanyAuction = () => {
   const seconds = Math.floor((elapsedTime / 1000) % 60);
 
   useEffect(()=>{
-    // console.log(purchases)
+    console.log(purchases)
+    console.log(EP)
   },[purchases])
   const handlePurchase = (data)=>{
-
     setPurchases(data)
+  }
+
+
+  const handleEP = (data) => {
+    setEP(data)
   }
 
           // console.log("this", itemsOnBid)
@@ -310,14 +323,19 @@ const CompanyAuction = () => {
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         <h1>Items On Bid</h1>
         </div>
+        <div style={{ display: "flex", alignItems: "center" }}>
         <div class="timer-box">
           <span id="minutes">{minutes}</span>:<span id="seconds">{seconds}</span>
         </div>
         <div class="timer-box">
+          <span id="minutes">{EP}</span>
+        </div>
+        <div class="timer-box">
           <span id="minutes">{round}</span>
         </div>
+        </div>
         <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
-          <Tab1 onPurchase ={handlePurchase} items={itemsOnBid} quantities={quantities}/>
+          <Tab1 roundSubmitted = {roundSubmitted} timerStatus = {timerExpired} EP = {EP} onEP = {handleEP} onPurchase ={handlePurchase} items={itemsOnBid} quantities={quantities}/>
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <button disabled={timerExpired||roundSubmitted} onClick={handleSubmitRound}>Submit Round</button>

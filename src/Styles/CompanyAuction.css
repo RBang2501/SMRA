@@ -63,12 +63,13 @@
   }
 
  .timer-box {
-  width: 100px;
+  width: 150px;
   height: 50px;
   background-color: #f0f0f0;
   border: 1px solid #ccc;
   border-radius: 5px;
   display: flex;
+  margin-left: 40px;
   align-items: center;
   justify-content: center;
   font-size: 1.2em;

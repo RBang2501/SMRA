@@ -25,8 +25,7 @@ const removeItemFromList = (list,itemToRemove) => {
   // Find the index of the item to remove
   for (let i = 0; i < list.length; i++) {
     // Check if the current item is the one to remove
-    if (list[i]["band"] === itemToRemove["band"] && list[i]["op"] === itemToRemove["op"] 
-    && list[i]["bid"] === itemToRemove["bid"]) {
+    if (list[i]["band"] === itemToRemove["band"] && list[i]["op"] === itemToRemove["op"] ) {
       // Remove the item from the list
       list.splice(i, 1);
       // Decrement the index as the list length has decreased
@@ -36,23 +35,26 @@ const removeItemFromList = (list,itemToRemove) => {
   // Return the modified list
   return list;
 }
-const Tab1 = ({ items, onPurchase, quantities }) => {
+const Tab1 = ({ roundSubmitted, timerStatus, items, onPurchase, quantities, onEP, EP }) => {
   useEffect(()=>{
     const tempbids = {};
     items.forEach(item => {
       const itemId = `${item.operator}-${item.frequencyBand}`;
-        if (!tempbids[itemId]) {
-          tempbids[itemId] = '0';
-        }
+      if (!tempbids[itemId]) {
+        tempbids[itemId] = '0';
+      }
     });
-    setBids(tempbids);
+    setCurEP(EP);
+    setToggle(true)
     console.log("tempbids", tempbids)
   },[items])
   const [selectedTab, setSelectedTab] = useState('700');
   const [bids, setBids] = useState([]);
+  const [toggleYes, setToggle] = useState(true)
   const [wantItem, setWantItem] = useState(false);
   const tabs = [...new Set(items.map(item => item.frequencyBand))];
   const [list, setList] = useState([])
+  const [curEP, setCurEP] = useState('');
   const handleBidChange = (e, index) => {
     console.log("bids", bids)
     const newBids = {}
@@ -68,12 +70,19 @@ const Tab1 = ({ items, onPurchase, quantities }) => {
     setBids(newBids);
   }
   
+  useEffect(()=>{
+    onEP(curEP)
+  },[curEP])
   
   useEffect(()=>{
     // console.log("tab1",list)
     onPurchase(list)
   },[list])
-  const handleYesClick = (band, op,index) => {
+  const handleYesClick = (band, op,index,item) => {
+    if(bids[index] == ''){
+      alert("enter value")
+      return;
+    }
     const newlist = [...list];
     newlist.push({
       band : band,
@@ -81,10 +90,19 @@ const Tab1 = ({ items, onPurchase, quantities }) => {
       bid: bids[index]
     });
     const temp= removeDuplicateObjects(newlist)
+
+    const reqEP = Number(item.epPerBlock)*Number(bids[index]);
+    if(reqEP > curEP){
+      alert("Cannot add req EP is more than you current EP")
+      return;
+    }
+    setToggle(false)
+    setCurEP(curEP-reqEP);
     setList(temp)
   }
   
-  const handleNoClick = (band,op,index) => {
+  
+  const handleNoClick = (band,op,index,item) => {
     const obj = {
       band : band,
       op : op,
@@ -92,7 +110,10 @@ const Tab1 = ({ items, onPurchase, quantities }) => {
     }
     const newlist = [...list]
     const temp = removeItemFromList(newlist,obj)
-    setList(temp)
+    const reqEP = Number(item.epPerBlock)*Number(bids[index]);
+    setToggle(true)
+    setCurEP(curEP+reqEP);
+    setList(temp);
   }
 
 // console.log("this", items)
@@ -129,6 +150,7 @@ const Tab1 = ({ items, onPurchase, quantities }) => {
             <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
               <div style={{paddingLeft:"20px", paddingBottom:"3vh"}}>
                 <input 
+                disabled={(!toggleYes)||timerStatus||roundSubmitted}
                 value={bids[`${item.operator}-${item.frequencyBand}`]} 
                 onChange={(e)=>
                   handleBidChange(e,`${item.operator}-${item.frequencyBand}`)
@@ -137,12 +159,12 @@ const Tab1 = ({ items, onPurchase, quantities }) => {
               </div>
                 <div style={{display: "flex"}}>
                 <div style={{paddingLeft:"20px"}}>
-                <button onClick={()=>handleYesClick(item.frequencyBand,item.operator,`${item.operator}-${item.frequencyBand}`)}>
+                <button disabled={(!toggleYes)||timerStatus||roundSubmitted} onClick={()=>handleYesClick(item.frequencyBand,item.operator,`${item.operator}-${item.frequencyBand}`,item)}>
                   Yes
                 </button>
                 </div>
                 <div style={{paddingLeft:"20px"}}>
-                <button onClick={()=>handleNoClick(item.frequencyBand,item.operator,`${item.operator}-${item.frequencyBand}`)}>
+                <button disabled={timerStatus||(toggleYes)||roundSubmitted} onClick={()=>handleNoClick(item.frequencyBand,item.operator,`${item.operator}-${item.frequencyBand}`,item)}>
                 No
                 </button>
                 </div>
