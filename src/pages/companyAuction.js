@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom';
 
 
 const CompanyAuction = () => {
-  const { companyName } = useParams();
+  const { companyName, auctionName} = useParams();
   const [itemsOnBid, setItemsOnBid] = useState([]);
   const [purchases, setPurchases] = useState([]);
   const [quantities, setQuantities] = useState([]);
@@ -25,6 +25,17 @@ const CompanyAuction = () => {
     ]
   
   };
+
+  const fetchCompanyPortfolio = () =>{
+    const db = getDatabase();
+    const currentCompany = ref(db, `Auctions/${auctionName}/CompanyPortfolio/${companyName}`);
+    onValue(currentCompany, (snapshot) => {
+      const data = snapshot.val();
+      console.log(data);
+      console.log(data.valuation);
+      
+    });
+  }
 
   function calculateDemand() {
     const db = getDatabase();
@@ -260,6 +271,9 @@ const CompanyAuction = () => {
       <div className="mainleft">
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <h1>Information Center</h1>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <button  onClick={fetchCompanyPortfolio}> Aja</button>
+          </div>
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
               <div style={{ padding: '10px' }}>
