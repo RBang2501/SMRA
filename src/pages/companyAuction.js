@@ -9,15 +9,26 @@ import { useParams } from 'react-router-dom';
 
 const CompanyAuction = () => {
   const { companyName, auctionName} = useParams();
+  const [currCompanyEliScore, setCurCompanyEliScore] = useState(0);
+  const [curCompanyValuation, setCurCompanyValuation] = useState(0);
+  const [curCompanyBankGuarantee, setCurCompanyBankGuarantee] = useState(0);
   const [itemsOnBid, setItemsOnBid] = useState([]);
   const [purchases, setPurchases] = useState([]);
   const [quantities, setQuantities] = useState([]);
-  const [EP, setEP] = useState('');
+  const [EP, setEP] = useState('');  // const [companyDetails, setCompanyDetails] = useState(null);
+
+
+  // Fetch company portfolio data
+  useEffect(() => {
+    fetchCompanyPortfolio();
+  }, [auctionName, companyName]); // Fetch on component mount and when auction or company name changes
+
 
   const companyDetails = {
-    companyName: "Sample Company",
-    netWorth: "$1,000,000",
-    eligibilityScore: 80,
+    companyName: companyName,
+    netWorth: curCompanyValuation,
+    eligibilityScore: currCompanyEliScore,
+    bankGuarantee: curCompanyBankGuarantee,
     currentHoldings: [
       { operator: "RJio", region: "Delhi", holdingUP: 10, holdingP: 0, year: 2022 },
       { operator: "RJio", region: "Tamil Nadu", holdingUP: 0, holdingP: 10, year: 2021 },
@@ -28,14 +39,33 @@ const CompanyAuction = () => {
 
   const fetchCompanyPortfolio = () =>{
     const db = getDatabase();
+    console.log(auctionName, companyName);
     const currentCompany = ref(db, `Auctions/${auctionName}/CompanyPortfolio/${companyName}`);
     onValue(currentCompany, (snapshot) => {
       const data = snapshot.val();
-      console.log(data);
-      console.log(data.valuation);
-      
+      if (data) {
+        console.log(data);
+        console.log("hehe");
+        console.log(data.Holding.holdingCards[0].region)
+        setCurCompanyEliScore(data.totalEligibilityPoints);
+        setCurCompanyValuation(data.valuation);
+        setCurCompanyBankGuarantee(data.bankGuarantee);
+      } else {
+        // Handle the case where data is null or empty
+        console.log("Data is null or empty");
+      }
     });
+}
+
+
+  const aja = () =>{
+    fetchCompanyPortfolio();
+    console.log(currCompanyEliScore);
+    console.log(curCompanyBankGuarantee);
+    console.log(curCompanyValuation);
   }
+
+
 
   function calculateDemand() {
     const db = getDatabase();
@@ -187,6 +217,7 @@ const CompanyAuction = () => {
     <div className="portfolio-container">
       <h2>Company Portfolio</h2>
       <p>Company Name: {companyDetails.companyName}</p>
+      <p>Bank Guarantee: {companyDetails.bankGuarantee}</p>
       <p>Net Worth: {companyDetails.netWorth}</p>
       <p>Eligibility Score: {companyDetails.eligibilityScore}</p>
       <p>Current Holdings:</p>
@@ -284,9 +315,11 @@ const CompanyAuction = () => {
       <div className="mainleft">
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <h1>Information Center</h1>
+
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <button  onClick={fetchCompanyPortfolio}> Aja</button>
-          </div>
+          <button onClick={aja}>Aja</button>
+        </div>
+        
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
               <div style={{ padding: '10px' }}>
