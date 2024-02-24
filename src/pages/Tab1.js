@@ -96,6 +96,10 @@ const Tab1 = ({ roundSubmitted, timerStatus, items, onPurchase, quantities, onEP
       alert("Cannot add req EP is more than you current EP")
       return;
     }
+    if(bids[index]>Number(item.paired)+Number(item.unpaired)){
+      alert("Cannot add! Quantity entered is more than available spectrum")
+      return;
+    }
     setToggle(false)
     setCurEP(curEP-reqEP);
     setList(temp)
@@ -143,12 +147,15 @@ const Tab1 = ({ roundSubmitted, timerStatus, items, onPurchase, quantities, onEP
             <p>Frequency: {item.frequencyBand}</p>
             <p>Unpaired: {item.unpaired}</p>
             <p>Paired: {item.paired}</p>
-            <p>Prev Round Demand: {quantities[`${item.operator}-${item.frequencyBand}`]}</p>
+            <p>EP(per block): {item.epPerBlock}</p>
+            
           </div>
 
           <div className = "auction-input">
             <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
               <div style={{paddingLeft:"20px", paddingBottom:"3vh"}}>
+                <p>Prev Round Demand: {quantities[`${item.operator}-${item.frequencyBand}`]}</p>
+                <p> </p>
                 <input 
                 disabled={(!toggleYes)||timerStatus||roundSubmitted}
                 value={bids[`${item.operator}-${item.frequencyBand}`]} 
