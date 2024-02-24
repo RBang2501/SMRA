@@ -92,15 +92,15 @@ function AdminDashboard() {
       const itemsRef2 = ref(db, refPath2);
       get((itemsRef2)).then((snapshot) => {
         const data = snapshot.val();
-        const rounditem = {
-          round : round,
-          data : newCartItems
-        }
-        data["companyMapping"]["airtel"].push(rounditem);
-        data["companyMapping"]["rjio"].push(rounditem);
-        data["companyMapping"]["att"].push(rounditem);
-        data["companyMapping"]["bsnl"].push(rounditem);
-        data["companyMapping"]["vi"].push(rounditem);
+        // const rounditem = {
+        //   round : round,
+        //   data : newCartItems
+        // }
+        data["companyMapping"]["airtel"][round] = newCartItems;
+        data["companyMapping"]["rjio"][round] = newCartItems;
+        data["companyMapping"]["att"][round] = newCartItems;
+        data["companyMapping"]["bsnl"][round] = newCartItems;
+        data["companyMapping"]["vi"][round] = newCartItems;
         console.log(data["companyMapping"]);
         const companyMapping = data["companyMapping"]
         set(ref(db, 'Auctions/' + "Instance1" + "/companyHistory"), {

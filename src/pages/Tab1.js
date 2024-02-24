@@ -36,7 +36,7 @@ const removeItemFromList = (list,itemToRemove) => {
   // Return the modified list
   return list;
 }
-const Tab1 = ({ items, onPurchase }) => {
+const Tab1 = ({ items, onPurchase, quantities }) => {
 
   const [selectedTab, setSelectedTab] = useState('700');
   const [bid, setBid] = useState('');
@@ -100,6 +100,7 @@ const Tab1 = ({ items, onPurchase }) => {
             <p>Frequency: {item.frequencyBand}</p>
             <p>Unpaired: {item.unpaired}</p>
             <p>Paired: {item.paired}</p>
+            <p>Prev Round Demand: {quantities[`${item.operator}-${item.frequencyBand}`]}</p>
           </div>
 
           <div className = "auction-input">
