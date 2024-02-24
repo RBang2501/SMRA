@@ -39,22 +39,31 @@ const CompanyAuction = () => {
 
   const fetchCompanyPortfolio = () =>{
     const db = getDatabase();
+    console.log(auctionName, companyName);
     const currentCompany = ref(db, `Auctions/${auctionName}/CompanyPortfolio/${companyName}`);
     onValue(currentCompany, (snapshot) => {
       const data = snapshot.val();
-      console.log(data);
-      console.log(data.valuation);
-      setCurCompanyEliScore(data.totalEligibilityPoints);
-      setCurCompanyValuation(data.valuation);
-      setCurCompanyBankGuarantee(data.bankGuarantee);
+      if (data) {
+        console.log(data);
+        console.log("hehe");
+        console.log(data.Holding.holdingCards[0].region)
+        setCurCompanyEliScore(data.totalEligibilityPoints);
+        setCurCompanyValuation(data.valuation);
+        setCurCompanyBankGuarantee(data.bankGuarantee);
+      } else {
+        // Handle the case where data is null or empty
+        console.log("Data is null or empty");
+      }
     });
-  }
+}
 
-  // const aja = () =>{
-  //   console.log(currCompanyEliScore);
-  //   console.log(curCompanyBankGuarantee);
-  //   console.log(curCompanyValuation);
-  // }
+
+  const aja = () =>{
+    fetchCompanyPortfolio();
+    console.log(currCompanyEliScore);
+    console.log(curCompanyBankGuarantee);
+    console.log(curCompanyValuation);
+  }
 
 
 
@@ -293,6 +302,10 @@ const CompanyAuction = () => {
       <div className="mainleft">
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <h1>Information Center</h1>
+
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <button onClick={aja}>Aja</button>
+        </div>
         
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
