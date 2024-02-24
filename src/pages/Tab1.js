@@ -37,36 +37,58 @@ const removeItemFromList = (list,itemToRemove) => {
   return list;
 }
 const Tab1 = ({ items, onPurchase, quantities }) => {
-
+  useEffect(()=>{
+    const tempbids = {};
+    items.forEach(item => {
+      const itemId = `${item.operator}-${item.frequencyBand}`;
+        if (!tempbids[itemId]) {
+          tempbids[itemId] = '0';
+        }
+    });
+    setBids(tempbids);
+    console.log("tempbids", tempbids)
+  },[items])
   const [selectedTab, setSelectedTab] = useState('700');
-  const [bid, setBid] = useState('');
+  const [bids, setBids] = useState([]);
   const [wantItem, setWantItem] = useState(false);
   const tabs = [...new Set(items.map(item => item.frequencyBand))];
   const [list, setList] = useState([])
-  const handleBidChange = (e) => {
-    setBid(e.target.value);
+  const handleBidChange = (e, index) => {
+    console.log("bids", bids)
+    const newBids = {}
+    items.forEach(item => {
+      const itemId = `${item.operator}-${item.frequencyBand}`;
+        if (itemId == index) {
+          newBids[index] = e.target.value;
+        }
+        else{
+          newBids[itemId] = bids[itemId];
+        }
+    });
+    setBids(newBids);
   }
-
+  
+  
   useEffect(()=>{
     // console.log("tab1",list)
     onPurchase(list)
   },[list])
-  const handleYesClick = (band, op) => {
+  const handleYesClick = (band, op,index) => {
     const newlist = [...list];
     newlist.push({
       band : band,
       op : op,
-      bid: bid
+      bid: bids[index]
     });
     const temp= removeDuplicateObjects(newlist)
     setList(temp)
   }
   
-  const handleNoClick = (band,op) => {
+  const handleNoClick = (band,op,index) => {
     const obj = {
       band : band,
       op : op,
-      bid : bid,
+      bid : bids[index],
     }
     const newlist = [...list]
     const temp = removeItemFromList(newlist,obj)
@@ -91,7 +113,7 @@ const Tab1 = ({ items, onPurchase, quantities }) => {
         ))}
       </div>
       <div className="auction-container-container">
-      {items.filter(item => item.frequencyBand === selectedTab).map(item => (
+      {items.filter(item => item.frequencyBand === selectedTab).map((item) => (
         <div key={item.operator} className="auction-container">
         
           {/*...item details*/}
@@ -107,18 +129,20 @@ const Tab1 = ({ items, onPurchase, quantities }) => {
             <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
               <div style={{paddingLeft:"20px", paddingBottom:"3vh"}}>
                 <input 
-                value={bid} 
-                onChange={handleBidChange}
+                value={bids[`${item.operator}-${item.frequencyBand}`]} 
+                onChange={(e)=>
+                  handleBidChange(e,`${item.operator}-${item.frequencyBand}`)
+                }
               />
               </div>
                 <div style={{display: "flex"}}>
                 <div style={{paddingLeft:"20px"}}>
-                <button onClick={()=>handleYesClick(item.frequencyBand,item.operator)}>
+                <button onClick={()=>handleYesClick(item.frequencyBand,item.operator,`${item.operator}-${item.frequencyBand}`)}>
                   Yes
                 </button>
                 </div>
                 <div style={{paddingLeft:"20px"}}>
-                <button onClick={()=>handleNoClick(item.frequencyBand,item.operator)}>
+                <button onClick={()=>handleNoClick(item.frequencyBand,item.operator,`${item.operator}-${item.frequencyBand}`)}>
                 No
                 </button>
                 </div>

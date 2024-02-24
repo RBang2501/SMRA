@@ -150,6 +150,7 @@ const CompanyAuction = () => {
       });
     })
     console.log("Round Submitted!");
+    setRoundSubmitted(true);
   };
 
   const [activeTab, setActiveTab] = useState('tab1');
@@ -186,10 +187,12 @@ const CompanyAuction = () => {
 
   const [elapsedTime, setElapsedTime] = useState(0);
   const [timerExpired, setTimerExpired] = useState(false);
+  const [roundSubmitted, setRoundSubmitted] = useState(false);
   const [round, setRound] = useState(0);
 
   useEffect(() => {
   // This effect will run whenever the value of round changes
+  setRoundSubmitted(false);
   calculateDemand();
 }, [round]);
 
@@ -303,7 +306,7 @@ const CompanyAuction = () => {
           <Tab1 onPurchase ={handlePurchase} items={itemsOnBid} quantities={quantities}/>
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <button disabled={timerExpired} onClick={handleSubmitRound}>Submit Round</button>
+          <button disabled={timerExpired||roundSubmitted} onClick={handleSubmitRound}>Submit Round</button>
         </div>
       </div>
     </div>
