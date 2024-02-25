@@ -72,7 +72,7 @@ const CompanyAuction = () => {
 
   function calculateDemand() {
     const db = getDatabase();
-    const refPath2 = 'Auctions/Instance1/companyHistory';
+    const refPath2 = `Auctions/${auctionName}/companyHistory`;
     const itemsRef2 = ref(db, refPath2);
     get((itemsRef2)).then((snapshot) => {
       const data = snapshot.val();
@@ -133,7 +133,7 @@ const CompanyAuction = () => {
 
   useEffect(()=>{
     const db = getDatabase();
-    const refPath= `Auctions/Instance1/CompanyPortfolio/${companyName}/totalEligibilityPoints`;
+    const refPath= `Auctions/${auctionName}/CompanyPortfolio/${companyName}/totalEligibilityPoints`;
     const itemsRef = ref(db, refPath);
     get((itemsRef)).then((snapshot) => {
       const data = snapshot.val();
@@ -142,7 +142,7 @@ const CompanyAuction = () => {
   },[]) 
   useEffect(() => {
     const db = getDatabase();
-    const itemsRef = ref(db, 'Auctions/Instance1/Items');
+    const itemsRef = ref(db, `Auctions/${auctionName}/Items`);
     onValue(itemsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
@@ -170,7 +170,7 @@ const CompanyAuction = () => {
     console.log(purchases);
     console.log(companyName);
     const db = getDatabase();
-    const refPath2 = 'Auctions/Instance1/companyHistory';
+    const refPath2 = `Auctions/${auctionName}/companyHistory`;
     const itemsRef2 = ref(db, refPath2);
     get((itemsRef2)).then((snapshot) => {
       const data = snapshot.val();
@@ -196,8 +196,10 @@ const CompanyAuction = () => {
       // data["companyMapping"]["bsnl"].push(newCartItems);
       // data["companyMapping"]["vi"].push(newCartItems);
       // console.log(data["companyMapping"]);
+
+      
       const companyMapping = data["companyMapping"];
-      set(ref(db, 'Auctions/' + "Instance1" + "/companyHistory"), {
+      set(ref(db, 'Auctions/' + auctionName + "/companyHistory"), {
         companyMapping
       });
     })
@@ -251,7 +253,7 @@ const CompanyAuction = () => {
 
   useEffect(() => {
     const db = getDatabase();
-    const itemsRef= ref(db, 'Auctions/Instance1/timerData');
+    const itemsRef= ref(db, `Auctions/${auctionName}/timerData1`);
     onValue(itemsRef, (snapshot) => {
       const data = snapshot.val();
       console.log(data);

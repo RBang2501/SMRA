@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import AddItemModal from './AddItemModal';
-import { getDatabase, ref, set, remove, get } from "firebase/database";
+import { getDatabase, ref, set, remove, get, onValue } from "firebase/database";
 
 
 function AdminDashboard() {
@@ -9,6 +9,7 @@ function AdminDashboard() {
   const [items, setItems] = useState([]);
   const [auctionName, setAuctionName] = useState('Default Auction Name');
   const [round, setRound] = useState(1);  
+  const [airtelList, setAirtelList] = useState([]);
   const location = useLocation();
   useEffect(() => {
     // Extract auctionName from the path parameters
@@ -53,6 +54,8 @@ function AdminDashboard() {
     newRound();
   }
 
+
+
   const newRound = () => {
     const db = getDatabase();
     const refPath = `Auctions/${auctionName}/Items`;
@@ -91,6 +94,39 @@ function AdminDashboard() {
       });
     })
   }
+
+// ----------------------- Result Calculation -------------------------------------
+
+const publishResult = () => {
+    const db = getDatabase();
+    const listOfItemsForAirtel = ref(db, `Auctions/${auctionName}/companyHistory/companyMapping/airtel/1/`);
+    onValue(listOfItemsForAirtel, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        console.log(data);
+        setAirtelList(data);
+      } else {
+        // Handle the case where data is null or empty
+        console.log("Data is null or empty");
+      }
+    }); 
+}
+
+const check = () => {
+  console.log(airtelList);
+  const db = getDatabase();
+  airtelList.forEach((it) => {
+      if (it.paired !== 0 || it.unpaired !== 0) {
+          const path = `Auctions/${auctionName}/provisionalWinner/${it.freqBand}_${it.region}/airtel`;
+          set(ref(db, path), {
+              paired: it.paired,
+              unpaired: it.unpaired,
+          });
+      }
+  });
+};
+
+
 
   const handleInit = () => {
     InitCompanyHistory();
@@ -156,6 +192,8 @@ function AdminDashboard() {
       <button onClick={handleInit} style={{marginLeft:'50px'}}>Init Company History</button>
       <button onClick={handleDelete} style={{marginLeft:'50px'}}>Delete Company History</button>
       <button onClick={resetRound} style={{marginLeft:'50px'}}>Round : 0</button>
+      <button onClick={publishResult} style={{marginLeft:'50px'}}>Result</button>
+      <button onClick={check} style={{marginLeft:'50px'}}>Check</button>
 
       {isModalOpen && <AddItemModal onAdd={addItem} onCancel={closeModal} auctionName={auctionName}/>}
       

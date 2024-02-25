@@ -34,6 +34,10 @@ const SelectAuction = () => {
       id: auctions.length + 1
     });
     setNewAuctionName("");
+
+    set(ref(db, `Auctions/${name}/provisionalWinner/`), {
+      id: 1,
+  });
   };
 
   const handleReadAuctions = () => {
