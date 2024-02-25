@@ -58,13 +58,7 @@ function AddItemModal() {
     });
 
 
-    set(ref(db, `Auctions/${auctionName}/provisionalWinner/${freqBand}_${region}/` ), {
-      airtel: 0,
-      rjio:0,
-      bsnl:0,
-      att:0,
-      vi:0
-    });
+    
     clearForm();
   };
 

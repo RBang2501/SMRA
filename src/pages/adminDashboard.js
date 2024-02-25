@@ -8,7 +8,11 @@ function AdminDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [items, setItems] = useState([]);
   const [auctionName, setAuctionName] = useState('Default Auction Name');
-  const [round, setRound] = useState(1);  
+  const [round, setRound] = useState(1); 
+  
+ 
+
+
   const [airtelList, setAirtelList] = useState([]);
   const [rjioList, setRjioList] = useState([]);
   const [attList, setAttList] = useState([]);
@@ -21,6 +25,7 @@ function AdminDashboard() {
     const parts = pathname.split('/');
     const lastPart = parts[parts.length - 1];
 
+
     // Set auctionName to the last part of the path
     setAuctionName(lastPart || 'Default Auction Name');
   }, [location.pathname]);
@@ -28,6 +33,8 @@ function AdminDashboard() {
   const openModal = () => {
     setIsModalOpen(true);
   };
+
+  
 
 
   const closeModal = () => {
@@ -102,124 +109,129 @@ function AdminDashboard() {
 // ----------------------- Result Calculation -------------------------------------
 
 const publishResult = () => {
-    const db = getDatabase();
-    console.log(round);
-    const listOfItemsForAirtel = ref(db, `Auctions/${auctionName}/companyHistory/companyMapping/airtel/1/`);
-    onValue(listOfItemsForAirtel, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        console.log(data);
-        setAirtelList(data);
-      } else {
-        console.log("Data is null or empty");
-      }
-    }); 
-    const listOfItemsForRjio = ref(db, `Auctions/${auctionName}/companyHistory/companyMapping/rjio/1/`);
-    onValue(listOfItemsForRjio, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        console.log(data);
-        setRjioList(data);
-      } else {
-        console.log("Data is null or empty");
-      }
-    }); 
-    const listOfItemsForVi = ref(db, `Auctions/${auctionName}/companyHistory/companyMapping/vi/1/`);
-    onValue(listOfItemsForVi, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        console.log(data);
-        setViList(data);
-      } else {
-        console.log("Data is null or empty");
-      }
-    }); 
-    const listOfItemsForAtt = ref(db, `Auctions/${auctionName}/companyHistory/companyMapping/att/1/`);
-    onValue(listOfItemsForAtt, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        console.log(data);
-        setAttList(data);
-      } else {
-        console.log("Data is null or empty");
-      }
-    }); 
-    const listOfItemsForBsnl = ref(db, `Auctions/${auctionName}/companyHistory/companyMapping/bsnl/1/`);
-    onValue(listOfItemsForBsnl, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        console.log(data);
-        setBsnlList(data);
-      } else {
-        console.log("Data is null or empty");
-      }
-    }); 
+  const db = getDatabase();
+  console.log(round);
+  const companyRefs = ['airtel', 'rjio', 'vi', 'att', 'bsnl'].map(company => {
+      return ref(db, `Auctions/${auctionName}/companyHistory/companyMapping/${company}/${round - 1}/`);
+  });
+
+  // Fetch data for each company from Firebase and update state
+  Promise.all(companyRefs.map(ref => {
+      return new Promise((resolve, reject) => {
+          onValue(ref, (snapshot) => {
+              const data = snapshot.val();
+              if (data) {
+                  resolve(data);
+              } else {
+                  reject(new Error(`${ref} data is null or empty`));
+              }
+          });
+      });
+  })).then((results) => {
+      // Update state for each company
+      const companyStateSetters = {
+          'airtel': setAirtelList,
+          'rjio': setRjioList,
+          'vi': setViList,
+          'att': setAttList,
+          'bsnl': setBsnlList
+      };
+
+      results.forEach((data, index) => {
+          const company = ['airtel', 'rjio', 'vi', 'att', 'bsnl'][index];
+          companyStateSetters[company](data);
+      });
+
+      // Further processing...
+      console.log(airtelList);
+      console.log(viList);
+      console.log(bsnlList);
+      console.log(attList);
+      console.log(rjioList);
+
+      const matrix = {};
+      const totalAvailable = {};
+
+      airtelList.forEach((item) => {
+          const key = item.frequencyBand + "_" + item.operator;
+          if (!matrix[key]) {
+              matrix[key] = [];
+              totalAvailable[key] = Number(item.unpaired) + Number(item.paired);
+          }
+          matrix[key].push({ company: 'airtel', quantity: item.qty });
+      });
+
+      viList.forEach((item) => {
+          const key = item.frequencyBand + "_" + item.operator;
+          if (!matrix[key]) {
+              matrix[key] = [];
+              totalAvailable[key] = Number(item.unpaired) + Number(item.paired);
+          }
+          matrix[key].push({ company: 'vi', quantity: item.qty });
+      });
+
+      attList.forEach((item) => {
+          const key = item.frequencyBand + "_" + item.operator;
+          if (!matrix[key]) {
+              matrix[key] = [];
+              totalAvailable[key] = Number(item.unpaired) + Number(item.paired);
+          }
+          matrix[key].push({ company: 'att', quantity: item.qty });
+      });
+
+      bsnlList.forEach((item) => {
+          const key = item.frequencyBand + "_" + item.operator;
+          if (!matrix[key]) {
+              matrix[key] = [];
+              totalAvailable[key] = Number(item.unpaired) + Number(item.paired);
+          }
+          matrix[key].push({ company: 'bsnl', quantity: item.qty });
+      });
+
+      console.log(matrix);
+      console.log(totalAvailable);
+
+      // Sort bids for each item in descending order based on quantity
+      Object.keys(matrix).forEach((key) => {
+          matrix[key].sort((a, b) => b.quantity - a.quantity);
+      });
+
+      // Select bids until the sum of quantities reaches the available quantity for each item
+      const winners = {};
+      Object.keys(matrix).forEach((key) => {
+          const available = totalAvailable[key];
+          console.log(available);
+          let sum = 0;
+          winners[key] = [];
+          matrix[key].forEach((bid) => {
+              if (sum + bid.quantity <= available && bid.quantity > 0) {
+                  winners[key].push({ [bid.company]: bid.quantity });
+                  sum += bid.quantity;
+              }
+          });
+      });
+
+      console.log(winners);
+      set(ref(db, `Auctions/${auctionName}/provisionalWinner/${round-1}/`), {
+        winners,
+      });
+
+
+  }).catch(error => {
+      console.error(error);
+  });
 }
 
-const check = () => {
-  console.log(airtelList);
-  const db = getDatabase();
-  airtelList.forEach((it) => {
-      if (it.qty !== 0 ) {
-          const path = `Auctions/${auctionName}/provisionalWinner/${it.frequencyBand}_${it.operator}/`;
-          update(ref(db, path), {
-              airtel: it.qty,
-          });
-      }
-  });
 
-  rjioList.forEach((it) => {
-    if (it.qty !== 0 ) {
-        const path = `Auctions/${auctionName}/provisionalWinner/${it.frequencyBand}_${it.operator}/`;
-        update(ref(db, path), {
-            rjio: it.qty,
-        });
-    }
-});
 
-  attList.forEach((it) => {
-    if (it.qty !== 0 ) {
-        const path = `Auctions/${auctionName}/provisionalWinner/${it.frequencyBand}_${it.operator}/`;
-        update(ref(db, path), {
-            att: it.qty,
-        });
-    }
-  });
 
-  bsnlList.forEach((it) => {
-    if (it.qty !== 0 ) {
-        const path = `Auctions/${auctionName}/provisionalWinner/${it.frequencyBand}_${it.operator}/`;
-        update(ref(db, path), {
-            bsnl: it.qty,
-        });
-    }
-  });
 
-  viList.forEach((it) => {
-    if (it.qty !== 0 ) {
-        const path = `Auctions/${auctionName}/provisionalWinner/${it.frequencyBand}_${it.operator}/`;
-        update(ref(db, path), {
-            vi: it.qty,
-        });
-    }
-  });
-
-  // airtelList.forEach((it) => {
-  //   if (it.qty !== 0 ) {
-  //       const path = `Auctions/${auctionName}/provisionalWinner/${it.frequencyBand}_${it.operator}/`;
-  //       set(ref(db, path), {
-  //           bsnl: it.qty,
-  //       });
-  //   }
-  // });
-
-  
-};
 
 
 
   const handleInit = () => {
     InitCompanyHistory();
+    
   }
   
   const handleDelete = () => {
@@ -232,6 +244,8 @@ const check = () => {
       'att': [],
       'bsnl': []
     };
+
+    
     set(ref(db, refPath), {
       companyMapping
     });
@@ -276,14 +290,15 @@ const check = () => {
   return (
     <div className="admin-dashboard">
       <h2>Auction Instance: {auctionName}</h2>
-      <button onClick={deleteAuction} style={{ position: 'fixed', top: '10%', right: '20px', transform: 'translateY(-50%)' }}>Delete Auction</button>
+      {/* <button onClick={deleteAuction} style={{ position: 'fixed', top: '10%', right: '20px', transform: 'translateY(-50%)' }}>Delete Auction</button> */}
       <button onClick={handleStartTimer} style={{ marginLeft: '50px' }}>Start Timer</button>
       <button onClick={openModal} style={{ marginLeft: '50px' }}>Add Item</button>
       <button onClick={handleInit} style={{marginLeft:'50px'}}>Init Company History</button>
       <button onClick={handleDelete} style={{marginLeft:'50px'}}>Delete Company History</button>
       <button onClick={resetRound} style={{marginLeft:'50px'}}>Round : 0</button>
       <button onClick={publishResult} style={{marginLeft:'50px'}}>UpdateAfterRound</button>
-      <button onClick={check} style={{marginLeft:'50px'}}>Provisional Winner</button>
+      {/* <button onClick={calcWithNewPrice} style={{marginLeft:'50px'}}>WithNewPrice</button> */}
+      {/* <button onClick={calc} style={{marginLeft:'50px'}}>Provisional Winner</button> */}
 
       {isModalOpen && <AddItemModal onAdd={addItem} onCancel={closeModal} auctionName={auctionName}/>}
       
