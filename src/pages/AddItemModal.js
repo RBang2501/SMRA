@@ -58,7 +58,7 @@ function AddItemModal() {
     });
 
 
-    set(ref(db, `Auctions/${auctionName}/provisionalWinner/` + freqBand + "_" + region), {
+    set(ref(db, `Auctions/${auctionName}/provisionalWinner/${freqBand}_${region}/` ), {
       airtel: 0,
       rjio:0,
       bsnl:0,

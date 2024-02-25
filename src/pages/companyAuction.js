@@ -202,6 +202,8 @@ const CompanyAuction = () => {
       set(ref(db, `Auctions/` + auctionName + `/companyHistory`), {
         companyMapping
       });
+
+
     })
     console.log("Round Submitted!");
     setRoundSubmitted(true);
