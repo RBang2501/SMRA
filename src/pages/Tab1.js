@@ -36,6 +36,13 @@ const removeItemFromList = (list,itemToRemove) => {
   return list;
 }
 const Tab1 = ({ roundSubmitted, timerStatus, items, onPurchase, quantities, onEP, EP }) => {
+  const [selectedTab, setSelectedTab] = useState('700');
+  const [bids, setBids] = useState([]);
+  const [toggleYes, setToggle] = useState(true)
+  const [wantItem, setWantItem] = useState(false);
+  const tabs = [...new Set(items.map(item => item.frequencyBand))];
+  const [list, setList] = useState([])
+  const [curEP, setCurEP] = useState('');
   useEffect(()=>{
     const tempbids = {};
     items.forEach(item => {
@@ -48,13 +55,8 @@ const Tab1 = ({ roundSubmitted, timerStatus, items, onPurchase, quantities, onEP
     setToggle(true)
     console.log("tempbids", tempbids)
   },[items])
-  const [selectedTab, setSelectedTab] = useState('700');
-  const [bids, setBids] = useState([]);
-  const [toggleYes, setToggle] = useState(true)
-  const [wantItem, setWantItem] = useState(false);
-  const tabs = [...new Set(items.map(item => item.frequencyBand))];
-  const [list, setList] = useState([])
-  const [curEP, setCurEP] = useState('');
+  
+
   const handleBidChange = (e, index) => {
     console.log("bids", bids)
     const newBids = {}
@@ -71,15 +73,22 @@ const Tab1 = ({ roundSubmitted, timerStatus, items, onPurchase, quantities, onEP
   }
   
   useEffect(()=>{
-    onEP(curEP)
+    if((curEP=='' || curEP == NaN || curEP == null) == false && (EP != curEP))
+    {
+      onEP(curEP)
+    }
   },[curEP])
-  
+
   useEffect(()=>{
     // console.log("tab1",list)
     onPurchase(list)
   },[list])
   const handleYesClick = (band, op,index,item) => {
-    if(bids[index] == ''){
+    if(curEP=='' || curEP == NaN || curEP == null){
+      setCurEP(EP);
+      console.log("Rectified :",curEP)
+    }
+    if(bids[index] == '' || bids[index] == null || bids[index] == NaN){
       alert("enter value")
       return;
     }
@@ -90,18 +99,23 @@ const Tab1 = ({ roundSubmitted, timerStatus, items, onPurchase, quantities, onEP
       bid: bids[index]
     });
     const temp= removeDuplicateObjects(newlist)
-
     const reqEP = Number(item.epPerBlock)*Number(bids[index]);
+    console.log("cur : ",curEP," req ", reqEP)
     if(reqEP > curEP){
-      alert("Cannot add req EP is more than you current EP")
+      if((curEP=='' || curEP == NaN || curEP == null) )
+      alert("Please Wait fetching EP, try again")
+      else
+      alert("Cannot add req EP is more than your current EP")
       return;
     }
-    if(bids[index]>Number(item.paired)+Number(item.unpaired)){
+    else if(bids[index]>(Number(item.paired)+Number(item.unpaired))){
       alert("Cannot add! Quantity entered is more than available spectrum")
       return;
     }
     setToggle(false)
-    setCurEP(curEP-reqEP);
+    const tep = (curEP-reqEP)
+    if(tep<0) tep = curEP
+    setCurEP(tep);
     setList(temp)
   }
   
@@ -114,9 +128,14 @@ const Tab1 = ({ roundSubmitted, timerStatus, items, onPurchase, quantities, onEP
     }
     const newlist = [...list]
     const temp = removeItemFromList(newlist,obj)
-    const reqEP = Number(item.epPerBlock)*Number(bids[index]);
+    var reqEP = Number(item.epPerBlock)*Number(bids[index]);
+    if(bids[index] == '' || bids[index] == null || bids[index] == NaN){
+      reqEP = 0
+    }
     setToggle(true)
-    setCurEP(curEP+reqEP);
+    const tep = (curEP+ reqEP)
+    if(tep<0) tep = curEP
+    setCurEP(tep);
     setList(temp);
   }
 

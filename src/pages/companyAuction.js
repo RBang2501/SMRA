@@ -46,7 +46,6 @@ const CompanyAuction = () => {
       const data = snapshot.val();
       if (data) {
         console.log(data);
-        console.log("hehe");
         console.log(data.Holding.holdingCards[0].region)
         setCurCompanyEliScore(data.totalEligibilityPoints);
         setCurCompanyValuation(data.valuation);
