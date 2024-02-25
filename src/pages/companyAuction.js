@@ -199,7 +199,7 @@ const CompanyAuction = () => {
 
       
       const companyMapping = data["companyMapping"];
-      set(ref(db, 'Auctions/' + auctionName + "/companyHistory"), {
+      set(ref(db, `Auctions/` + auctionName + `/companyHistory`), {
         companyMapping
       });
     })
@@ -253,7 +253,7 @@ const CompanyAuction = () => {
 
   useEffect(() => {
     const db = getDatabase();
-    const itemsRef= ref(db, `Auctions/${auctionName}/timerData1`);
+    const itemsRef= ref(db, `Auctions/${auctionName}/timerData`);
     onValue(itemsRef, (snapshot) => {
       const data = snapshot.val();
       console.log(data);
