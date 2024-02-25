@@ -38,21 +38,25 @@ const removeItemFromList = (list,itemToRemove) => {
 const Tab1 = ({ roundSubmitted, timerStatus, items, onPurchase, quantities, onEP, EP }) => {
   const [selectedTab, setSelectedTab] = useState('700');
   const [bids, setBids] = useState([]);
-  const [toggleYes, setToggle] = useState(true)
+  const [toggleYes, setToggle] = useState(true);
+  const [bidStates, setBidStates] = useState([])
   const [wantItem, setWantItem] = useState(false);
   const tabs = [...new Set(items.map(item => item.frequencyBand))];
   const [list, setList] = useState([])
   const [curEP, setCurEP] = useState('');
   useEffect(()=>{
     const tempbids = {};
+    const tempbidStates = {};
     items.forEach(item => {
       const itemId = `${item.operator}-${item.frequencyBand}`;
       if (!tempbids[itemId]) {
         tempbids[itemId] = '0';
+        tempbidStates[itemId] = true;
       }
     });
     setCurEP(EP);
     setToggle(true)
+    setBidStates(tempbidStates)
     console.log("tempbids", tempbids)
   },[items])
   
@@ -113,6 +117,17 @@ const Tab1 = ({ roundSubmitted, timerStatus, items, onPurchase, quantities, onEP
       return;
     }
     setToggle(false)
+    const newBidStates = {}
+    items.forEach(item => {
+      const itemId = `${item.operator}-${item.frequencyBand}`;
+        if (itemId == index) {
+          newBidStates[index] = false;
+        }
+        else{
+          newBidStates[itemId] = bidStates[itemId];
+        }
+    });
+    setBidStates(newBidStates)
     const tep = (curEP-reqEP)
     if(tep<0) tep = curEP
     setCurEP(tep);
@@ -133,8 +148,19 @@ const Tab1 = ({ roundSubmitted, timerStatus, items, onPurchase, quantities, onEP
       reqEP = 0
     }
     setToggle(true)
+    const newBidStates = {}
+    items.forEach(item => {
+      const itemId = `${item.operator}-${item.frequencyBand}`;
+        if (itemId == index) {
+          newBidStates[index] = true;
+        }
+        else{
+          newBidStates[itemId] = bidStates[itemId];
+        }
+    });
+    setBidStates(newBidStates)
+
     const tep = (curEP+ reqEP)
-    if(tep<0) tep = curEP
     setCurEP(tep);
     setList(temp);
   }
@@ -176,7 +202,7 @@ const Tab1 = ({ roundSubmitted, timerStatus, items, onPurchase, quantities, onEP
                 <p>Prev Round Demand: {quantities[`${item.operator}-${item.frequencyBand}`]}</p>
                 <p> </p>
                 <input 
-                disabled={(!toggleYes)||timerStatus||roundSubmitted}
+                disabled={(!bidStates[`${item.operator}-${item.frequencyBand}`])||timerStatus||roundSubmitted}
                 value={bids[`${item.operator}-${item.frequencyBand}`]} 
                 onChange={(e)=>
                   handleBidChange(e,`${item.operator}-${item.frequencyBand}`)
@@ -185,12 +211,12 @@ const Tab1 = ({ roundSubmitted, timerStatus, items, onPurchase, quantities, onEP
               </div>
                 <div style={{display: "flex"}}>
                 <div style={{paddingLeft:"20px"}}>
-                <button disabled={(!toggleYes)||timerStatus||roundSubmitted} onClick={()=>handleYesClick(item.frequencyBand,item.operator,`${item.operator}-${item.frequencyBand}`,item)}>
+                <button disabled={(!bidStates[`${item.operator}-${item.frequencyBand}`])||timerStatus||roundSubmitted} onClick={()=>handleYesClick(item.frequencyBand,item.operator,`${item.operator}-${item.frequencyBand}`,item)}>
                   Yes
                 </button>
                 </div>
                 <div style={{paddingLeft:"20px"}}>
-                <button disabled={timerStatus||(toggleYes)||roundSubmitted} onClick={()=>handleNoClick(item.frequencyBand,item.operator,`${item.operator}-${item.frequencyBand}`,item)}>
+                <button disabled={timerStatus||(bidStates[`${item.operator}-${item.frequencyBand}`])||roundSubmitted} onClick={()=>handleNoClick(item.frequencyBand,item.operator,`${item.operator}-${item.frequencyBand}`,item)}>
                 No
                 </button>
                 </div>
