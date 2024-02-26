@@ -56,6 +56,9 @@ function AddItemModal() {
       reservedPrice: reservedPrice,
       epPerBlock: epPerBlock
     });
+
+
+    
     clearForm();
   };
 

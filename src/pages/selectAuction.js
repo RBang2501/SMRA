@@ -34,6 +34,8 @@ const SelectAuction = () => {
       id: auctions.length + 1
     });
     setNewAuctionName("");
+
+   
   };
 
   const handleReadAuctions = () => {

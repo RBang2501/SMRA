@@ -46,7 +46,6 @@ const CompanyAuction = () => {
       const data = snapshot.val();
       if (data) {
         console.log(data);
-        console.log("hehe");
         console.log(data.Holding.holdingCards[0].region)
         setCurCompanyEliScore(data.totalEligibilityPoints);
         setCurCompanyValuation(data.valuation);
@@ -196,10 +195,14 @@ const CompanyAuction = () => {
       // data["companyMapping"]["bsnl"].push(newCartItems);
       // data["companyMapping"]["vi"].push(newCartItems);
       // console.log(data["companyMapping"]);
+
+      
       const companyMapping = data["companyMapping"];
       set(ref(db, `Auctions/` + auctionName + `/companyHistory`), {
         companyMapping
       });
+
+
     })
     console.log("Round Submitted!");
     setRoundSubmitted(true);
