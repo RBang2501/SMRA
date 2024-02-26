@@ -255,30 +255,31 @@ const CompanyAuction = () => {
     onValue(itemsRef, (snapshot) => {
       const data = snapshot.val();
       console.log(data);
-      const intervalId = setInterval(() => {
-        const startTime = data.start || 0;
-        const currentTime = Date.now();
-        const elapsedMilliseconds = currentTime - startTime;
-        const remainingMilliseconds = Math.max(0, 60 * 1000 * data.time - elapsedMilliseconds);
-        setElapsedTime(remainingMilliseconds);
-        setRound(data.round);
+      if(data){
+        const intervalId = setInterval(() => {
+          const startTime = data.start || 0;
+          const currentTime = Date.now();
+          const elapsedMilliseconds = currentTime - startTime;
+          const remainingMilliseconds = Math.max(0, 60 * 1000 * data.time - elapsedMilliseconds);
+          setElapsedTime(remainingMilliseconds);
+          setRound(data.round);
 
-        if (remainingMilliseconds > 0) {
-          setTimerExpired(false);
-          calculateDemand();
-          // clearInterval(intervalId);
-        }
+          if (remainingMilliseconds > 0) {
+            setTimerExpired(false);
+            calculateDemand();
+            // clearInterval(intervalId);
+          }
 
-        if (remainingMilliseconds === 0) {
-          setTimerExpired(true);
-          clearInterval(intervalId);
-        }
-
+          if (remainingMilliseconds === 0) {
+            setTimerExpired(true);
+            clearInterval(intervalId);
+          }
       }, 1000)
       return () => {
         // Stop the interval when the component unmounts
         clearInterval(intervalId);
       };
+    }
     })
 
     // Update the elapsed time when the data changes
