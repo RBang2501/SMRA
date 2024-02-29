@@ -74,27 +74,33 @@ const CompanyAuction = () => {
 
   function findWinner() {
     const db = getDatabase();
-    if(round==0 || round==1){
-      const currWinners = {}
-      itemsOnBid.forEach((item) => {
-        const item_id = `${item.frequencyBand}_${item.operator}`
-        currWinners[item_id] = 'false'
-      })
-      setWinners(currWinners)
-      return
-    }
+    // if(round==0 || round==1){
+    //   const currWinners = {}
+    //   itemsOnBid.forEach((item) => {
+    //     const item_id = `${item.operator}-${item.frequencyBand}`
+    //     currWinners[item_id] = 'false'
+    //   })
+    //   setWinners(currWinners)
+    //   return
+    // }
 
     const refPath = `Auctions/${auctionName}/provisionalWinner/${round-1}/`;
     const itemsRef = ref(db, refPath);
     // const newCartItems = [];
     get((itemsRef)).then((snapshot) => {
       const data = snapshot.val();
-      console.log(data);
+      console.log("Received", data);
       const winners1 = data["winners"]
-      const currWinners = {}
+      const currWinners = {...winners}
       itemsOnBid.forEach((item) => {
-        const item_id = `${item.frequencyBand}_${item.operator}`
+        const item_id = `${item.operator}-${item.frequencyBand}`
         currWinners[item_id] = 'false'
+      })
+      setWinners(currWinners)
+      
+      itemsOnBid.forEach((item) => {
+        const item_id = `${item.operator}-${item.frequencyBand}`
+        // currWinners[item_id] = 'false'
         if (winners1[item_id] && winners1[item_id].length > 0) {
           winners1[item_id].forEach((item1) => {
             // if(item.airtel) console.log("Winner", item.airtel)
@@ -102,12 +108,13 @@ const CompanyAuction = () => {
               if(key == companyName){
                 console.log(item_id, key, item1[key])
                 currWinners[item_id] = 'true'
+                setWinners(currWinners)
               }
             }
           });
         }
       })
-      setWinners(currWinners)
+      
       console.log("Winners" , winners)
     })
   }
@@ -300,6 +307,8 @@ const CompanyAuction = () => {
   setRoundSubmitted(false);
   calculateDemand();
   findWinner();
+  findWinner();
+  findWinner();
 }, [round]);
 
   useEffect(()=>{
@@ -330,6 +339,7 @@ const CompanyAuction = () => {
           if (remainingMilliseconds > 0) {
             setTimerExpired(false);
             calculateDemand();
+            // findWinner();
             // clearInterval(intervalId);
           }
 
