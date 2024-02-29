@@ -36,7 +36,7 @@ const removeItemFromList = (list,itemToRemove) => {
   // Return the modified list
   return list;
 }
-const Tab1 = ({round, roundSubmitted, timerStatus, items, onPurchase, quantities, onEP, EP, winners }) => {
+const Tab1 = ({round, roundSubmitted, timerStatus, items, onPurchase, quantities, onEP, EP, winners, winQuantities}) => {
 // const Tab1 = ({ round, roundSubmitted, timerStatus, items, onPurchase, quantities, onEP, EP }) => {
   const [selectedTab, setSelectedTab] = useState('700');
   const [bids, setBids] = useState([]);
@@ -229,7 +229,7 @@ const Tab1 = ({round, roundSubmitted, timerStatus, items, onPurchase, quantities
           <div className = "auction-input">
             <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
               <div style={{paddingLeft:"20px", paddingBottom:"3vh"}}>
-                <p>Provisional Winner: {winners[`${item.operator}-${item.frequencyBand}`]}</p>
+                <p>Provisional Winner: {winners[`${item.operator}-${item.frequencyBand}`]} ({winQuantities[`${item.operator}-${item.frequencyBand}`]} blocks)</p>
                 <p>Prev Round Demand: {quantities[`${item.operator}-${item.frequencyBand}`]}</p>
                 <p> </p>
                 <input 
