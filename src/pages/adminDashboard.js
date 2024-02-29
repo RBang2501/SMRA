@@ -153,7 +153,7 @@ const publishResult = () => {
       const totalAvailable = {};
 
       airtelList.forEach((item) => {
-          const key = item.frequencyBand + "_" + item.operator;
+          const key = item.operator + "-" + item.frequencyBand;
           if (!matrix[key]) {
               matrix[key] = [];
               totalAvailable[key] = Number(item.unpaired) + Number(item.paired);
@@ -162,7 +162,7 @@ const publishResult = () => {
       });
 
       viList.forEach((item) => {
-          const key = item.frequencyBand + "_" + item.operator;
+          const key = item.operator + "-" + item.frequencyBand;
           if (!matrix[key]) {
               matrix[key] = [];
               totalAvailable[key] = Number(item.unpaired) + Number(item.paired);
@@ -171,7 +171,7 @@ const publishResult = () => {
       });
 
       attList.forEach((item) => {
-          const key = item.frequencyBand + "_" + item.operator;
+          const key = item.operator + "-" + item.frequencyBand;
           if (!matrix[key]) {
               matrix[key] = [];
               totalAvailable[key] = Number(item.unpaired) + Number(item.paired);
@@ -180,7 +180,7 @@ const publishResult = () => {
       });
 
       bsnlList.forEach((item) => {
-          const key = item.frequencyBand + "_" + item.operator;
+          const key = item.operator + "-" + item.frequencyBand;
           if (!matrix[key]) {
               matrix[key] = [];
               totalAvailable[key] = Number(item.unpaired) + Number(item.paired);
