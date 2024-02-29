@@ -112,7 +112,7 @@ const publishResult = () => {
   const db = getDatabase();
   console.log(round);
   const companyRefs = ['airtel', 'rjio', 'vi', 'att', 'bsnl'].map(company => {
-      return ref(db, `Auctions/${auctionName}/companyHistory/companyMapping/${company}/${round - 1}/`);
+      return ref(db, `Auctions/${auctionName}/companyHistory/companyMapping/${company}/${round-1}/`);
   });
 
   // Fetch data for each company from Firebase and update state

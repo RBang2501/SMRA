@@ -17,6 +17,7 @@ const CompanyAuction = () => {
   const [quantities, setQuantities] = useState([]);
   const [EP, setEP] = useState('');  // const [companyDetails, setCompanyDetails] = useState(null);
   const [holdings, setHoldings] = useState([]);
+  const [winners, setWinners] = useState({});
 
   // Fetch company portfolio data
   useEffect(() => {
@@ -67,7 +68,45 @@ const CompanyAuction = () => {
     console.log(holdings);
   }
 
+  function findWinner() {
+    const db = getDatabase();
+    if(round==0 || round==1){
+      const currWinners = {}
+      itemsOnBid.forEach((item) => {
+        const item_id = `${item.frequencyBand}_${item.operator}`
+        currWinners[item_id] = 'false'
+      })
+      setWinners(currWinners)
+      return
+    }
 
+    const refPath = `Auctions/${auctionName}/provisionalWinner/${round-1}/`;
+    const itemsRef = ref(db, refPath);
+    // const newCartItems = [];
+    get((itemsRef)).then((snapshot) => {
+      const data = snapshot.val();
+      console.log(data);
+      const winners1 = data["winners"]
+      const currWinners = {}
+      itemsOnBid.forEach((item) => {
+        const item_id = `${item.frequencyBand}_${item.operator}`
+        currWinners[item_id] = 'false'
+        if (winners1[item_id] && winners1[item_id].length > 0) {
+          winners1[item_id].forEach((item1) => {
+            // if(item.airtel) console.log("Winner", item.airtel)
+            for(let key in item1) {
+              if(key == companyName){
+                console.log(item_id, key, item1[key])
+                currWinners[item_id] = 'true'
+              }
+            }
+          });
+        }
+      })
+      setWinners(currWinners)
+      console.log("Winners" , winners)
+    })
+  }
 
   function calculateDemand() {
     const db = getDatabase();
@@ -250,6 +289,7 @@ const CompanyAuction = () => {
   // This effect will run whenever the value of round changes
   setRoundSubmitted(false);
   calculateDemand();
+  findWinner();
 }, [round]);
 
   useEffect(() => {
@@ -375,7 +415,7 @@ const CompanyAuction = () => {
         </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
-          <Tab1 roundSubmitted = {roundSubmitted} timerStatus = {timerExpired} EP = {EP} onEP = {handleEP} onPurchase ={handlePurchase} items={itemsOnBid} quantities={quantities}/>
+          <Tab1 roundSubmitted = {roundSubmitted} timerStatus = {timerExpired} EP = {EP} onEP = {handleEP} onPurchase ={handlePurchase} items={itemsOnBid} quantities={quantities} winners={winners}/>
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <button disabled={timerExpired||roundSubmitted} onClick={handleSubmitRound}>Submit Round</button>
