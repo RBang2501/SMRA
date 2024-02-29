@@ -28,10 +28,10 @@ const SelectAuction = () => {
   };
 
   const handleCreateAuction = (name) => {
+    // console.log(auctions);
     const db = getDatabase();
     set(ref(db, 'Auctions/' + name), {
       auctionName: name,
-      id: auctions.length + 1
     });
     setNewAuctionName("");
 
@@ -44,13 +44,14 @@ const SelectAuction = () => {
     onValue(starCountRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
+        // console.log(data);
         const auctionsArray = Object.keys(data).map(key => ({
-          id: data[key].id,
-          name: data[key].auctionName
+          name: key,
         }));
         setAuctions(auctionsArray);
       }
     });
+    // console.log(auctions);
   };
 
   // Function to handle click on auction card
@@ -62,33 +63,37 @@ const SelectAuction = () => {
     navigate(path);
   };
 
-  return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-      <div style={{ border: "1px solid #ccc", borderRadius: "10px", padding: "20px" }}>
-        <h1>Select an Auction</h1>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          {/* Input box for creating a new auction */}
-          <input
-            type="text"
-            value={newAuctionName}
-            onChange={(e) => setNewAuctionName(e.target.value)}
-            placeholder="Enter Auction Name"
-            style={{ marginBottom: "10px", padding: "5px", borderRadius: "5px", border: "1px solid #ccc" }}
-          />
-          {/* Button to create a new auction */}
-          <button onClick={() => handleCreateAuction(newAuctionName)} style={{ padding: "5px 10px", borderRadius: "5px", border: "1px solid #007bff", backgroundColor: "#007bff", color: "#fff", cursor: "pointer" }}>Create Auction</button>
-          {/* List of already created auctions as cards */}
-          {auctions.map((auction) => (
-            <div key={auction.id} style={{ marginBottom: "10px", cursor: "pointer" }} onClick={() => handleAuctionCardClick(auction)}>
-              <div style={{ border: "1px solid #ccc", borderRadius: "5px", padding: "10px", width: "200px" }}>
-                <h3 style={{ margin: "0", fontSize: "16px", textAlign: "center" }}>{auction.name}</h3>
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <div style={{ border: "1px solid #ccc", borderRadius: "10px", padding: "20px" }}>
+          <h1>Select Auction</h1>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            {/* Conditionally render input box and create auction button only for admin */}
+            {companyName === "admin" && (
+              <>
+                <input
+                  type="text"
+                  value={newAuctionName}
+                  onChange={(e) => setNewAuctionName(e.target.value)}
+                  placeholder="Enter Auction Name"
+                  style={{ marginBottom: "10px", padding: "5px", borderRadius: "5px", border: "1px solid #ccc" }}
+                />
+                <button onClick={() => handleCreateAuction(newAuctionName)} style={{ padding: "5px 10px", borderRadius: "5px", border: "1px solid #007bff", backgroundColor: "#007bff", color: "#fff", cursor: "pointer" }}>Create Auction</button>
+              </>
+            )}
+            {/* List of already created auctions as cards */}
+            {auctions.map((auction) => (
+              <div key={auction.name} style={{ marginBottom: "10px", cursor: "pointer" }} onClick={() => handleAuctionCardClick(auction)}>
+                <div style={{ border: "1px solid #ccc", borderRadius: "5px", padding: "10px", width: "200px" }}>
+                  <h3 style={{ margin: "0", fontSize: "16px", textAlign: "center" }}>{auction.name}</h3>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+    
 };
 
 export default SelectAuction;
