@@ -4,11 +4,11 @@ import React, { useState, useEffect } from "react";
 import Tab1 from './Tab1';
 import '../Styles/CompanyAuction.css'
 import { getDatabase, ref, get, set, onValue } from "firebase/database";
-import { useParams } from 'react-router-dom';
+import { json, useParams } from 'react-router-dom';
 
 
 const CompanyAuction = () => {
-  const { companyName, auctionName} = useParams();
+  const {companyName, auctionName} = useParams();
   const [currCompanyEliScore, setCurCompanyEliScore] = useState(0);
   const [curCompanyValuation, setCurCompanyValuation] = useState(0);
   const [curCompanyBankGuarantee, setCurCompanyBankGuarantee] = useState(0);
@@ -18,6 +18,10 @@ const CompanyAuction = () => {
   const [EP, setEP] = useState('');  // const [companyDetails, setCompanyDetails] = useState(null);
   const [holdings, setHoldings] = useState([]);
   const [winners, setWinners] = useState({});
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [timerExpired, setTimerExpired] = useState(false);
+  const [roundSubmitted, setRoundSubmitted] = useState(false);
+  const [round, setRound] = useState(0);
 
   // Fetch company portfolio data
   useEffect(() => {
@@ -175,7 +179,16 @@ const CompanyAuction = () => {
     const itemsRef = ref(db, refPath);
     get((itemsRef)).then((snapshot) => {
       const data = snapshot.val();
-      setEP(data);
+      var localep = JSON.parse(localStorage.getItem("EPVALUE"));
+      if(localep==null && (data!=undefined || data !=null)){
+        localStorage.setItem("EPVALUE", JSON.stringify(data))
+        console.log("round ",round)
+        setEP(data)
+      }
+      else{
+        setEP(localep)
+      }
+      
     });
   },[]) 
   useEffect(() => {
@@ -280,18 +293,25 @@ const CompanyAuction = () => {
     </div>
   );
 
-  const [elapsedTime, setElapsedTime] = useState(0);
-  const [timerExpired, setTimerExpired] = useState(false);
-  const [roundSubmitted, setRoundSubmitted] = useState(false);
-  const [round, setRound] = useState(0);
-
+  
   useEffect(() => {
   // This effect will run whenever the value of round changes
+  console.log(round)
   setRoundSubmitted(false);
   calculateDemand();
   findWinner();
 }, [round]);
 
+  useEffect(()=>{
+    const db = getDatabase();
+    const itemsRef= ref(db, `Auctions/${auctionName}/timerData`);
+    get((itemsRef)).then((snapshot) => { 
+      const data = snapshot.val()
+      // if(data.round == 1){
+      //   localStorage.clear()
+      // }
+    })
+  },[])
   useEffect(() => {
     const db = getDatabase();
     const itemsRef= ref(db, `Auctions/${auctionName}/timerData`);
@@ -351,8 +371,11 @@ const CompanyAuction = () => {
     setPurchases(data)
   }
 
-
+  useEffect(()=>{
+    // console.log("TERIYAKI ", EP)
+  },[EP])
   const handleEP = (data) => {
+    // console.log("GOT, ",data);
     setEP(data)
   }
 
@@ -415,7 +438,8 @@ const CompanyAuction = () => {
         </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
-          <Tab1 roundSubmitted = {roundSubmitted} timerStatus = {timerExpired} EP = {EP} onEP = {handleEP} onPurchase ={handlePurchase} items={itemsOnBid} quantities={quantities} winners={winners}/>
+          <Tab1 round = {round} roundSubmitted = {roundSubmitted} timerStatus = {timerExpired} EP = {EP} onEP = {handleEP} onPurchase ={handlePurchase} items={itemsOnBid} quantities={quantities} winners={winners}/>
+          {/* <Tab1 round = {round} roundSubmitted = {roundSubmitted} timerStatus = {timerExpired} EP = {EP} onEP = {handleEP} onPurchase ={handlePurchase} items={itemsOnBid} quantities={quantities}/> */}
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <button disabled={timerExpired||roundSubmitted} onClick={handleSubmitRound}>Submit Round</button>

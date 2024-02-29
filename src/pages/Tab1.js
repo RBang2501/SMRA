@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import "../Styles/CompanyAuction.css"
+import { json } from 'react-router-dom';
 const removeDuplicateObjects = (listOfObjects) => {
   // Create an empty Set to keep track of unique object representations
   const uniqueObjectStrings = new Set();
@@ -35,7 +36,8 @@ const removeItemFromList = (list,itemToRemove) => {
   // Return the modified list
   return list;
 }
-const Tab1 = ({ roundSubmitted, timerStatus, items, onPurchase, quantities, onEP, EP, winners }) => {
+const Tab1 = ({round, roundSubmitted, timerStatus, items, onPurchase, quantities, onEP, EP, winners }) => {
+// const Tab1 = ({ round, roundSubmitted, timerStatus, items, onPurchase, quantities, onEP, EP }) => {
   const [selectedTab, setSelectedTab] = useState('700');
   const [bids, setBids] = useState([]);
   const [toggleYes, setToggle] = useState(true);
@@ -45,6 +47,12 @@ const Tab1 = ({ roundSubmitted, timerStatus, items, onPurchase, quantities, onEP
   const [list, setList] = useState([])
   const [curEP, setCurEP] = useState('');
   useEffect(()=>{
+    var localep = JSON.parse(localStorage.getItem("EPVALUE"));
+    var locallist = JSON.parse(localStorage.getItem("LISTVALUE"))
+    var localbidstates = JSON.parse(localStorage.getItem("BIDSTATESVALUE"))
+    var localbids = JSON.parse(localStorage.getItem("BIDVALUES"));
+
+    console.log("local ep : ", localep, " \nlocallist : ",locallist, " \n localbidstate : ",localbidstates, " \n local bids : ", localbids)
     const tempbids = {};
     const tempbidStates = {};
     items.forEach(item => {
@@ -54,13 +62,26 @@ const Tab1 = ({ roundSubmitted, timerStatus, items, onPurchase, quantities, onEP
         tempbidStates[itemId] = true;
       }
     });
-    setCurEP(EP);
-    setToggle(true)
-    setBidStates(tempbidStates)
-    console.log("tempbids", tempbids)
+    if(localep!=null && localbids!= null && locallist != null)
+    {
+      setCurEP(localep);
+      setToggle(true)
+      setBidStates(localbidstates)
+      setBids(localbids)
+      setList(locallist)
+      onEP(localep)
+    }
+    else{
+      setCurEP(EP);
+      setToggle(true)
+      setBidStates(tempbidStates)
+      setBids(tempbids)
+      console.log("tempbids", tempbids)
+    }
+    
   },[items])
   
-
+  
   const handleBidChange = (e, index) => {
     console.log("bids", bids)
     const newBids = {}
@@ -74,6 +95,8 @@ const Tab1 = ({ roundSubmitted, timerStatus, items, onPurchase, quantities, onEP
         }
     });
     setBids(newBids);
+    console.log(newBids);
+    localStorage.setItem("BIDVALUES", JSON.stringify(newBids));
   }
   
   useEffect(()=>{
@@ -132,6 +155,10 @@ const Tab1 = ({ roundSubmitted, timerStatus, items, onPurchase, quantities, onEP
     if(tep<0) tep = curEP
     setCurEP(tep);
     setList(temp)
+    localStorage.setItem("EPVALUE", JSON.stringify(tep));
+    localStorage.setItem("LISTVALUE", JSON.stringify(temp));
+    localStorage.setItem("BIDSTATESVALUE",JSON.stringify(newBidStates));
+    
   }
   
   
@@ -160,9 +187,12 @@ const Tab1 = ({ roundSubmitted, timerStatus, items, onPurchase, quantities, onEP
     });
     setBidStates(newBidStates)
 
-    const tep = (curEP+ reqEP)
+    const tep = (curEP + reqEP)
     setCurEP(tep);
     setList(temp);
+    localStorage.setItem("EPVALUE", JSON.stringify(tep));
+    localStorage.setItem("LISTVALUE", JSON.stringify(temp));
+    localStorage.setItem("BIDSTATESVALUE",JSON.stringify(newBidStates));
   }
 
 // console.log("this", items)
