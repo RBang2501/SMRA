@@ -228,7 +228,7 @@ const CompanyAuction = () => {
         setItemsOnBid(newCartItems);
       }
     });
-  }, []); // Empty dependency array to run the effect only once on component mount
+  }, [round]); // Empty dependency array to run the effect only once on component mount
   
 
   const handleSubmitRound = () => {

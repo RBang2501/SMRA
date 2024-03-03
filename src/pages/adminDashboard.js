@@ -9,6 +9,7 @@ function AdminDashboard() {
   const [items, setItems] = useState([]);
   const [auctionName, setAuctionName] = useState('Default Auction Name');
   const [round, setRound] = useState(1); 
+  const [demand, setDemand] = useState({});
   
  
 
@@ -35,7 +36,54 @@ function AdminDashboard() {
   };
 
   
+  const updatePrice= () =>{
+      const db = getDatabase();
+      const itemsRef = ref(db, `Auctions/${auctionName}/Items`);
+      console.log("Hello");
+      get((itemsRef)).then((snapshot) => {
+        const data = snapshot.val();
+        console.log("Price Initial data",data)
 
+        if (data) {
+          const updatedData = {};
+
+          Object.keys(data).forEach((freqBand) => {
+            Object.keys(data[freqBand]).forEach((region) => {
+              const currentReservedPrice = data[freqBand][region].reservedPrice;
+              const paired = data[freqBand][region].pairedBlocks;
+              const unpaired = data[freqBand][region].unpairedBlocks;
+
+              const key = region + "-" + freqBand
+              if(demand[key]>=Number(paired)+Number(unpaired)){
+                const increasedReservedPrice = Math.round(Number(currentReservedPrice) * 1.1); // Increase by 10%
+                // Update the reserved price in the updatedData object
+                if (!updatedData[freqBand]) {
+                  updatedData[freqBand] = {};
+                }
+  
+                updatedData[freqBand][region] = {
+                  ...data[freqBand][region],
+                  reservedPrice: increasedReservedPrice,
+                };
+              }
+              else{
+                if (!updatedData[freqBand]) {
+                  updatedData[freqBand] = {};
+                }
+                
+                updatedData[freqBand][region] = {
+                  ...data[freqBand][region],
+                };
+              }
+            });
+          });
+
+          // Push the updated data back to the database
+          console.log("Updated price:", updatedData);
+          set(itemsRef, updatedData);
+        }
+      });
+ }
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -198,31 +246,36 @@ const publishResult = () => {
 
       // Select bids until the sum of quantities reaches the available quantity for each item
       const winners = {};
+      const demand1 = {};
       Object.keys(matrix).forEach((key) => {
           const available = totalAvailable[key];
           console.log(available);
           let sum = 0;
           winners[key] = [];
+          demand1[key]=0;
           matrix[key].forEach((bid) => {
+              demand1[key]+=bid.quantity;
               if (sum + bid.quantity <= available && bid.quantity > 0) {
                   winners[key].push({ [bid.company]: bid.quantity });
                   sum += bid.quantity;
               }
           });
+          setDemand(demand1);
       });
+
 
       console.log(winners);
       set(ref(db, `Auctions/${auctionName}/provisionalWinner/${round-1}/`), {
         winners,
       });
 
-
   }).catch(error => {
       console.error(error);
   });
+
 }
 
-
+ 
 
 
 
@@ -297,6 +350,7 @@ const publishResult = () => {
       <button onClick={handleDelete} style={{marginLeft:'50px'}}>Delete Company History</button>
       <button onClick={resetRound} style={{marginLeft:'50px'}}>Round : 0</button>
       <button onClick={publishResult} style={{marginLeft:'50px'}}>UpdateAfterRound</button>
+      <button onClick={updatePrice} style={{marginLeft:'50px'}}>UpdatePrice</button>
       {/* <button onClick={calcWithNewPrice} style={{marginLeft:'50px'}}>WithNewPrice</button> */}
       {/* <button onClick={calc} style={{marginLeft:'50px'}}>Provisional Winner</button> */}
 
