@@ -76,15 +76,18 @@ const CompanyAuction = () => {
 
   function findWinner() {
     const db = getDatabase();
-    // if(round==0 || round==1){
-    //   const currWinners = {}
-    //   itemsOnBid.forEach((item) => {
-    //     const item_id = `${item.operator}-${item.frequencyBand}`
-    //     currWinners[item_id] = 'false'
-    //   })
-    //   setWinners(currWinners)
-    //   return
-    // }
+    if(round==0 || round==1){
+      const currWinners = {}
+      const currQuantities = {}
+      itemsOnBid.forEach((item) => {
+        const item_id = `${item.operator}-${item.frequencyBand}`
+        currWinners[item_id] = 'false'
+        currQuantities[item_id] = 0
+      })
+      setWinners(currWinners)
+      setWinQuantities(currQuantities)
+      return
+    }
 
     const refPath = `Auctions/${auctionName}/provisionalWinner/${round-1}/`;
     const itemsRef = ref(db, refPath);
