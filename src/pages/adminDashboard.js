@@ -8,7 +8,7 @@ function AdminDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [items, setItems] = useState([]);
   const [auctionName, setAuctionName] = useState('Default Auction Name');
-  const [round, setRound] = useState(1); 
+  const [round, setRound] = useState(0); 
   const [demand, setDemand] = useState({});
   
  
@@ -108,9 +108,20 @@ function AdminDashboard() {
     set(ref(db, `Auctions/${auctionName}/timerData`), {
       start: startTime,
       time: 1,
-      round: round
+      round: round+1
     });
     newRound();
+  }
+
+  const handleExtendTimer = () => {
+    const db = getDatabase();
+    const startTime = Date.now();
+    console.log(round);
+    set(ref(db, `Auctions/${auctionName}/timerData`), {
+      start: startTime,
+      time: 1,
+      round: round
+    });
   }
 
 
@@ -141,11 +152,11 @@ function AdminDashboard() {
     const itemsRef2 = ref(db, refPath2);
     get((itemsRef2)).then((snapshot) => {
       const data = snapshot.val();
-      data["companyMapping"]["airtel"][round] = newCartItems;
-      data["companyMapping"]["rjio"][round] = newCartItems;
-      data["companyMapping"]["att"][round] = newCartItems;
-      data["companyMapping"]["bsnl"][round] = newCartItems;
-      data["companyMapping"]["vi"][round] = newCartItems;
+      data["companyMapping"]["airtel"][round+1] = newCartItems;
+      data["companyMapping"]["rjio"][round+1] = newCartItems;
+      data["companyMapping"]["att"][round+1] = newCartItems;
+      data["companyMapping"]["bsnl"][round+1] = newCartItems;
+      data["companyMapping"]["vi"][round+1] = newCartItems;
       console.log(data["companyMapping"]);
       const companyMapping = data["companyMapping"]
       set(ref(db, `Auctions/${auctionName}/companyHistory`), {
@@ -160,7 +171,7 @@ const publishResult = () => {
   const db = getDatabase();
   console.log(round);
   const companyRefs = ['airtel', 'rjio', 'vi', 'att', 'bsnl'].map(company => {
-      return ref(db, `Auctions/${auctionName}/companyHistory/companyMapping/${company}/${round-1}/`);
+      return ref(db, `Auctions/${auctionName}/companyHistory/companyMapping/${company}/${round}/`);
   });
 
   // Fetch data for each company from Firebase and update state
@@ -265,7 +276,7 @@ const publishResult = () => {
 
 
       console.log(winners);
-      set(ref(db, `Auctions/${auctionName}/provisionalWinner/${round-1}/`), {
+      set(ref(db, `Auctions/${auctionName}/provisionalWinner/${round}/`), {
         winners,
       });
 
@@ -345,6 +356,7 @@ const publishResult = () => {
       <h2>Auction Instance: {auctionName}</h2>
       {/* <button onClick={deleteAuction} style={{ position: 'fixed', top: '10%', right: '20px', transform: 'translateY(-50%)' }}>Delete Auction</button> */}
       <button onClick={handleStartTimer} style={{ marginLeft: '50px' }}>Start Timer</button>
+      <button onClick={handleExtendTimer} style={{ marginLeft: '50px' }}>Extend Timer</button>
       <button onClick={openModal} style={{ marginLeft: '50px' }}>Add Item</button>
       <button onClick={handleInit} style={{marginLeft:'50px'}}>Init Company History</button>
       <button onClick={handleDelete} style={{marginLeft:'50px'}}>Delete Company History</button>
