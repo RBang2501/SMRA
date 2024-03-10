@@ -223,6 +223,7 @@ const Tab1 = ({round, roundSubmitted, timerStatus, items, onPurchase, quantities
             <p>Unpaired: {item.unpaired}</p>
             <p>Paired: {item.paired}</p>
             <p>EP(per block): {item.epPerBlock}</p>
+            <p>Reserve Price: {item.reservedPrice}</p>
             
           </div>
 
