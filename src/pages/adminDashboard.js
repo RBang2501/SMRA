@@ -223,6 +223,72 @@ const publishResult = () => {
 }
 
 
+function calculateDemand() {
+  const db = getDatabase();
+  const refPath2 = `Auctions/${auctionName}/companyHistory`;
+  const itemsRef2 = ref(db, refPath2);
+  get((itemsRef2)).then((snapshot) => {
+    const data = snapshot.val();
+    const itemQuantities = {};
+    const itemAvailable = {};
+    const priceOfEachItem = {};
+    if(round>1){
+  data["companyMapping"]["airtel"][round-1].forEach((item) => {
+    const itemId = `${item.operator}-${item.frequencyBand}`;
+    if (!itemQuantities[itemId]) {
+      itemQuantities[itemId] = 0;
+      itemAvailable[itemId] = 0;
+    }
+    itemQuantities[itemId] += item.qty;
+    itemAvailable[itemId] = item.unpairedBlocks + item.pairedBlocks;
+    priceOfEachItem[itemId] = item.reservedPrice
+  });
+  data["companyMapping"]["rjio"][round-1].forEach((item) => {
+    const itemId = `${item.operator}-${item.frequencyBand}`;
+    if (!itemQuantities[itemId]) {
+      itemQuantities[itemId] = 0;
+    }
+    itemQuantities[itemId] += item.qty;
+  });
+  data["companyMapping"]["bsnl"][round-1].forEach((item) => {
+    const itemId = `${item.operator}-${item.frequencyBand}`;
+    if (!itemQuantities[itemId]) {
+      itemQuantities[itemId] = 0;
+    }
+    itemQuantities[itemId] += item.qty;
+  });
+  data["companyMapping"]["att"][round-1].forEach((item) => {
+    const itemId = `${item.operator}-${item.frequencyBand}`;
+    if (!itemQuantities[itemId]) {
+      itemQuantities[itemId] = 0;
+    }
+    itemQuantities[itemId] += item.qty;
+  });
+  data["companyMapping"]["vi"][round-1].forEach((item) => {
+    const itemId = `${item.operator}-${item.frequencyBand}`;
+    if (!itemQuantities[itemId]) {
+      itemQuantities[itemId] = 0;
+    }
+    itemQuantities[itemId] += item.qty;
+    if(itemQuantities[itemId] > itemAvailable[itemId]){
+      priceOfEachItem[itemId] += 0.1*priceOfEachItem[itemId];
+    }
+    
+  });
+    
+    console.log(itemQuantities);
+    console.log(itemAvailable);
+    set(ref(db, `Auctions/${auctionName}/DemandAndPrice/${round-1}/`), {
+      itemQuantities,
+      priceOfEachItem,
+    });
+
+    // setQuantities(itemQuantities);    
+}
+  })
+}
+
+
 
 
 
@@ -297,6 +363,7 @@ const publishResult = () => {
       <button onClick={handleDelete} style={{marginLeft:'50px'}}>Delete Company History</button>
       <button onClick={resetRound} style={{marginLeft:'50px'}}>Round : 0</button>
       <button onClick={publishResult} style={{marginLeft:'50px'}}>UpdateAfterRound</button>
+      <button onClick={calculateDemand} style={{marginLeft:'50px'}}>DemandAndPrice</button>
       {/* <button onClick={calcWithNewPrice} style={{marginLeft:'50px'}}>WithNewPrice</button> */}
       {/* <button onClick={calc} style={{marginLeft:'50px'}}>Provisional Winner</button> */}
 
