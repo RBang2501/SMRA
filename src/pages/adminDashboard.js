@@ -10,6 +10,8 @@ function AdminDashboard() {
   const [auctionName, setAuctionName] = useState('Default Auction Name');
   const [round, setRound] = useState(0); 
   const [demand, setDemand] = useState({});
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [timerExpired, setTimerExpired] = useState(false);
   
  
 
@@ -48,6 +50,45 @@ function AdminDashboard() {
   const openModal = () => {
     setIsModalOpen(true);
   };
+
+  useEffect(() => {
+    const db = getDatabase();
+    const itemsRef= ref(db, `Auctions/${auctionName}/timerData`);
+    onValue(itemsRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log(data);
+      if(data){
+        const intervalId = setInterval(() => {
+          const startTime = data.start || 0;
+          const currentTime = Date.now();
+          const elapsedMilliseconds = currentTime - startTime;
+          const remainingMilliseconds = Math.max(0, 60 * 1000 * data.time - elapsedMilliseconds);
+          setElapsedTime(remainingMilliseconds);
+          setRound(data.round);
+
+          if (remainingMilliseconds > 0) {
+            setTimerExpired(false);
+            calculateDemand();
+            // findWinner();
+            // clearInterval(intervalId);
+          }
+
+          if (remainingMilliseconds === 0) {
+            setTimerExpired(true);
+            clearInterval(intervalId);
+          }
+      }, 1000)
+      return () => {
+        // Stop the interval when the component unmounts
+        clearInterval(intervalId);
+      };
+    }
+    })
+
+    }, []); 
+
+  const minutes = Math.floor(elapsedTime / 1000 / 60);
+  const seconds = Math.floor((elapsedTime / 1000) % 60);
 
   
   const updatePrice= () =>{
@@ -436,7 +477,7 @@ function calculateDemand() {
     <div className="admin-dashboard">
       <h2>Auction Instance: {auctionName}</h2>
       {/* <button onClick={deleteAuction} style={{ position: 'fixed', top: '10%', right: '20px', transform: 'translateY(-50%)' }}>Delete Auction</button> */}
-      <button onClick={handleStartTimer} style={{ marginLeft: '50px' }}>Start Timer</button>
+      <button onClick={handleStartTimer} disabled={!timerExpired} style={{ marginLeft: '50px' }}>Start Timer</button>
       <button onClick={handleExtendTimer} style={{ marginLeft: '50px' }}>Extend Timer</button>
       <button onClick={openModal} style={{ marginLeft: '50px' }}>Add Item</button>
       <button onClick={handleInit} style={{marginLeft:'50px'}}>Init Company History</button>
@@ -444,6 +485,9 @@ function calculateDemand() {
       <button onClick={resetRound} style={{marginLeft:'50px'}}>Round : 0</button>
       <button onClick={publishResult} style={{marginLeft:'50px'}}>UpdateAfterRound</button>
       <button onClick={updatePrice} style={{marginLeft:'50px'}}>UpdatePrice</button>
+      <div class="timer-box">
+          <span id="minutes">{minutes}</span>:<span id="seconds">{seconds}</span>
+      </div>
       {/* <button onClick={calcWithNewPrice} style={{marginLeft:'50px'}}>WithNewPrice</button> */}
       {/* <button onClick={calc} style={{marginLeft:'50px'}}>Provisional Winner</button> */}
 
