@@ -80,14 +80,14 @@ const Home = () => {
             </div>
             <button type="submit">Sign In</button>
           </form>
-          <div className="links">
+          {/* <div className="links">
             <p>
               <Link to="/forgot-password">Forgot Password</Link>
             </p>
             <p>
               <Link to="/register-company">Register Company</Link>
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
