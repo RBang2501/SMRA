@@ -79,13 +79,16 @@ const CompanyAuction = () => {
     if(round==0 || round==1){
       const currWinners = {}
       const currQuantities = {}
+      const currPrices = {}
       itemsOnBid.forEach((item) => {
         const item_id = `${item.operator}-${item.frequencyBand}`
         currWinners[item_id] = 'false'
         currQuantities[item_id] = 0
+        currPrices[item_id] = 'NA'
       })
       setWinners(currWinners)
       setWinQuantities(currQuantities)
+      setWinPrices(currPrices)
       return
     }
 
@@ -98,13 +101,16 @@ const CompanyAuction = () => {
       const winners1 = data["winners"]
       const currWinners = {...winners}
       const currQuantities = {...winQuantities}
+      const currPrices = {...winPrices}
       itemsOnBid.forEach((item) => {
         const item_id = `${item.operator}-${item.frequencyBand}`
         currWinners[item_id] = 'false'
         currQuantities[item_id] = 0
+        currPrices[item_id] = 'NA'
       })
       setWinners(currWinners)
       setWinQuantities(currQuantities)
+      setWinPrices(currPrices)
 
       itemsOnBid.forEach((item) => {
         const item_id = `${item.operator}-${item.frequencyBand}`
@@ -119,6 +125,11 @@ const CompanyAuction = () => {
                 currQuantities[item_id] = item1[key]
                 setWinners(currWinners)
                 setWinQuantities(currQuantities)
+              }
+              if(key=='price' && currWinners[item_id]=='true'){
+                currPrices[item_id] = item1[key]
+                setWinPrices(currPrices)
+                console.log("PRICE", item1[key])
               }
             }
           });
@@ -460,7 +471,7 @@ const CompanyAuction = () => {
         </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
-          <Tab1 round = {round} roundSubmitted = {roundSubmitted} timerStatus = {timerExpired} EP = {EP} onEP = {handleEP} onPurchase ={handlePurchase} items={itemsOnBid} quantities={quantities} winners={winners} winQuantities={winQuantities}/>
+          <Tab1 round = {round} roundSubmitted = {roundSubmitted} timerStatus = {timerExpired} EP = {EP} onEP = {handleEP} onPurchase ={handlePurchase} items={itemsOnBid} quantities={quantities} winners={winners} winQuantities={winQuantities} winPrices={winPrices}/>
           {/* <Tab1 round = {round} roundSubmitted = {roundSubmitted} timerStatus = {timerExpired} EP = {EP} onEP = {handleEP} onPurchase ={handlePurchase} items={itemsOnBid} quantities={quantities}/> */}
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>

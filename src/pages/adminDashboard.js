@@ -35,28 +35,20 @@ function AdminDashboard() {
           setRound(0)
         }
       })
+
+    // const db = getDatabase();
   })
-  useEffect(() => {
-    // Extract auctionName from the path parameters
-    const { pathname } = location;
-    const parts = pathname.split('/');
-    const lastPart = parts[parts.length - 1];
-
-
-    // Set auctionName to the last part of the path
-    setAuctionName(lastPart || 'Default Auction Name');
-  }, [location.pathname]);
-
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
 
   useEffect(() => {
+    getTimer()
+  }, [round])
+
+  function getTimer(){
     const db = getDatabase();
-    const itemsRef= ref(db, `Auctions/${auctionName}/timerData`);
-    onValue(itemsRef, (snapshot) => {
+    const timeRef= ref(db, `Auctions/${auctionName}/timerData`);
+    get((timeRef)).then((snapshot) => {
       const data = snapshot.val();
-      console.log(data);
+      // console.log(data);
       if(data){
         const intervalId = setInterval(() => {
           const startTime = data.start || 0;
@@ -64,11 +56,11 @@ function AdminDashboard() {
           const elapsedMilliseconds = currentTime - startTime;
           const remainingMilliseconds = Math.max(0, 60 * 1000 * data.time - elapsedMilliseconds);
           setElapsedTime(remainingMilliseconds);
-          setRound(data.round);
+          // setRound(data.round);
 
           if (remainingMilliseconds > 0) {
             setTimerExpired(false);
-            calculateDemand();
+            // calculateDemand();
             // findWinner();
             // clearInterval(intervalId);
           }
@@ -84,8 +76,24 @@ function AdminDashboard() {
       };
     }
     })
+  }
+  
+  useEffect(() => {
+    // Extract auctionName from the path parameters
+    const { pathname } = location;
+    const parts = pathname.split('/');
+    const lastPart = parts[parts.length - 1];
 
-    }, []); 
+
+    // Set auctionName to the last part of the path
+    setAuctionName(lastPart || 'Default Auction Name');
+  }, [location.pathname]);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+ 
 
   const minutes = Math.floor(elapsedTime / 1000 / 60);
   const seconds = Math.floor((elapsedTime / 1000) % 60);
@@ -265,12 +273,14 @@ const publishResult = () => {
 
       const matrix = {};
       const totalAvailable = {};
+      const price = {};
 
       airtelList.forEach((item) => {
           const key = item.operator + "-" + item.frequencyBand;
           if (!matrix[key]) {
               matrix[key] = [];
               totalAvailable[key] = Number(item.unpaired) + Number(item.paired);
+              price[key] = Number(item.reservedPrice)
           }
           matrix[key].push({ company: 'airtel', quantity: item.qty });
       });
@@ -280,6 +290,7 @@ const publishResult = () => {
           if (!matrix[key]) {
               matrix[key] = [];
               totalAvailable[key] = Number(item.unpaired) + Number(item.paired);
+              price[key] = Number(item.reservedPrice)
           }
           matrix[key].push({ company: 'vi', quantity: item.qty });
       });
@@ -289,6 +300,7 @@ const publishResult = () => {
           if (!matrix[key]) {
               matrix[key] = [];
               totalAvailable[key] = Number(item.unpaired) + Number(item.paired);
+              price[key] = Number(item.reservedPrice)
           }
           matrix[key].push({ company: 'att', quantity: item.qty });
       });
@@ -298,6 +310,7 @@ const publishResult = () => {
           if (!matrix[key]) {
               matrix[key] = [];
               totalAvailable[key] = Number(item.unpaired) + Number(item.paired);
+              price[key] = Number(item.reservedPrice)
           }
           matrix[key].push({ company: 'bsnl', quantity: item.qty });
       });
@@ -324,8 +337,11 @@ const publishResult = () => {
               if (sum + bid.quantity <= available && bid.quantity > 0) {
                   winners[key].push({ [bid.company]: bid.quantity });
                   sum += bid.quantity;
+                  winners[key].push({ "price": price[key] });
+                  console.log("price", price[key])
               }
           });
+         
           setDemand(demand1);
       });
 
@@ -477,7 +493,7 @@ function calculateDemand() {
     <div className="admin-dashboard">
       <h2>Auction Instance: {auctionName}</h2>
       {/* <button onClick={deleteAuction} style={{ position: 'fixed', top: '10%', right: '20px', transform: 'translateY(-50%)' }}>Delete Auction</button> */}
-      <button onClick={handleStartTimer} disabled={!timerExpired} style={{ marginLeft: '50px' }}>Start Timer</button>
+      <button onClick={handleStartTimer} style={{ marginLeft: '50px' }}>Start Timer</button>
       <button onClick={handleExtendTimer} style={{ marginLeft: '50px' }}>Extend Timer</button>
       <button onClick={openModal} style={{ marginLeft: '50px' }}>Add Item</button>
       <button onClick={handleInit} style={{marginLeft:'50px'}}>Init Company History</button>

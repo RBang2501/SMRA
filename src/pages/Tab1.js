@@ -36,7 +36,7 @@ const removeItemFromList = (list,itemToRemove) => {
   // Return the modified list
   return list;
 }
-const Tab1 = ({round, roundSubmitted, timerStatus, items, onPurchase, quantities, onEP, EP, winners, winQuantities}) => {
+const Tab1 = ({round, roundSubmitted, timerStatus, items, onPurchase, quantities, onEP, EP, winners, winQuantities, winPrices}) => {
 // const Tab1 = ({ round, roundSubmitted, timerStatus, items, onPurchase, quantities, onEP, EP }) => {
   const [selectedTab, setSelectedTab] = useState('700');
   const [bids, setBids] = useState([]);
@@ -219,19 +219,27 @@ const Tab1 = ({round, roundSubmitted, timerStatus, items, onPurchase, quantities
           {/*...item details*/}
           <div className ="deets">
             <h3>{item.operator}</h3>
-            <p>Frequency: {item.frequencyBand}</p>
-            <p>Unpaired: {item.unpaired}</p>
-            <p>Paired: {item.paired}</p>
-            <p>EP(per block): {item.epPerBlock}</p>
-            <p>Reserve Price: {item.reservedPrice}</p>
+            <pre>Frequency: {item.frequencyBand}</pre>
+            <pre>Unpaired: {item.unpaired}</pre>
+            <pre>Paired: {item.paired}</pre>
+            <pre>EP(per block): {item.epPerBlock}</pre>
+            <pre>Reserve Price: {item.reservedPrice}</pre>
             
           </div>
 
           <div className = "auction-input">
             <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
               <div style={{paddingLeft:"20px", paddingBottom:"3vh"}}>
-                <p>Provisional Winner: {winners[`${item.operator}-${item.frequencyBand}`]} ({winQuantities[`${item.operator}-${item.frequencyBand}`]} blocks)</p>
-                <p>Prev Round Demand: {quantities[`${item.operator}-${item.frequencyBand}`]}</p>
+                {/* <p>Provisional Winner: {winners[`${item.operator}-${item.frequencyBand}`]} ({winQuantities[`${item.operator}-${item.frequencyBand}`]} blocks at RP: {winPrices[`${item.operator}-${item.frequencyBand}`]})</p> */}
+                {winners[`${item.operator}-${item.frequencyBand}`] == 'true' ? (
+                  <p>
+                    Provisional Winner: (
+                    {winQuantities[`${item.operator}-${item.frequencyBand}`]} blocks at RP:{' '}
+                    {winPrices[`${item.operator}-${item.frequencyBand}`]}
+                    )
+                  </p>
+                ) : <p>You are not a provisional Winner</p>}
+                <pre>Prev Round Demand: {quantities[`${item.operator}-${item.frequencyBand}`]}</pre>
                 <p> </p>
                 <input 
                 disabled={(!bidStates[`${item.operator}-${item.frequencyBand}`])||timerStatus||roundSubmitted}
