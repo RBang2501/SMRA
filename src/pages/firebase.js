@@ -4,15 +4,17 @@ import "firebase/compat/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCMn9RXaJc3lWzvYBSzDF3L_Hb-oC7yv_Q",
-  authDomain: "smra-499de.firebaseapp.com",
-  projectId: "smra-499de",
-  storageBucket: "smra-499de.appspot.com",
-  messagingSenderId: "324786353304",
-  appId: "1:324786353304:web:c07098ab2ce96c03c0cced"
+  apiKey: "AIzaSyD3Rrrllmjd8PvymunPkyi4hoNQqU0IvVY",
+  authDomain: "smra-final.firebaseapp.com",
+  projectId: "smra-final",
+  storageBucket: "smra-final.appspot.com",
+  messagingSenderId: "1033557091557",
+  appId: "1:1033557091557:web:cb2b861caded7a52b1200c"
 };
+
 
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
