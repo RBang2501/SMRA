@@ -445,6 +445,8 @@ const CompanyAuction = () => {
         paddingBottom:"20px", borderRadius:"10px", maxHeight:"94vh", marginTop:"1vh", marginRight:"1vh"}}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         <h1>Items On Bid</h1>
+        </div><div style={{ display: "flex", alignItems: "center" }}>
+          <pre>            Timer                  EP                    Round</pre>
         </div>
         <div style={{ display: "flex", alignItems: "center" }}>
         <div class="timer-box">
