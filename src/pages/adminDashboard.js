@@ -21,6 +21,9 @@ function AdminDashboard() {
   const [viList, setViList] = useState([]);
   const location = useLocation();
   useEffect(() => {
+    
+  })
+  useEffect(() => {
     // Extract auctionName from the path parameters
     const { pathname } = location;
     const parts = pathname.split('/');
