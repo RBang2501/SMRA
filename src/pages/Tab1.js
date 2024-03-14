@@ -139,6 +139,12 @@ const Tab1 = ({round, roundSubmitted, timerStatus, items, onPurchase, quantities
       alert("Cannot add! Quantity entered is more than available spectrum")
       return;
     }
+    else if(winners[`${item.operator}-${item.frequencyBand}`] == 'true' && 
+            Number(item.reservedPrice)>Number(winPrices[`${item.operator}-${item.frequencyBand}`]) &&
+            bids[index]<winQuantities[`${item.operator}-${item.frequencyBand}`]){
+        alert("You cannot enter a lower bid than before and you are the provisional winner and the price has not changed.")
+        return;
+      }
     setToggle(false)
     const newBidStates = {}
     items.forEach(item => {
