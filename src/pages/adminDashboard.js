@@ -21,7 +21,18 @@ function AdminDashboard() {
   const [viList, setViList] = useState([]);
   const location = useLocation();
   useEffect(() => {
-    
+    const db = getDatabase();
+      const itemsRef = ref(db, `Auctions/${auctionName}/timerData`);
+      get((itemsRef)).then((snapshot) => {
+        const data = snapshot.val();
+        if(data){
+          const r = data["round"]
+          setRound(r)
+        }
+        else{
+          setRound(0)
+        }
+      })
   })
   useEffect(() => {
     // Extract auctionName from the path parameters
