@@ -14,12 +14,12 @@
 
 .left-half {
     width: 40%;
-    background-color: #e0e0e0; /* Example background color for left half */
+    background-color: white; /* Example background color for left half */
 }
 
 .right-half {
     width: 60%;
-    background-color: #f0f0ff; /* Example background color for right half */
+    background-color: #333; /* Example background color for right half */
 }
 
 .middle-box {
@@ -38,13 +38,14 @@
     width: 50%; /* Set the width to match the middle box */
     padding: 10px; /* Add padding */
     height: 50px;
-    background-color: #24a0ed; /* Example background color for the button */
+    background-color: #7DA177; /* Example background color for the button */
     color: #fff; /* Text color */
-    cursor: pointer; /* Add cursor pointer */
     text-align: center; /* Center text */
     font-size: x-large;
 }
-
+.submit-button:hover{
+    background-color:#7DA177;
+}
 .navbar {
     display: flex;
     justify-content: space-around;
@@ -57,7 +58,7 @@
 .tab-button {
     /* cursor: pointer; */
     padding: 10px 20px;
-    background-color: #24a0ed;
+    background-color:  #84A3AC;
     font-size: 16px;
     border-right: 2px solid white;
     border-radius: 0;
@@ -66,11 +67,11 @@
     font-size: x-large;
 }
 .tab-button:hover {
-    background-color: darkblue; /* Change background color on hover */
+    background-color: #52656C;; /* Change background color on hover */
 }
 
 .tab-button.active {
-    background-color: darkblue;
+    background-color:  #52656C;;
 }
 
 .cards-container {
@@ -85,7 +86,7 @@
 .card {
     height: 20%; /* Each card occupies 20% of the remaining height */
     margin-bottom: 2%; /* Add margin between cards */
-    border: 1px solid #24a0ed;
+    border: 1px solid #333;
     border-radius: 0;
     padding: 4px;
     background-color: white;
@@ -166,7 +167,18 @@
 .lock-button,
 .unlock-button {
     width: 45%;
+    background-color: #84A3AC;
+    font-size: medium;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
+
+.lock-button:hover,
+.unlock-button:hover {
+    width: 45%;
+    
+    background-color: #52656C;
+}
+
 
 
 .header-row {
@@ -175,7 +187,7 @@
     width:100%;
     background-color: #f0f0ff; /* Example background color for header rows */
     margin-bottom: 20px;
-
+    
 }
 
 .header-box {
@@ -187,7 +199,7 @@
     display: flex;
     flex-direction: column;
     font-weight: bold;
-    font-size: x-large;
+    font-size: xx-large;
 }
 
 
@@ -198,12 +210,12 @@
     right: 0;
     width: 30%; /* Set the width of the box */
     height: 5%; /* Set the height of the box */
-    background-color: #24a0ed;
+    background-color: white;
 }
 
 
 .timer {
-    font-size: 32px; /* Adjust the font size relative to the box */
+    font-size: 36px; /* Adjust the font size relative to the box */
     font-family: 'Roboto', sans-serif; /* Use the Roboto font */
     font-weight: bold;
     text-align: center;
@@ -231,25 +243,25 @@
 
 .ep-label{
     font-weight: bold;
-    font-size: x-large;
+    font-size: xx-large;
     text-align: center; /* Center the text horizontally */
 }
 .green{
-    color: green;
+    color: #7DA177;
 }
 
 
 .winner-button {
-    background-color: green;
+    background-color: #7DA177;
     color: white;
     padding: 8px 20px;
     border-radius: 4px;
-
+    font: large;
     margin-left: 10px; /* Adjust margin as needed */
     
 }  
 .winner-button:hover {
-    background-color: green;
+    background-color: #7DA177;
 }   
 
 
@@ -307,44 +319,111 @@
     padding: 10px;
     color: #fff;
     border-right:1px solid white;
+    font-size: x-large;
+    font-weight: 400;
 }
+
 .navbar-section:hover {
    background-color: rgb(54, 54, 54);
 }
 
 
+
+.options{
+    width: 90%;
+    /* background-color: black; */
+    display: flex; /* Ensure child elements are displayed in a row */
+    flex-direction: column; /* Arrange child elements vertically */
+    margin-top: 14px;
+    height: 92%;
+
+}
+
+
 .rules-section {
     background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    margin-top: 20px;
+    padding: 16px;
+    width: calc(100% - 40px); /* Occupy full width within the options container minus padding */
 }
-
-.company-details-section {
-    background-color: #fff;
-    height: 30%;
-    padding: 20px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-}
-
-
 .company-details-upper {
-    height: 30%;
-    width: 100%;
-    background-color: #fff; /* Optional: Set background color */
-    padding: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    background-color: black;
+    height: 20vh;
+    width: calc(100% - 40px); /* Occupy full width within the options container minus padding */
+    padding: 10px;
+    background-color: #e0e0ee;
+    margin-bottom: 40px;
 }
 
 .company-details-lower {
-    height: 70%;
+    height: 64vh;
     width: 100%;
-    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-y: auto;
+    border: 1px solid black;
 }
 
-.company-cards {
-    width: 100%; /* Ensure cards take full width of parent container */
+.holdingcompany-cards {
+    max-height: calc(100vh - 200px); /* Adjust the value as needed */
+    overflow-y: auto;
+
+}
+
+.demandcard-grid {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.demandcard-box {
+    flex: 0 0 calc(100% / 3); /* Each card takes 1/3 of the parent width */
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-sizing: border-box;
+    margin-bottom: 7px;
+}
+
+.section {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+
+.supply,
+.demand {
+    font-style: bold;
+    font-size: 300;
+}
+
+.title{
+    font-size: x-large;
+    font-weight: 500;
+    color: black
+}
+
+
+.lightred {
+    background-color: #ffe6e6; /* Light red */
+}
+
+.verylightgrey {
+    background-color: #f2f2f2; /* Very light grey */
+}
+
+
+
+
+.holding-card {
+    height: 20%; /* Each card occupies 20% of the remaining height */
+    margin-bottom: 2%; /* Add margin between cards */
+    border: 1px solid black;
+    border-radius: 0;
+    padding: 4px;
+    background-color: #e0e0ee;
+    overflow-y: auto;
+}
+
+.leftheading{
+    background-color: black;
+}
+
+.red-timer{
+    color: #ee7272;
 }

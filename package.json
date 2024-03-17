@@ -13,6 +13,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.14.0",
+    "chart.js": "^4.4.2",
     "firebase": "^10.8.0",
     "material-ui": "^0.20.2",
     "netlify-cli": "^17.17.1",

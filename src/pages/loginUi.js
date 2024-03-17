@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './loginUI.css'; // Import CSS file
 
 function LoginUi() {
-
-    const [showRules, setShowRules] = useState(false);
-    const [showCompanyDetails, setShowCompanyDetails] = useState(false);
+    const [showSpectrumDemand, setShowSpectrumDemand] = useState(false);
+    const [showCompanyDetails, setShowCompanyDetails] = useState(true);
 
     // Dummy list of auction rules
     const auctionRules = [
@@ -19,6 +18,20 @@ function LoginUi() {
         'Tab 3': 2,
         'Tab 4': 4
     };
+
+    const dummyDemandData = [
+        80,  // Demand for Card 1
+        90,  // Demand for Card 2
+        75,  // Demand for Card 3
+        // Add more demand data as needed
+    ];
+
+    const dummySupplyData = [
+        70,  // Supply for Card 1
+        60,  // Supply for Card 2
+        85,  // Supply for Card 3
+        // Add more supply data as needed
+    ];
 
     const [activeTab, setActiveTab] = useState('Tab 1');
     const [timer, setTimer] = useState(0);
@@ -51,9 +64,20 @@ function LoginUi() {
     };
 
     // Dummy list of cards
+
+    const demandData = [
+        { cardName: "Card 1", supply: 70, demand: 80 },
+        { cardName: "Card 2", supply: 60, demand: 90 },
+        { cardName: "Card 3", supply: 85, demand: 75 },
+        // Add more cards as needed
+    ];
     const cardsData = [
         { name: "Card 1", region: "Region 1" },
         { name: "Card 2", region: "Region 2" },
+        { name: "Card 3", region: "Region 3" },
+        { name: "Card 3", region: "Region 3" },
+        { name: "Card 3", region: "Region 3" },
+        { name: "Card 3", region: "Region 3" },
         { name: "Card 3", region: "Region 3" },
         // Add more cards as needed
     ];
@@ -62,54 +86,67 @@ function LoginUi() {
         <div className="container">
             <div className="left-half">
                 <div className="leftnavbar">
-                    <div className="navbar-section" onClick={() => { setShowRules(false); setShowCompanyDetails(true); }}>Company Details</div>
-                    <div className="navbar-section" onClick={() => { setShowRules(true); setShowCompanyDetails(false); }}>Auction Rules</div>
+                    <div className="navbar-section" onClick={() => { setShowSpectrumDemand(false); setShowCompanyDetails(true); }}>Company Portfolio</div>
+                    <div className="navbar-section" onClick={() => { setShowSpectrumDemand(true); setShowCompanyDetails(false); }}>Spectrum Demand </div>
                 </div>
-                {showRules && (
-                    <div className="rules-section">
-                        <h2>Auction Rules</h2>
-                        <ol className="rules-list">
-                            {auctionRules.map((rule, index) => (
-                                <li key={index}>{rule}</li>
-                            ))}
-                        </ol>
-                    </div>
-                )}
-                {showCompanyDetails && (
-                    <div>
-                        <div className="company-details-upper">
-                            <h2>Company Details</h2>
-                            <div className="company-details-content">
-                                <p>Name: {companyDetails.name}</p>
-                                <p>Address: {companyDetails.address}</p>
-                                <p>Phone: {companyDetails.phone}</p>
-                                {/* Add more company details as needed */}
-                            </div>
-                        </div>
-                        <div className="company-details-lower">
-                            <div className="company-cards">
-                                {cardsData.map((card, index) => (
-                                    <div key={index} className="card">
-                                        <div className="card-content">
-                                            <div className="card-left">
-                                                <div className="top-component">
-                                                    <div className="lsaName">{card.name}</div>
-                                                </div>
-                                                <div className="middle-component">
-                                                    <div className="block-size">Price: <span className='price'>2500</span></div>
-                                                </div>
-                                                <div className="bottom-component">
-                                                    <div className="block-size">Block Size:</div>
-                                                    <div className="quantity">Quantity:</div>
+                <div className='options'>
+
+
+                    {showCompanyDetails && (
+                        <div>
+                            <h1>Past Holding</h1>
+
+                            <div className="holdingcompany-cards">
+                                    {cardsData.map((card, index) => (
+                                        <div key={index} className="holding-card">
+                                            <div className="card-content">
+                                                <div className="card-left">
+                                                    <div className="top-component">
+                                                        <div className="lsaName">{card.name}</div>
+                                                    </div>
+                                                    <div className="bottom-component">
+                                                        <div className="block-size">Block Size:</div>
+                                                        <div className="quantity">Quantity Paired:</div>
+                                                        <div className="quantity">Quantity Unpaired:</div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
+                      
+                    )}
+
+                    {showSpectrumDemand && (
+                        <div className="rules-section">
+                            <h1>Round: 1</h1>
+                            <div className="demandcard-grid">
+                                {Array.from({ length: 16 }).map((_, index) => {
+                                    const demand = dummyDemandData[index];
+                                    const supply = dummySupplyData[index];
+                                    const cardColor = supply < demand ? 'lightred' : supply > demand ? 'white' : '';
+
+                                    return (
+                                        <div key={index} className={`demandcard-box ${cardColor}`}>
+                                            <div className="section">
+                                                <div className="title">Card {index + 1}</div>
+                                            </div>
+                                            <div className="section">
+                                                <div className="supply">Supply: {supply}</div>
+                                            </div>
+                                            <div className="section">
+                                                <div className="demand">Demand: {demand}</div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
+
 
             </div>
             <div className="right-half">
@@ -120,11 +157,12 @@ function LoginUi() {
                         </div>
                     </div>
                     <div className="top-right-box">
-                        <span className="timer">Clock: {formatTimer(timer)}</span>
+                    <span className={`timer ${timer < 300 ? 'red-timer' : ''}`}>Clock: {formatTimer(timer)}</span>
+
                     </div>
                 </div>
                 <div className="ep">
-                    <span className="ep-label">Eligibility Points (EP): <span className='green'>45690</span></span>
+                    <span className="ep-label">EP: 45690 </span>
                 </div>
 
                 <div className="middle-box">
