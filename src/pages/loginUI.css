@@ -149,11 +149,13 @@
     justify-content: center;
     align-items: center;
     height: 50%;
+    
     margin-bottom: 2vh;
 }
 
 .card-input {
     width: 80%; /* Set width of input box */
+    height: 3vh;
 }
 
 .button-container {
@@ -282,6 +284,8 @@
 .middle-component {
     height: 20%;
     margin-bottom: 8px;
+    display: flex;
+    align-items: center;
 }
 
 
@@ -426,4 +430,10 @@
 
 .red-timer{
     color: #ee7272;
+}
+
+.qty{
+    font-size: large;
+    font-weight: bold;
+    margin-right: 4px;
 }

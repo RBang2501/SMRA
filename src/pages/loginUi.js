@@ -189,7 +189,9 @@ function LoginUi() {
                                         </div>
                                         <div className="middle-component">
                                             <div className="block-size">Price: <span className='price'>2500</span></div>
+                                            <div className="block-size">EP (per Block): <span className='price'>25</span></div>
                                         </div>
+                        
                                         <div className="bottom-component">
                                             <div className="block-size">Block Size:</div>
                                             <div className="quantity">Quantity:</div>
@@ -197,7 +199,7 @@ function LoginUi() {
                                     </div>
                                     <div className="card-right">
                                         <div className="card-input-container">
-                                            <label htmlFor={`qty-input-${index + 1}`}>Qty:</label>
+                                            <span className="qty">Qty:</span> 
                                             <input type="number" id={`qty-input-${index + 1}`} placeholder="Enter number" className="card-input" />
                                         </div>
                                         <div className="button-container">
