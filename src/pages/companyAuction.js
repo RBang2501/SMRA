@@ -41,7 +41,8 @@ const CompanyAuction = () => {
       region: holding.region,
       holdingUP: holding.holdingUP,
       holdingP: holding.holdingP,
-      year: holding.year
+      year: holding.year,
+      frequencyBand: holding.frequencyBand
     }))
   };
 
@@ -53,11 +54,14 @@ const CompanyAuction = () => {
       const data = snapshot.val();
       if (data) {
         console.log(data);
-        console.log(data.Holding.holdingCards[0].region)
+        // console.log(data.Holding.holdingCards[0].region)
         setCurCompanyEliScore(data.totalEligibilityPoints);
         setCurCompanyValuation(data.valuation);
         setCurCompanyBankGuarantee(data.bankGuarantee);
-        setHoldings(data.Holding.holdingCards);
+        if (data && data.Holding && data.Holding.holdingCards){
+          setHoldings(data.Holding.holdingCards);
+        }
+        
       } else {
         // Handle the case where data is null or empty
         console.log("Data is null or empty");
@@ -308,13 +312,14 @@ const CompanyAuction = () => {
       <p>Eligibility Score: {companyDetails.eligibilityScore}</p>
       <p>Current Holdings:</p>
       <div className="contains-Tabcontent">
+      {console.log("Teri mkc", companyDetails.currentHoldings)}
         {companyDetails.currentHoldings.map((holding, index) => (
+          
           <div key={index} className="holding-container">
-            <h3>{holding.operator}</h3>
+            <h3>{holding.frequencyBand}</h3>
             <p>region: {holding.region}</p>
             <p>holdingUP: {holding.holdingUP}</p>
             <p>holdingP: {holding.holdingP}</p>
-            <p>year: {holding.year}</p>
           </div>
         ))}
       </div> 
@@ -415,47 +420,15 @@ const CompanyAuction = () => {
     <div style={{ display: "flex", justifyContent: "space-between"}}>
       <div className="mainleft">
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <h1>Information Center</h1>
-
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <button onClick={aja}>Aja</button>
-        </div>
-        
+          
           <div>
-            <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
-              <div style={{ padding: '10px' }}>
-                <Tab 
-                  title="Company Portfolio"
-                  active={activeTab === 'tab1'}
-                  onClick={() => setActiveTab('tab1')}
-                />
-              </div>
-              <div style={{ padding: '10px' }}>
-                <Tab
-                  title="Participants"
-                  active={activeTab === 'tab2'}
-                  onClick={() => setActiveTab('tab2')}
-                />
-              </div>
-              <div style={{ padding: '10px' }}>
-                <Tab 
-                  title="Round Details"
-                  active={activeTab === 'tab3'}
-                  onClick={() => setActiveTab('tab3')}
-                />
-              </div>
-            </div>
-            <div className="tab-content">
-              {activeTab === 'tab1' && <Tab1Content />}
-              {/* Render other tab contents if needed */}
-            </div>
+          <Tab1Content />
           </div>
         </div>
       </div>
       <div style={{ flex: 1, border: "1px solid #007bff", paddingLeft: "20px",
-        paddingBottom:"20px", borderRadius:"10px", maxHeight:"94vh", marginTop:"1vh", marginRight:"1vh"}}>
+        paddingBottom:"20px", borderRadius:"10px", maxHeight:"95vh", marginTop:"1vh", marginRight:"1vh"}}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <h1>Items On Bid</h1>
         </div><div style={{ display: "flex", alignItems: "center" }}>
           <pre>            Timer                  EP                    Round</pre>
         </div>
