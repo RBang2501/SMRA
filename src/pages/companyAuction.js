@@ -418,7 +418,7 @@ const CompanyAuction = () => {
           <h1>Information Center</h1>
 
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <button onClick={aja}>Aja</button>
+          {/* <button onClick={aja}>Aja</button> */}
         </div>
         
           <div>
