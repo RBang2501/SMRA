@@ -6,6 +6,8 @@
     padding-left: 20px;
     padding-right: 20px;
     padding-bottom: 20px;
+    width:510px;
+    flex-direction:row;
   }
   
   .portfolio-container h2 {
@@ -14,8 +16,11 @@
   .contains-Tabcontent{
     border: 1px solid #007bff;
     overflow: scroll;
-    max-height: 50vh;
+    max-height: 75vh;
     border-radius: 10px;
+    display: flex;
+    flex-direction:row;
+    flex-wrap: wrap;
   }
   .holding-container {
     border: 1px solid #007bff;
@@ -23,14 +28,17 @@
     margin: 10px;
     padding: 10px;
     background-color: #f5f5f5;
+    width:200px;
   }
   .mainleft{
     overflow: scroll;
     max-height: 102vh;
+    width: 35%;
   }
   .auction-container-container {
     border: 1px solid #007bff;
     width : auto;
+    height: 590px;
     border-radius: 10px;
     margin: 10px;
     padding: 1px;
