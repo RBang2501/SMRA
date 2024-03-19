@@ -170,7 +170,7 @@ const CompanyDetails = () => {
         {showModal && (
           <div className="modal">
             <div className="modal-content">
-              <p>{`With the given bank guarantee, you will get ${eligibilityPoints} eligibility points.`}</p>
+              <p>{`With the given EP, you will get ${eligibilityPoints*0.3} Crores in Purse Value.`}</p>
               <div>
                 <button onClick={handleConfirm}>Confirm</button>
                 <button onClick={() => setShowModal(false)}>Cancel</button>

@@ -201,6 +201,7 @@ function AdminDashboard() {
           const newItem = {
             operator: region,
             frequencyBand: freqBand,
+            blockSize:  data[freqBand][region].blockSize,
             unpaired: data[freqBand][region].unpairedBlocks,
             paired: data[freqBand][region].pairedBlocks,
             reservedPrice: data[freqBand][region].reservedPrice,
@@ -314,6 +315,16 @@ const publishResult = () => {
           }
           matrix[key].push({ company: 'bsnl', quantity: item.qty });
       });
+
+      rjioList.forEach((item) => {
+        const key = item.operator + "-" + item.frequencyBand;
+        if (!matrix[key]) {
+            matrix[key] = [];
+            totalAvailable[key] = Number(item.unpaired) + Number(item.paired);
+            price[key] = Number(item.reservedPrice)
+        }
+        matrix[key].push({ company: 'rjio', quantity: item.qty });
+    });
 
       console.log(matrix);
       console.log(totalAvailable);
@@ -501,9 +512,9 @@ function calculateDemand() {
       <button onClick={resetRound} style={{marginLeft:'50px'}}>Round : 0</button>
       <button onClick={publishResult} style={{marginLeft:'50px'}}>UpdateAfterRound</button>
       <button onClick={updatePrice} style={{marginLeft:'50px'}}>UpdatePrice</button>
-      <div class="timer-box">
+      <span class="timer-box">
           <span id="minutes">{minutes}</span>:<span id="seconds">{seconds}</span>
-      </div>
+      </span>
       {/* <button onClick={calcWithNewPrice} style={{marginLeft:'50px'}}>WithNewPrice</button> */}
       {/* <button onClick={calc} style={{marginLeft:'50px'}}>Provisional Winner</button> */}
 
