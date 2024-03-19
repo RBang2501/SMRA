@@ -251,6 +251,21 @@ const CompanyAuction = () => {
   
 
   const handleSubmitRound = () => {
+    
+    var localbidstates = JSON.parse(localStorage.getItem("BIDSTATESVALUE"))
+    console.log("LOCALSTATES", localbidstates, winners, winPrices)
+    var flag=0
+    itemsOnBid.forEach((item) => {
+        if(winners[`${item.operator}-${item.frequencyBand}`] == 'true' && 
+            Number(item.reservedPrice)==Number(winPrices[`${item.operator}-${item.frequencyBand}`]) &&
+            localbidstates[`${item.operator}-${item.frequencyBand}`]==true){
+        alert("For item `${item.operator}-${item.frequencyBand}` Please Select yes!")
+        flag=1
+        return;
+      }
+    })
+    if(flag==1 ) return;
+
     console.log(purchases);
     console.log(companyName);
     console.log("check")

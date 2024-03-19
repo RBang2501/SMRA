@@ -111,6 +111,7 @@ const Tab1 = ({round, roundSubmitted, timerStatus, items, onPurchase, quantities
     onPurchase(list)
   },[list])
   const handleYesClick = (band, op,index,item) => {
+    console.log("BIDS", bids)
     if(curEP=='' || curEP == NaN || curEP == null){
       setCurEP(EP);
       console.log("Rectified :",curEP)
@@ -140,7 +141,7 @@ const Tab1 = ({round, roundSubmitted, timerStatus, items, onPurchase, quantities
       return;
     }
     else if(winners[`${item.operator}-${item.frequencyBand}`] == 'true' && 
-            Number(item.reservedPrice)>Number(winPrices[`${item.operator}-${item.frequencyBand}`]) &&
+            Number(item.reservedPrice)==Number(winPrices[`${item.operator}-${item.frequencyBand}`]) &&
             bids[index]<winQuantities[`${item.operator}-${item.frequencyBand}`]){
         alert("You cannot enter a lower bid than before and you are the provisional winner and the price has not changed.")
         return;
