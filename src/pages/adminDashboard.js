@@ -201,6 +201,7 @@ function AdminDashboard() {
           const newItem = {
             operator: region,
             frequencyBand: freqBand,
+            blockSize:  data[freqBand][region].blockSize,
             unpaired: data[freqBand][region].unpairedBlocks,
             paired: data[freqBand][region].pairedBlocks,
             reservedPrice: data[freqBand][region].reservedPrice,
@@ -511,9 +512,9 @@ function calculateDemand() {
       <button onClick={resetRound} style={{marginLeft:'50px'}}>Round : 0</button>
       <button onClick={publishResult} style={{marginLeft:'50px'}}>UpdateAfterRound</button>
       <button onClick={updatePrice} style={{marginLeft:'50px'}}>UpdatePrice</button>
-      <div class="timer-box">
+      <span class="timer-box">
           <span id="minutes">{minutes}</span>:<span id="seconds">{seconds}</span>
-      </div>
+      </span>
       {/* <button onClick={calcWithNewPrice} style={{marginLeft:'50px'}}>WithNewPrice</button> */}
       {/* <button onClick={calc} style={{marginLeft:'50px'}}>Provisional Winner</button> */}
 

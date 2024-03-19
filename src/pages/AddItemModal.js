@@ -9,6 +9,7 @@ function AddItemModal() {
   const { auctionName } = useParams();
   const [region, setRegion] = useState('');
   const [freqBand, setFreqBand] = useState('');
+  const [blockSize, setBlockSize] = useState('');
   const [unpairedOnSale, setUnpairedOnSale] = useState('');
   const [pairedOnSale, setPairedOnSale] = useState('');
   const [reservedPrice, setReservedPrice] = useState('');
@@ -34,6 +35,7 @@ function AddItemModal() {
               const newItem = {
                 region: region,
                 freqBand: freqBand,
+                blockSize: data[freqBand][region].blockSize,
                 unpairedOnSale: data[freqBand][region].unpairedBlocks,
                 pairedOnSale: data[freqBand][region].pairedBlocks,
                 reservedPrice: data[freqBand][region].reservedPrice,
@@ -54,7 +56,8 @@ function AddItemModal() {
       unpairedBlocks: unpairedOnSale,
       pairedBlocks: pairedOnSale,
       reservedPrice: reservedPrice,
-      epPerBlock: epPerBlock
+      epPerBlock: epPerBlock,
+      blockSize: blockSize
     });
 
 
@@ -92,6 +95,15 @@ function AddItemModal() {
               value={freqBand}
               onChange={(e) => setFreqBand(e.target.value)}
               placeholder="Enter Frequency Band"
+            />
+          </div>
+          <div className="input-group">
+            <label>Block Size</label>
+            <input
+              type="text"
+              value={blockSize}
+              onChange={(e) => setBlockSize(e.target.value)}
+              placeholder="Enter Block Size"
             />
           </div>
           <div className="input-group">
@@ -144,6 +156,8 @@ function AddItemModal() {
                 <strong>Region:</strong> {item.region}
                 <br />
                 <strong>Freq Band:</strong> {item.freqBand}
+                <br />
+                <strong>Block Size:</strong> {item.blockSize}
                 <br />
                 <strong>Unpaired (on sale):</strong> {item.unpairedOnSale}
                 <br />

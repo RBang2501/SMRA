@@ -238,7 +238,8 @@ const CompanyAuction = () => {
               unpaired: data[freqBand][region].unpairedBlocks,
               paired: data[freqBand][region].pairedBlocks,
               reservedPrice: data[freqBand][region].reservedPrice,
-              epPerBlock: data[freqBand][region].epPerBlock
+              epPerBlock: data[freqBand][region].epPerBlock,
+              blockSize: data[freqBand][region].blockSize
             };
             newCartItems.push(newItem);
           });
@@ -252,11 +253,13 @@ const CompanyAuction = () => {
   const handleSubmitRound = () => {
     console.log(purchases);
     console.log(companyName);
+    console.log("check")
     const db = getDatabase();
     const refPath2 = `Auctions/${auctionName}/companyHistory`;
     const itemsRef2 = ref(db, refPath2);
     get((itemsRef2)).then((snapshot) => {
       const data = snapshot.val();
+      console.log(data)
       console.log(data["companyMapping"][companyName][round]);
       for (let i = 0; i < data["companyMapping"][companyName][round].length; i++) {
         const freqBand = data["companyMapping"][companyName][round][i]["frequencyBand"];
@@ -305,14 +308,11 @@ const CompanyAuction = () => {
 
   const Tab1Content = () => (
     <div className="portfolio-container">
-      <h2>Company Portfolio</h2>
-      <p>Company Name: {companyDetails.companyName}</p>
-      <p>Bank Guarantee: {companyDetails.bankGuarantee}</p>
-      <p>Net Worth: {companyDetails.netWorth}</p>
-      <p>Eligibility Score: {companyDetails.eligibilityScore}</p>
-      <p>Current Holdings:</p>
+      <h2 className="name">{companyDetails.companyName}</h2>
+      <p className="purse">Purse Value: ₹{EP*0.3} Crores</p>
+      <p className="name">Eligibility Points: {EP}</p>
+      <p className="holding">Current Holdings:</p>
       <div className="contains-Tabcontent">
-      {console.log("Teri mkc", companyDetails.currentHoldings)}
         {companyDetails.currentHoldings.map((holding, index) => (
           
           <div key={index} className="holding-container">
@@ -430,7 +430,7 @@ const CompanyAuction = () => {
         paddingBottom:"20px", borderRadius:"10px", maxHeight:"95vh", marginTop:"1vh", marginRight:"1vh"}}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         </div><div style={{ display: "flex", alignItems: "center" }}>
-          <pre>            Timer                  EP                    Round</pre>
+          <pre className="name">        Timer              EP              Round</pre>
         </div>
         <div style={{ display: "flex", alignItems: "center" }}>
         <div class="timer-box">

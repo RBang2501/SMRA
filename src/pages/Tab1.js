@@ -225,11 +225,11 @@ const Tab1 = ({round, roundSubmitted, timerStatus, items, onPurchase, quantities
           {/*...item details*/}
           <div className ="deets">
             <h3>{item.operator}</h3>
-            <pre>Frequency: {item.frequencyBand}</pre>
-            <pre>Unpaired: {item.unpaired}</pre>
-            <pre>Paired: {item.paired}</pre>
-            <pre>EP(per block): {item.epPerBlock}</pre>
-            <pre>Reserve Price: {item.reservedPrice}</pre>
+            <pre>Block Size: <span className='bold'>{item.blockSize} </span></pre>
+            <pre>Unpaired: <span className='bold'>{item.unpaired} units </span></pre>
+            <pre>Paired: <span className='bold'>{item.paired} units </span></pre>
+            <pre>Clock Round Price: <span className='bold'>{item.reservedPrice} Cr </span></pre>
+            <pre>EP (per block): <span className='bold'>{item.epPerBlock} </span></pre>
             
           </div>
 
