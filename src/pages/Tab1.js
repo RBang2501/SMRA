@@ -241,10 +241,15 @@ const Tab1 = ({round, roundSubmitted, timerStatus, items, onPurchase, quantities
                 {winners[`${item.operator}-${item.frequencyBand}`] === 'true' && (
                   <p>
                     Provisional Winner: (
-                    {winQuantities[`${item.operator}-${item.frequencyBand}`]} blocks at RP:{' '}
-                    {winPrices[`${item.operator}-${item.frequencyBand}`]}
+                    {winQuantities[`${item.operator}-${item.frequencyBand}`]} blocks at CRP:{' '} 
+                    {winPrices[`${item.operator}-${item.frequencyBand}`]} Cr
                     )
                   </p>
+                )}
+                {winners[`${item.operator}-${item.frequencyBand}`] === 'true' && (
+                  <pre>
+                    Money locked in: {Number(winQuantities[`${item.operator}-${item.frequencyBand}`]) * Number(winPrices[`${item.operator}-${item.frequencyBand}`])} Cr
+                  </pre>
                 )}
                 <pre>Prev Round Demand: {quantities[`${item.operator}-${item.frequencyBand}`]}</pre>
                 <p> </p>

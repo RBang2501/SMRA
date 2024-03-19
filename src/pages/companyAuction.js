@@ -259,7 +259,7 @@ const CompanyAuction = () => {
         if(winners[`${item.operator}-${item.frequencyBand}`] == 'true' && 
             Number(item.reservedPrice)==Number(winPrices[`${item.operator}-${item.frequencyBand}`]) &&
             localbidstates[`${item.operator}-${item.frequencyBand}`]==true){
-        alert("For item `${item.operator}-${item.frequencyBand}` Please Select yes!")
+        alert("For item " + item.operator + item.frequencyBand+  " Please Select yes!")
         flag=1
         return;
       }
@@ -324,7 +324,6 @@ const CompanyAuction = () => {
   const Tab1Content = () => (
     <div className="portfolio-container">
       <h2 className="name">{companyDetails.companyName}</h2>
-      <p className="purse">Purse Value: ₹{EP*0.3} Crores</p>
       <p className="name">Eligibility Points: {EP}</p>
       <p className="holding">Current Holdings:</p>
       <div className="contains-Tabcontent">

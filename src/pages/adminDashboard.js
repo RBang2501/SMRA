@@ -170,7 +170,7 @@ function AdminDashboard() {
     console.log(round);
     set(ref(db, `Auctions/${auctionName}/timerData`), {
       start: startTime,
-      time: 1,
+      time: 10,
       round: round+1
     });
     newRound();
@@ -182,7 +182,7 @@ function AdminDashboard() {
     console.log(round);
     set(ref(db, `Auctions/${auctionName}/timerData`), {
       start: startTime,
-      time: 1,
+      time: 2,
       round: round
     });
   }
@@ -509,7 +509,6 @@ function calculateDemand() {
       <button onClick={openModal} style={{ marginLeft: '50px' }}>Add Item</button>
       <button onClick={handleInit} style={{marginLeft:'50px'}}>Init Company History</button>
       <button onClick={handleDelete} style={{marginLeft:'50px'}}>Delete Company History</button>
-      <button onClick={resetRound} style={{marginLeft:'50px'}}>Round : 0</button>
       <button onClick={publishResult} style={{marginLeft:'50px'}}>UpdateAfterRound</button>
       <button onClick={updatePrice} style={{marginLeft:'50px'}}>UpdatePrice</button>
       <span class="timer-box">
