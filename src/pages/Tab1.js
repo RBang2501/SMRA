@@ -237,14 +237,14 @@ const Tab1 = ({round, roundSubmitted, timerStatus, items, onPurchase, quantities
             <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
               <div style={{paddingLeft:"20px", paddingBottom:"3vh"}}>
                 {/* <p>Provisional Winner: {winners[`${item.operator}-${item.frequencyBand}`]} ({winQuantities[`${item.operator}-${item.frequencyBand}`]} blocks at RP: {winPrices[`${item.operator}-${item.frequencyBand}`]})</p> */}
-                {winners[`${item.operator}-${item.frequencyBand}`] == 'true' ? (
+                {winners[`${item.operator}-${item.frequencyBand}`] === 'true' && (
                   <p>
                     Provisional Winner: (
                     {winQuantities[`${item.operator}-${item.frequencyBand}`]} blocks at RP:{' '}
                     {winPrices[`${item.operator}-${item.frequencyBand}`]}
                     )
                   </p>
-                ) : <p>You are not a provisional Winner</p>}
+                )}
                 <pre>Prev Round Demand: {quantities[`${item.operator}-${item.frequencyBand}`]}</pre>
                 <p> </p>
                 <input 

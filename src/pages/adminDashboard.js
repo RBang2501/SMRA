@@ -315,6 +315,16 @@ const publishResult = () => {
           matrix[key].push({ company: 'bsnl', quantity: item.qty });
       });
 
+      rjioList.forEach((item) => {
+        const key = item.operator + "-" + item.frequencyBand;
+        if (!matrix[key]) {
+            matrix[key] = [];
+            totalAvailable[key] = Number(item.unpaired) + Number(item.paired);
+            price[key] = Number(item.reservedPrice)
+        }
+        matrix[key].push({ company: 'rjio', quantity: item.qty });
+    });
+
       console.log(matrix);
       console.log(totalAvailable);
 

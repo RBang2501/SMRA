@@ -16,7 +16,7 @@ function AddItemModal() {
   const [cartItems, setCartItems] = useState([]);
   const { currentUser } = useAuth();
   const navigate = useNavigate();
-  console.log(auctionName);
+  // console.log(auctionName);
 
   useEffect(() => {
     console.log(currentUser);
