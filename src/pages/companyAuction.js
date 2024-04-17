@@ -6,6 +6,82 @@ import '../Styles/CompanyAuction.css'
 import { getDatabase, ref, get, set, onValue } from "firebase/database";
 import { json, useParams } from 'react-router-dom';
 
+function getAverageBuy(round, auctionName, companyName) {
+  const db = getDatabase();
+  const refPath2 = `Auctions/${auctionName}/companyHistory`;
+  const itemsRef2 = ref(db, refPath2);
+  let averageDemand = 0;
+  let companyDemand = 0;
+  get((itemsRef2)).then((snapshot) => {
+    const data = snapshot.val();
+    const itemQuantities = {};
+    const itemAvailable = {};
+    const priceOfEachItem = {};
+    if(round>1){
+      data["companyMapping"]["airtel"][round-1].forEach((item) => {
+        console.log("ITEM QTY....",item.qty, "Average Demand....",averageDemand)
+        if(item.qty > 0)
+        {
+          averageDemand+=1;
+          if(companyName == "airtel") 
+        {
+          companyDemand += 1;
+        }
+        }
+        
+      });
+      data["companyMapping"]["rjio"][round-1].forEach((item) => {
+        if(item.qty > 0)
+        {
+          averageDemand+=1;
+          if(companyName == "rjio") 
+        {
+          companyDemand += 1;
+        }
+        }
+        
+      });
+      data["companyMapping"]["bsnl"][round-1].forEach((item) => {
+        if(item.qty > 0)
+        {
+          averageDemand += 1
+          if(companyName == "bsnl") 
+        {
+          companyDemand += 1;
+        }
+        }
+        
+      });
+      data["companyMapping"]["att"][round-1].forEach((item) => {
+        if(item.qty > 0)
+        {
+          averageDemand += 1
+          if(companyName == "att") 
+        {
+          companyDemand += 1;
+        }
+        }
+        
+      });
+
+      data["companyMapping"]["vi"][round-1].forEach((item) => {
+        if(item.qty > 0)
+        {
+          averageDemand += 1
+          if(companyName == "vi") 
+        {
+          companyDemand += 1;
+        }
+        }
+        
+      });
+      averageDemand = averageDemand/5;
+      console.log("AVG DEMAND CALLED : " , averageDemand, "Company DEMAND", companyDemand, " ROUND > ", round)
+      return averageDemand - companyDemand;
+    // setQuantities(itemQuantities);    
+    }
+  });
+}
 
 const CompanyAuction = () => {
   const {companyName, auctionName} = useParams();
@@ -24,12 +100,88 @@ const CompanyAuction = () => {
   const [timerExpired, setTimerExpired] = useState(false);
   const [roundSubmitted, setRoundSubmitted] = useState(false);
   const [round, setRound] = useState(0);
-
+  const [averagePreviousBuy, setAveragePreviousBuy] = useState(0);
+  const [lastCompanyDemand, setLastCompanyDemand] = useState(0);
   // Fetch company portfolio data
   useEffect(() => {
     fetchCompanyPortfolio();
   }, [auctionName, companyName]); // Fetch on component mount and when auction or company name changes
 
+  function getAverageBuy(round, auctionName, companyName) {
+    const db = getDatabase();
+    const refPath2 = `Auctions/${auctionName}/companyHistory`;
+    const itemsRef2 = ref(db, refPath2);
+    let averageDemand = 0;
+    let companyDemand = 0;
+    get((itemsRef2)).then((snapshot) => {
+      const data = snapshot.val();
+      const itemQuantities = {};
+      const itemAvailable = {};
+      const priceOfEachItem = {};
+      if(round>1){
+        data["companyMapping"]["airtel"][round-1].forEach((item) => {
+          console.log("ITEM QTY....",item.qty, "Average Demand....",averageDemand)
+          if(item.qty > 0)
+          {
+            averageDemand+=1;
+            if(companyName == "airtel") 
+          {
+            companyDemand += 1;
+          }
+          }
+          
+        });
+        data["companyMapping"]["rjio"][round-1].forEach((item) => {
+          if(item.qty > 0)
+          {
+            averageDemand+=1;
+            if(companyName == "rjio") 
+          {
+            companyDemand += 1;
+          }
+          }
+          
+        });
+        data["companyMapping"]["bsnl"][round-1].forEach((item) => {
+          if(item.qty > 0)
+          {
+            averageDemand += 1
+            if(companyName == "bsnl") 
+          {
+            companyDemand += 1;
+          }
+          }
+          
+        });
+        data["companyMapping"]["att"][round-1].forEach((item) => {
+          if(item.qty > 0)
+          {
+            averageDemand += 1
+            if(companyName == "att") 
+          {
+            companyDemand += 1;
+          }
+          }
+          
+        });
+  
+        data["companyMapping"]["vi"][round-1].forEach((item) => {
+          if(item.qty > 0)
+          {
+            averageDemand += 1
+            if(companyName == "vi") 
+          {
+            companyDemand += 1;
+          }
+          }
+          
+        });
+        averageDemand = averageDemand/5;
+        console.log("AVG DEMAND CALLED : " , averageDemand, "Company DEMAND", companyDemand, " ROUND > ", round)
+        setAveragePreviousBuy(averageDemand - companyDemand);
+      }
+    });
+  }
 
   const companyDetails = {
     companyName: companyName,
@@ -198,7 +350,7 @@ const CompanyAuction = () => {
       // data["companyMapping"]["bsnl"].push(newCartItems);
       // data["companyMapping"]["vi"].push(newCartItems);
       // console.log(data["companyMapping"]);
-      console.log(itemQuantities);
+      // console.log(itemQuantities);
       setQuantities(itemQuantities);    
   }
     })
@@ -249,12 +401,45 @@ const CompanyAuction = () => {
     });
   }, [round]); // Empty dependency array to run the effect only once on component mount
   
+  useEffect( () => {
+    getAverageBuy(round, auctionName,companyName);
+  }, [round]);
 
+  useEffect(() => {
+    console.log("CHAL JA, " ,averagePreviousBuy);
+    var roundpenalty  = JSON.parse(localStorage.getItem("ROUNDPENALTY"));
+    if(averagePreviousBuy>0 && roundpenalty!=round) // apb = avg - company
+    {
+      localStorage.setItem("ROUNDPENALTY", JSON.stringify(round));
+      const penalty = (averagePreviousBuy)*(100);
+      alert("LOW DEMAND PENALTY : " + penalty);
+      var localep = JSON.parse(localStorage.getItem("EPVALUE"));
+      localep -= penalty;
+      localStorage.setItem("EPVALUE", JSON.stringify(localep));
+      handleEP(localep);
+    }
+    setAveragePreviousBuy(0);
+  }, [averagePreviousBuy])
   const handleSubmitRound = () => {
-    
     var localbidstates = JSON.parse(localStorage.getItem("BIDSTATESVALUE"))
     console.log("LOCALSTATES", localbidstates, winners, winPrices)
     var flag=0
+    // console.log("AVERAGE PREVIOUS BUY ::::: ", averagePreviousBuy);
+    // let yourBuy = 0;
+    // for(const key in localbidstates)
+    // {
+    //   if(!localbidstates[key]) yourBuy+=1;
+    // }
+    // const penalty = 100;
+    // console.log("YOUR BUY  :::::: ", yourBuy);
+
+    // if(averagePreviousBuy > yourBuy)
+    // {
+    //   var localep = JSON.parse(localStorage.getItem("EPVALUE"));
+    //   localep = localep*penalty*(averagePreviousBuy - yourBuy);
+    //   localStorage.setItem("EPVALUE", JSON.stringify(localep));
+    //   handleEP(localep);
+    // }
     itemsOnBid.forEach((item) => {
         if(winners[`${item.operator}-${item.frequencyBand}`] == 'true' && 
             Number(item.reservedPrice)==Number(winPrices[`${item.operator}-${item.frequencyBand}`]) &&
@@ -433,15 +618,15 @@ const CompanyAuction = () => {
   return (
     <div style={{ display: "flex", justifyContent: "space-between"}}>
       <div className="mainleft">
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", maxWidth:"100%", paddingLeft: "20px", paddingRight: "20px"}}>
           
-          <div>
+          <div style={{ display: "flex", flexDirection: "column"}}>
           <Tab1Content />
           </div>
         </div>
       </div>
       <div style={{ flex: 1, border: "1px solid #007bff", paddingLeft: "20px",
-        paddingBottom:"20px", borderRadius:"10px", maxHeight:"95vh", marginTop:"1vh", marginRight:"1vh"}}>
+        paddingBottom:"20px", borderRadius:"10px", maxHeight:"95vh", marginTop:"1vh", marginRight:"1vh", maxWidth:"65%"}}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         </div><div style={{ display: "flex", alignItems: "center" }}>
           <pre className="name">        Timer              EP              Round</pre>
@@ -458,7 +643,7 @@ const CompanyAuction = () => {
         </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
-          <Tab1 round = {round} roundSubmitted = {roundSubmitted} timerStatus = {timerExpired} EP = {EP} onEP = {handleEP} onPurchase ={handlePurchase} items={itemsOnBid} quantities={quantities} winners={winners} winQuantities={winQuantities} winPrices={winPrices}/>
+          <Tab1 round = {round} roundSubmitted = {roundSubmitted} timerStatus = {timerExpired} EP = {EP} onEP = {handleEP} onPurchase ={handlePurchase} items={itemsOnBid} quantities={quantities} winners={winners} winQuantities={winQuantities} winPrices={winPrices} auctionName = {auctionName}/>
           {/* <Tab1 round = {round} roundSubmitted = {roundSubmitted} timerStatus = {timerExpired} EP = {EP} onEP = {handleEP} onPurchase ={handlePurchase} items={itemsOnBid} quantities={quantities}/> */}
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>

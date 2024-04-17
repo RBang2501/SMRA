@@ -170,7 +170,7 @@ function AdminDashboard() {
     console.log(round);
     set(ref(db, `Auctions/${auctionName}/timerData`), {
       start: startTime,
-      time: 10,
+      time: 1,
       round: round+1
     });
     newRound();

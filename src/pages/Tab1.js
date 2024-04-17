@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import "../Styles/CompanyAuction.css"
 import { json } from 'react-router-dom';
+import { getDatabase, ref, get, set, onValue } from "firebase/database";
 const removeDuplicateObjects = (listOfObjects) => {
   // Create an empty Set to keep track of unique object representations
   const uniqueObjectStrings = new Set();
@@ -36,7 +37,69 @@ const removeItemFromList = (list,itemToRemove) => {
   // Return the modified list
   return list;
 }
-const Tab1 = ({round, roundSubmitted, timerStatus, items, onPurchase, quantities, onEP, EP, winners, winQuantities, winPrices}) => {
+function getAverageBuy(round, auctionName) {
+  const db = getDatabase();
+  const refPath2 = `Auctions/${auctionName}/companyHistory`;
+  const itemsRef2 = ref(db, refPath2);
+  let averageDemand = 0;
+  get((itemsRef2)).then((snapshot) => {
+    const data = snapshot.val();
+    const itemQuantities = {};
+    const itemAvailable = {};
+    const priceOfEachItem = {};
+    let total = 0;
+    let curDemand = 0
+    if(round>1){
+      data["companyMapping"]["airtel"][round-1].forEach((item) => {
+        total += 1
+        if(item.qty > 0)
+        {
+          curDemand += 1
+        }
+      });
+      averageDemand += (curDemand/total);
+      curDemand = 0;
+      data["companyMapping"]["rjio"][round-1].forEach((item) => {
+        if(item.qty > 0)
+        {
+          curDemand += 1
+        }
+      });
+      averageDemand += (curDemand/total);
+      curDemand = 0;
+      data["companyMapping"]["bsnl"][round-1].forEach((item) => {
+        if(item.qty > 0)
+        {
+          curDemand += 1
+        }
+      });
+      averageDemand += (curDemand/total);
+      curDemand = 0;
+      data["companyMapping"]["att"][round-1].forEach((item) => {
+        if(item.qty > 0)
+        {
+          curDemand += 1
+        }
+      });
+      averageDemand += (curDemand/total);
+      curDemand = 0;
+      data["companyMapping"]["vi"][round-1].forEach((item) => {
+        if(item.qty > 0)
+        {
+          curDemand += 1
+        }
+        
+      });
+      averageDemand += (curDemand/total);
+      averageDemand = averageDemand/5;
+      console.log(itemQuantities);
+      console.log(itemAvailable);
+    // setQuantities(itemQuantities);    
+    }
+  });
+  return averageDemand;
+}
+const Tab1 = ({round, roundSubmitted, timerStatus, items, onPurchase, quantities, onEP, EP, winners, winQuantities, winPrices, auctionName}) => {
 // const Tab1 = ({ round, roundSubmitted, timerStatus, items, onPurchase, quantities, onEP, EP }) => {
   const [selectedTab, setSelectedTab] = useState('700');
   const [bids, setBids] = useState([]);

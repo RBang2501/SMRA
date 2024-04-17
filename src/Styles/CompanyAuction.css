@@ -4,23 +4,24 @@
     background-color: #fff;
     border-radius: 10px;
     padding-left: 20px;
-    padding-right: 20px;
     padding-bottom: 20px;
     width:510px;
     flex-direction:row;
+    margin-left: 3%;
   }
   
   .portfolio-container h2 {
+    margin-left: 2%;
     margin-bottom: 5px;
   }
   .contains-Tabcontent{
     border: 1px solid #007bff;
-    /* overflow: scroll; */
+    overflow: scroll;
     max-height: 75vh;
+    max-width: fit-content;
     border-radius: 10px;
     display: flex;
-    flex-direction:row;
-    flex-wrap: wrap;
+    flex-direction:column;
   }
   .holding-container {
     border: 1px solid #007bff;
@@ -28,12 +29,12 @@
     margin: 10px;
     padding: 10px;
     background-color: #f5f5f5;
-    width:200px;
+    width:400px;
   }
   .mainleft{
     overflow: scroll;
     max-height: 102vh;
-    width: 35%;
+    max-width: 35%;
   }
   .auction-container-container {
     border: 1px solid #007bff;
@@ -46,7 +47,7 @@
     max-height: 65vh;
   }
   .deets{
-    padding-right: 27vw;
+    padding-right: 23vw;
   }
   .auction-container {
     display: flex;
