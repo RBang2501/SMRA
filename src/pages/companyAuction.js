@@ -1,5 +1,81 @@
 // CompanyAuction.js
 
+/*
+State Management:
+The component utilizes several state variables using the useState hook to manage various aspects of the auction, including the current company's eligibility score, valuation, bank guarantee, items on bid, purchases, quantities, elapsed time, timer status, current round, average previous buy, and more.
+Firebase Integration:
+The component interacts with Firebase to fetch and update auction-related data such as company portfolios, item details, timer data, company history, and provisional winners.
+It uses functions like getDatabase, ref, get, set, and onValue from the Firebase Realtime Database SDK to perform database operations.
+Effect Hooks:
+The component uses multiple useEffect hooks to perform various side effects such as fetching data, calculating demand, finding winners, handling round submissions, and updating timer status.
+These effects run based on dependencies like the current round, auction name, company name, etc.
+Helper Functions:
+The component defines helper functions like getAverageBuy, fetchCompanyPortfolio, findWinner, calculateDemand, and handleEP to perform specific tasks such as calculating average buy, fetching company portfolio data, determining winners, calculating demand, and handling eligibility points.
+Rendering:
+The component renders different sections based on the current state and data fetched from Firebase. It displays company details, current holdings, timer information, tabs for different functionalities, and buttons for actions like submitting rounds.
+Tab Component:
+It includes a tab component (Tab1) that displays auction-related information and allows users to interact with items on bid, make purchases, and submit rounds.
+Event Handling:
+Event handlers like handleSubmitRound and handlePurchase manage user interactions such as submitting rounds and handling purchases.
+Styling:
+CSS classes and styles are applied to structure and style the UI components.
+
+currCompanyEliScore: Holds the current company's eligibility score.
+curCompanyValuation: Stores the current company's valuation.
+curCompanyBankGuarantee: Represents the current company's bank guarantee.
+itemsOnBid: Contains information about items available for bidding.
+purchases: Tracks the purchases made by the company during the auction.
+quantities: Stores the quantities of items bought by the company.
+EP: Represents the eligibility points of the company.
+holdings: Holds data about the current holdings of the company.
+winners: Keeps track of the winners of the auction.
+winQuantities: Stores the quantities won by the company in the auction.
+winPrices: Contains the winning prices for items won by the company.
+elapsedTime: Represents the elapsed time during the auction.
+timerExpired: Indicates whether the auction timer has expired.
+roundSubmitted: Tracks whether the current round has been submitted.
+round: Represents the current round of the auction.
+averagePreviousBuy: Holds the average previous buy value.
+lastCompanyDemand: Stores the demand value of the last company.
+Other Variables:
+companyDetails: An object containing details about the company, including its name, net worth, eligibility score, bank guarantee, and current holdings.
+activeTab: Represents the currently active tab in the UI.
+Tab: A functional component representing a tab element in the UI.
+Tab1Content: A functional component displaying content for Tab 1.
+minutes and seconds: Variables used to display elapsed time in minutes and seconds.
+Firebase Integration Variables:
+Various variables are used to interact with Firebase, including db, refPath2, itemsRef2, itemsRef, refPath, ref, snapshot, data, etc.
+Helper Variables:
+Variables used within helper functions like itemQuantities, itemAvailable, priceOfEachItem, etc.
+
+useState:
+Used to declare state variables and manage their values.
+Examples:
+useState is used for variables like currCompanyEliScore, curCompanyValuation, itemsOnBid, etc.
+useEffect:
+Used to perform side effects in function components.
+Executes after every render by default, but can be configured to run under specific conditions.
+Examples:
+Fetching company portfolio data (fetchCompanyPortfolio) when the component mounts or when the auction or company name changes.
+Managing timer, round updates, and calculations (useEffect blocks related to timer, round, purchases, etc.).
+useParams:
+Used to access parameters from the current route in React Router.
+Example:
+const { companyName, auctionName } = useParams(); extracts parameters from the route.
+Custom Hooks:
+Tab, Tab1Content: These are custom functional components used within the component.
+Example:
+Tab1Content renders the content for Tab 1.
+Tab represents a tab element in the UI.
+
+In the CompanyAuction component, the use of local storage serves a crucial purpose in conducting a simultaneous multi-round auction over many days. Here's why it's important and how it's utilized:
+
+(It is to much effort to implement otherwise for 4 credits)Persistent Data Storage: Local storage allows the application to store data locally within the user's web browser. This data persists even after the browser is closed and reopened, providing a way to retain auction-related information across multiple sessions and days.
+Storing Auction Data: During a multi-round auction, various data points need to be stored and accessed across different rounds and days. Local storage enables the application to save auction-related data such as eligibility points (EP), round penalties, bid states, etc., ensuring continuity and consistency throughout the auction process.
+Maintaining User State: Local storage helps maintain the state of the auction for each participating company and user. For example, it stores the current eligibility points (EP) for a company, which is crucial for determining bidding capabilities and strategies in subsequent rounds.
+Handling Round Progression: In a multi-round auction conducted over several days, local storage tracks the current round and elapsed time, ensuring that the auction progresses seamlessly. It allows the application to resume from where it left off, even if the user closes the browser or navigates away from the auction page.
+Handling Interruptions and Resumptions: Local storage is vital for handling interruptions such as browser crashes or network failures. By storing essential auction data locally, the application can recover the auction state upon resumption, preventing data loss and ensuring a smooth user experience.
+*/
 import React, { useState, useEffect } from "react";
 import Tab1 from './Tab1';
 import '../Styles/CompanyAuction.css'

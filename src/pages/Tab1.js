@@ -1,5 +1,40 @@
+/*
+Imports
+The code imports necessary modules from React and Firebase, along with CSS styles.
+json is imported from react-router-dom, although it's not used in the code snippet.
+Helper Functions
+removeDuplicateObjects: This function takes a list of objects as input and removes duplicate objects from it. It achieves this by converting each object to a string representation and using a Set to keep track of unique object representations.
+removeItemFromList: This function removes a specific item from a list based on its properties (band and op).
+getAverageBuy: This function calculates the average demand for spectrum bands in a specific round of an auction. It retrieves data from Firebase Realtime Database and computes the average demand for each operator.
+Component: Tab1
+This component is a functional component that renders a tab for bidding in an auction. Let's break down its key parts:
 
-
+State Variables:
+selectedTab: Tracks the currently selected tab.
+bids: Stores the bid values for each item.
+toggleYes: Toggles the "Yes" button state.
+bidStates: Stores the state of each bid button.
+wantItem: Tracks if the user wants an item.
+list: Stores the list of selected items.
+curEP: Stores the current EP (Energy Points).
+useEffect Hook:
+Initializes state variables based on local storage values or default values when the component mounts.
+handleBidChange Function:
+Updates the bid value when the user types in the input field.
+handleYesClick Function:
+Handles the logic when the user clicks "Yes" to place a bid.
+Validates bid amount, EP availability, and quantity before adding the bid to the list.
+Updates state variables and local storage accordingly.
+handleNoClick Function:
+Handles the logic when the user clicks "No" to remove a bid.
+Updates state variables and local storage accordingly.
+Rendering:
+Renders tab buttons for different frequency bands.
+Renders auction details for each item in the selected tab, including operator, block size, unpaired units, paired units, clock round price, and EP per block.
+Renders input fields for bidding and "Yes" and "No" buttons for bid confirmation.
+Local Storage Usage:
+Local storage is used to store and retrieve bid values, EP values, bid states, and the list of selected items. This ensures that data persists across page refreshes.
+*/
 import React, { useEffect, useState } from 'react';
 import "../Styles/CompanyAuction.css"
 import { json } from 'react-router-dom';

@@ -4,7 +4,57 @@ import '../Styles/AddItemModal.css';
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getDatabase, ref, set, onValue } from "firebase/database";
 import { useAuth } from "./authContext";
+/*
+useParams():
+This hook, sourced from React Router DOM, extracts parameters from the URL path in React components. Here, it retrieves the auctionName parameter from the URL.
+useState():
+useState() is employed to manage state within functional components in React. It declares state variables (region, freqBand, blockSize, etc.) to hold values from form fields and manage cart items.
+useEffect():
+useEffect() executes side effects in functional components post-render. In this code, it handles the side effect of fetching auction items from Firebase upon component mounting.
+useAuth():
+A custom hook granting access to authentication-related context within the application. It provides information about the current user's authentication status, retrieved here as currentUser.
+useNavigate():
+This hook, from React Router DOM, facilitates programmatic navigation within the application. It redirects the user to the login page if no authenticated user is present (currentUser is null).
+handleSubmit():
+A custom function managing form submission. It updates the Firebase database with new item details entered in the form and subsequently clears the form inputs.
+clearForm():
+A custom function resetting form inputs. It returns all input fields to their initial state, erasing any entered values.
 
+region:
+Type: String
+Description: Stores the value of the region entered in the form input field.
+freqBand:
+Type: String
+Description: Holds the value of the frequency band entered in the form input field.
+blockSize:
+Type: String
+Description: Stores the value of the block size entered in the form input field.
+unpairedOnSale:
+Type: String
+Description: Holds the value of unpaired blocks available for sale entered in the form input field.
+pairedOnSale:
+Type: String
+Description: Stores the value of paired blocks available for sale entered in the form input field.
+reservedPrice:
+Type: String
+Description: Holds the value of the reserved price per block entered in the form input field.
+epPerBlock:
+Type: String
+Description: Stores the value of energy performance per block entered in the form input field.
+cartItems:
+Type: Array
+Description: Stores an array of objects representing items added to the cart. Each object contains details such as region, frequency band, block size, etc.
+currentUser:
+Type: Object
+Description: Stores information about the currently authenticated user.
+navigate:
+Type: Function
+Description: A function provided by the useNavigate() hook for programmatic navigation within the application.
+Other Variables:
+auctionName:
+Type: String
+Description: Stores the name of the auction extracted from the URL path using the useParams() hook.
+*/
 function AddItemModal() {
   const { auctionName } = useParams();
   const [region, setRegion] = useState('');

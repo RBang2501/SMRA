@@ -1,3 +1,35 @@
+/*
+auctionName: This variable holds the name of the auction extracted from the URL parameters using the useParams hook.
+companyName: Similar to auctionName, this variable holds the name of the company extracted from the URL parameters using the useParams hook.
+companyValuationInput: This state variable is used to store the input value for the company valuation entered by the user in the form.
+bankGuaranteeInput: Another state variable that holds the input value for the bank guarantee entered by the user in the form.
+showModal: This state variable manages the visibility of the confirmation modal. It's set to true when the user submits the form and triggers the modal.
+eligibilityPoints: State variable to store the calculated eligibility points based on the bank guarantee input.
+holdingsForm: This state variable is an object that holds the form data for adding holdings. It includes fields like holdingUP, holdingP, region, frequencyBand, and blockSize.
+holdingCards: State variable to maintain an array of holding cards. Each holding card represents a set of holding information added by the user.
+
+handleSubmit:
+This function is triggered when the user submits the main form by clicking the "Submit" button.
+It prevents the default form submission behavior.
+Calculates the eligibility points based on the bank guarantee input (assuming it's a percentage of the bank guarantee).
+Sets the eligibility points in the component state.
+Sets the showModal state to true, displaying the confirmation modal.
+handleConfirm:
+This function is invoked when the user confirms the submission in the modal.
+Uses Firebase's Realtime Database API to store company-related data like valuation, bank guarantee, and total eligibility points under the specified auction and company name.
+Also, stores holding cards data under the holding node for the respective company.
+Finally, navigates to the company auction page using the navigate function from the react-router-dom.
+handleHoldingsFormSubmit:
+Triggered when the user submits the holding form by clicking the "Add Holdings" button.
+Prevents the default form submission behavior.
+Logs the holding form data to the console (for debugging or logging purposes).
+Adds the new holding data from the holdingsForm state to the holdingCards state array.
+Resets the holdingsForm state to clear the form fields.
+handleHoldingsInputChange:
+This function is called when the user types into any input field within the holdings form.
+Captures the name and value of the input field that triggered the change.
+Updates the holdingsForm state by spreading its current values and updating the changed field with the new value.
+*/
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../Styles/CompanyDetails.css"; // Import custom CSS file

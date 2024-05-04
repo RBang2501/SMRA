@@ -3,7 +3,76 @@ import { useLocation } from 'react-router-dom';
 import AddItemModal from './AddItemModal';
 import { getDatabase, ref, set, remove, get, onValue, update} from "firebase/database";
 
+/*
+State Variables:
+isModalOpen:
+Type: Boolean
+Description: Tracks whether the modal for adding items is open or closed.
+items:
+Type: Array
+Description: Stores an array of items added to the auction.
+auctionName:
+Type: String
+Description: Holds the name of the current auction instance.
+round:
+Type: Number
+Description: Tracks the current round of the auction.
+demand:
+Type: Object
+Description: Stores the demand for each region and frequency band in the auction.
+elapsedTime:
+Type: Number
+Description: Tracks the elapsed time since the start of the auction round.
+timerExpired:
+Type: Boolean
+Description: Tracks whether the timer for the auction round has expired.
+airtelList, rjioList, attList, bsnlList, viList:
+Type: Array
+Description: Stores lists of items for each company participating in the auction.
+Other Variables:
+location:
+Type: Object
+Description: Represents the location object from the useLocation hook, providing information about the current URL.
+Functions:
+getTimer():
+Description: Fetches timer data for the current auction round from Firebase and updates the elapsed time.
+handleStartTimer():
+Description: Initiates a new auction round by updating timer data in Firebase and starting the timer.
+handleExtendTimer():
+Description: Extends the current auction round's timer by updating timer data in Firebase.
+newRound():
+Description: Initializes a new auction round by resetting item quantities for each company in Firebase.
+calculateDemand():
+Description: Calculates the demand for each item based on previous auction rounds and updates demand data in Firebase.
+handleInit():
+Description: Initializes the company history data in Firebase for the current auction instance.
+handleDelete():
+Description: Deletes the company history data in Firebase for the current auction instance.
+resetRound():
+Description: Resets the current auction round by updating timer data in Firebase.
+publishResult():
+Description: Calculates the provisional winners for the current auction round and updates the result data in Firebase.
 
+getTimer():
+This function is responsible for fetching timer data for the current auction round from Firebase and updating the elapsed time in the component state. It sets up an interval to update the elapsed time every second based on the difference between the current time and the start time of the auction round.
+Within the interval, it checks if the timer has expired. If so, it sets the timerExpired state to true and clears the interval.
+This function ensures that the elapsed time is accurately tracked and reflects the progress of the auction round.
+handleStartTimer():
+When invoked, this function initiates a new auction round by updating timer data in Firebase and starting the timer.
+It retrieves the current time and sets it as the start time for the auction round in Firebase, along with the specified timer duration.
+Additionally, it increments the round number, indicating the start of a new round.
+This function effectively kicks off a new auction round and ensures synchronization of timer data across the application.
+calculateDemand():
+This function calculates the demand for each item based on previous auction rounds and updates demand data in Firebase.
+It retrieves historical data from Firebase, including quantities of items sold in previous rounds.
+Using this data, it computes the demand for each item by summing up the quantities sold in previous rounds.
+The calculated demand is then updated in Firebase, enabling further analysis and decision-making for the auction.
+publishResult():
+Upon invocation, this function calculates the provisional winners for the current auction round based on bidding data and updates the result data in Firebase.
+It fetches bidding data for all participating companies from Firebase and processes it to determine the winners for each item.
+The winners are determined based on bidding quantities, with the highest bidders winning the items.
+The calculated winners are then stored in Firebase, providing transparency and accountability in the auction process.
+*/
 function AdminDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [items, setItems] = useState([]);

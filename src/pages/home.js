@@ -1,3 +1,23 @@
+/*
+Imports: 
+React and its hooks (useRef, useEffect).
+Link and useNavigate from "react-router-dom".
+The useAuth hook from "./authContext".
+Custom CSS file for styling.
+Component Functionality:
+The Home component renders a login form and handles user authentication.
+It uses the useAuth hook to access authentication-related functions and the current user state.
+Two refs (emailRef and passwordRef) are used to capture user input from the email and password fields.
+The useEffect hook runs after the component mounts and whenever the currentUser state changes. It checks if there is a current user. If not, it navigates the user back to the homepage (/).
+The handleSubmitLogin function is called when the user submits the login form. It prevents the default form submission behavior, extracts the email and password from the input fields, attempts to log in the user using the login function from the authentication context, and then navigates the user to the appropriate page based on their company.
+The extractCompanyName function extracts the company name from the user's email address. It splits the email address at the "@" symbol, then further splits the first part of the email (before the "@") at the "." symbol to isolate the company name.
+HTML Structure:
+The component's HTML structure includes a container div, a form container div with left and right sections, and a form for user login.
+The form contains input fields for email and password, with placeholders and labels for each field.
+There is a submit button to submit the form.
+Styling:
+The component applies custom CSS classes for styling, including container layout, form layout, input styles, and logo display.
+*/
 import React, { useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./authContext";
